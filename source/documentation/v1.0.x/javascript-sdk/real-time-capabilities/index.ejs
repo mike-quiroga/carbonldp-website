@@ -60,7 +60,8 @@ version: v1.0.x
 		The real-time capabilities that Carbon provides come in the form of subscriptions to events that occur within the platform.
 		To start subscribing to events with the SDK, first and foremost, you need to know three things: the <strong>subject</strong> (document) you are interested in,
 		the <strong>event</strong> you're going to subscribe to, and the <strong>action</strong> that will be triggered after the event takes place.
-		<br>
+	</p>
+	<p>
 		Once you have identified the three of them, you can start writing a subscription with the SDK.
 	</p>
 	<p>
@@ -133,9 +134,10 @@ version: v1.0.x
 		<h3 class="hidden">The Subject (document)</h3>
 		<p>
 			First, we need to identify the subject we want to subscribe to. In this example, we want to know whenever a client is added or removed from your clients;
-			because the <span class="highlight">clients/</span> document contains all the clients as <span class="highlight">children/</span>, this will be the subject
+			because the <span class="highlight">clients/</span> document contains all the clients as <span class="highlight">children</span>, this will be the subject
 			we want to subscribe to.
-			<br>
+		</p>
+		<p>
 			Now that we've identified the subject we want to subscribe to (<span class="highlight">clients/</span>), we need to retrieve that document.
 		</p>
 
@@ -211,7 +213,9 @@ version: v1.0.x
 		<p>
 			Now that we've identified and retrieved the subject, we have to specify the event we want to subscribe to.<br>
 			To specify the event, Carbon provides a series of predefined events that it can subscribe; such events are defined
-			in the <span class="highlight">Carbon/Messaging/Event</span> file.<br>
+			in the <span class="highlight">Carbon/Messaging/Event</span> file.
+		</p>
+		<p>
 			The list of events we can subscribe to are the following:
 		</p>
 		<div class="ui list">
@@ -398,8 +402,8 @@ version: v1.0.x
 			Going back to our example, we have identified the <span class="highlight">clients/</span> document as the <strong>subject</strong>, and now we want
 			to know whenever a client is added or removed from the company. Because the <span class="highlight">clients/</span> document contains all the clients
 			as its <span class="highlight">children</span> and we want to know whenever a client is added or removed, we can portrait this rule by saying:
-			Whenever a <span class="highlight">client/</span> (child of <span class="highlight">clients/</span>) is created, <code>CHILD_CREATED</code>,
-			or a <span class="highlight">client/</span> is deleted, <code>DOCUMENT_DELETED</code>, we want to adjust the budget of the company.<br>
+			Whenever a <span class="highlight">client</span> (child of <span class="highlight">clients/</span>) is created (<code>CHILD_CREATED</code>),
+			or a <span class="highlight">client</span> is deleted (<code>DOCUMENT_DELETED</code>), we want to adjust the budget of the company.<br>
 		</p>
 
 	</section>
@@ -614,34 +618,49 @@ version: v1.0.x
 <section class="mainContent-subSection">
 	<h3 class="hidden">Using the Documents Service</h3>
 	<p>
-		Notice how we managed to create the subscriptions using the <span class="highlight">PersistedDocument.Class</span>.<br>
+		Notice how we managed to create the subscriptions using the <span class="highlight">PersistedDocument.Class</span>.
+	</p>
+	<p>
 		First, we had to retrieve the subject, then identify the events and their respective actions and finally we proceeded to code the subscriptions.
 	</p>
 	<p>
-		Now, suppose that you want to know whenever a <span class="highlight">client/</span> signs a contract for a new project so that you can update the company's
+		Now, suppose that you want to know whenever a <span class="highlight">client</span> signs a contract for a new project so that you can update the company's
 		sales forecast.
-		To do so, you've decided to store every project as a child of a <span class="highlight">client/</span>. If we look at the list of
-		<a href="#the-event">available events</a>, someone could say:<br>
-		<i>"Because every project will be a <u>children</u> of a client,
-			perhaps I could subscribe to <code>CHILD_CREATED</code> events for every client"</i> and then proceed to code those subscriptions.<br>
-		Well, this approach introduces a lot of issues because the number of clients will vary and for every client you'll also have to create
-		a subscription, which could easily result in a massive amount of requests just to keep the subscriptions alive. This of course is not efficient aside
-		from also being very cumbersome to maintain. Therefore, it is by no means recommended when developing any application.<br>
-		So, how could we create a subscription that handles that requirement?<br>
 	</p>
 	<p>
-		If we look at the <a href="#subscribing">structure</a> of the example platform, every <span class="highlight">client/</span> is a child of
-		<span class="highlight">clients/</span> and because we decided that every <span class="highlight">project/</span> will be stored as a child of <span class="highlight">client/</span>,
-		this means that every <span class="highlight">project/</span> will be a <i>grandchild</i> of the <span class="highlight">clients/</span> document.<br>
+		To do so, you've decided to store every project as a child of a <span class="highlight">client</span>. If we look at the list of
+		<a href="#the-event">available events</a>, someone could say:
+	</p>
+	<p>
+		<i>"Because every project will be a <u>children</u> of a client,
+			perhaps I could subscribe to <code>CHILD_CREATED</code> events for every client"</i> and then proceed to code those subscriptions.
+	</p>
+	<p>
+		Well, this approach introduces a lot of issues because the number of clients will vary and for every client you'll also have to create
+		a subscription, which could easily result in a massive amount of requests just to keep the subscriptions alive. This of course is not efficient aside
+		from also being very cumbersome to maintain. Therefore, it is by no means recommended when developing any application.
+	</p>
+	<p>
+		So, how could we create a subscription that handles that requirement?
+	</p>
+	<p>
+		If we look at the <a href="#subscribing">structure</a> of the example platform, every <span class="highlight">client</span> is a child of
+		<span class="highlight">clients/</span> and because we decided that every <span class="highlight">project</span> will be stored as a child of <span class="highlight">client</span>,
+		this means that every <span class="highlight">project/</span> will be a <i>grandchild</i> of the <span class="highlight">clients/</span> document.
+	</p>
+	<p>
 		If we look again at the list of events, there isn't a <code>GRANDCHILD_CREATED</code> event to subscribe from <span class="highlight">clients/</span>,
 		so how can we detect whenever a grandchild is created?
-		<br>
+	</p>
+	<p>
 		Well, there is another powerful way to create subscriptions with the SDK and is by using the <span class="highlight">documents</span> service.
 	</p>
 	<p>
 		As mentioned in the <a href="#the-event">events</a> section, the <span class="highlight">documents</span> service allows us to use the same methods that
 		<span class="highlight">PersistedDocument.Class</span> provides to subscribe to events. Nevertheless, the difference with using the <span class="highlight">documents</span>
-		service is that it also lets us specify an <a href="https://ant.apache.org/manual/dirtasks.html" target="_blank">Ant pattern</a> to work with hierarchical subscriptions.<br>
+		service is that it also lets us specify an <a href="https://ant.apache.org/manual/dirtasks.html" target="_blank">Ant pattern</a> to work with hierarchical subscriptions.
+	</p>
+	<p>
 		The patterns that can be used are the following:
 	</p>
 	<table class="ui collapsed striped compact small table">
@@ -658,7 +677,7 @@ version: v1.0.x
 			</tr>
 			<tr>
 				<td>**</td>
-				<td>Every children or children of the children and son on...</td>
+				<td>Every children or children of the children and so on...</td>
 			</tr>
 		</tbody>
 	</table>
@@ -668,7 +687,6 @@ version: v1.0.x
 		Therefore, the patterns allow us to subscribe to whatever happens in a given <span class="highlight">document</span> (*) or in any sub-level of that <span class="highlight">document</span> (**).
 		With that in mind, now we can create the subscriptions to meet the requirement successfully:
 	</p>
-
 
 	<!-- START: Code example defining the subscription to an event using the documents service -->
 	<tabs>
@@ -943,16 +961,16 @@ version: v1.0.x
 <section class="mainContent-subSection">
 	<h3 class="hidden">Messaging Service</h3>
 	<p>
-		We just saw how to subscribe to an event and execute a function depending on the event we subscribed to.<br>
+		We just saw how to subscribe to an event and execute a function depending on the event we subscribed to.
+	</p>
+	<p>
 		If you noticed, we didn't have to configure anything to actively check for events that occurred in the platform, we just had
 		to code our desired subscriptions and that was it.
-		So, how did the SDK know an event happened in the platform?<br>
+		So, how did the SDK know an event happened in the platform?
 	</p>
 	<p>
 		Well, the platform provides an endpoint which the SDK actively queries to verify whenever a subscription
-		has occurred, that endpoint is <span class="highlight">http://your-platform-instance:8080/broker/</span>.
-
-		The class in charge to establish connections to that endpoint is the <code>Carbon.Messaging.Service</code>, which
+		has occurred, that endpoint is <span class="highlight">http://your-platform-instance:8080/broker/</span>.The class in charge to establish connections to that endpoint is the <code>Carbon.Messaging.Service</code>, which
 		provides the following methods to handle the connection:
 	</p>
 	<div class="ui bulleted list">
@@ -984,7 +1002,9 @@ version: v1.0.x
 	<p>
 		Whenever you subscribe to an event, if you haven't called the <code>connect</code> or <code>reconnect</code> methods, the SDK will automatically
 		connect to the <span class="highlight">broker/</span> endpoint and will actively poll that connection. That gives you the flexibility to just dive into
-		coding the subscriptions without worrying about opening and closing connections.<br>
+		coding the subscriptions without worrying about opening and closing connections.
+	</p>
+	<p>
 		If you ever want to change the default options -maxReconnectAttempts (10 attemps), -reconnectDelay (1000ms) of the connection, you can do so whenever you want,
 		even if the service is already connected.
 	</p>
@@ -996,14 +1016,18 @@ version: v1.0.x
 <section class="mainContent-section">
 	<h2>Conclusion</h2>
 	<p>
-		The SDK immediately notifies you whenever an event occurs thanks to subscriptions.<br>
-		A subscription is formed of a <u>subject</u> (<span class="highlight">document</span>), an <u>event</u> and an <u>action</u> to trigger when the event occurs.<br>
+		The SDK immediately notifies you whenever an event occurs thanks to subscriptions.
 	</p>
 	<p>
-		A subscription can be created using the <code>on</code> method of the <span class="highlight">PersistedDocument.Class</span> or the <span class="highlight">documents</span> service.<br>
+		A subscription is formed of a <u>subject</u> (<span class="highlight">document</span>), an <u>event</u> and an <u>action</u> to trigger when the event occurs.
+	</p>
+	<p>
+		A subscription can be created using the <code>on</code> method of the <span class="highlight">PersistedDocument.Class</span> or the <span class="highlight">documents</span> service.
+	</p>
+	<p>
 		The difference between <span class="highlight">PersistedDocument.Class</span> and the <span class="highlight">documents</span> service is that the <span class="highlight">documents</span> service
 		lets you specify <a href="https://ant.apache.org/manual/dirtasks.html" target="_blank">Ant patterns</a> to subscribe to multiple levels of an endpoint whereas the
-		<span class="highlight">PersistedDocument.Class</span> doesn't.<br>
+		<span class="highlight">PersistedDocument.Class</span> doesn't.
 	</p>
 	<p>
 		The <code>Carbon.Messaging.Service</code> is the responsible of handling the connections to the <span class="highlight">broker/</span> endpoint of the platform and with it, you can configure
