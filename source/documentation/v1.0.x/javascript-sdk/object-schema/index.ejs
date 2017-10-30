@@ -130,12 +130,12 @@ version: v1.0.x
 	<p>To provide information about the properties your application objects will have, a property with the same name needs to be defined on the object schema:</p>
 
 	<pre><code class="javascript">
-			carbon.extendObjectSchema( &#123;
-				"labels": &#123;
-					// Metadata of the "labels" property
-				&#125;
-			&#125; );
-		</code></pre>
+		carbon.extendObjectSchema( &#123;
+			"labels": &#123;
+				// Metadata of the "labels" property
+			&#125;
+		&#125; );
+	</code></pre>
 
 
 	<!-- START: Collections (@container) -->
@@ -155,20 +155,20 @@ version: v1.0.x
 		<p>For example, imagine that the application handled objects like the following one:</p>
 
 		<pre><code class="javascript">
-				var project = &#123;
-					labels: [
-						"important"
-					],
-					tasks: [
-						&#123;
-							title: "Do something"
-						&#125;,
-						&#123;
-							title: "Then do something else"
-						&#125;,
-					]
-				&#125;;
-			</code></pre>
+			var project = &#123;
+				labels: [
+					"important"
+				],
+				tasks: [
+					&#123;
+						title: "Do something"
+					&#125;,
+					&#123;
+						title: "Then do something else"
+					&#125;,
+				]
+			&#125;;
+		</code></pre>
 
 		<p>
 			The <code>labels</code> property is going to have a collection as a value, but it doesn't need to keep it's order. After all, its only valuable information is
@@ -178,15 +178,15 @@ version: v1.0.x
 		<p>The object schema should be extended as follows:</p>
 
 		<pre><code class="javascript">
-				carbon.extendObjectSchema( &#123;
-					"labels": &#123;
-						"@container": "@set"
-					&#125;,
-					"tasks": &#123;
-						"@container": "@list"
-					&#125;
-				&#125; );
-			</code></pre>
+			carbon.extendObjectSchema( &#123;
+				"labels": &#123;
+					"@container": "@set"
+				&#125;,
+				"tasks": &#123;
+					"@container": "@list"
+				&#125;
+			&#125; );
+		</code></pre>
 
 		<p>Having done that, persisting the resource and then reading it again will yield the expected results.</p>
 	</section>
@@ -205,11 +205,11 @@ version: v1.0.x
 				Application <strong>A</strong> and <strong>B</strong> are developed using the same platform instance to store their data.
 
 				<pre><code class="javascript">
-				// App A Carbon instance
-				var carbonA = new Carbon( "my-carbon-instance.com:8080" );
+					// App A Carbon instance
+					var carbonA = new Carbon( "my-carbon-instance.com:8080" );
 
-				// App B Carbon instance
-				var carbonB = new Carbon( "my-carbon-instance.com:8080" );
+					// App B Carbon instance
+					var carbonB = new Carbon( "my-carbon-instance.com:8080" );
 				</code></pre>
 			</li>
 			<li>
@@ -244,10 +244,8 @@ version: v1.0.x
 								&#125;
 							).catch( console.error );
 						</code></pre>
-
 					</tab>
 					<tab title="JavaScript ES2015">
-
 						<pre><code class="javascript">
 							// ... initialize your Carbon objects
 
@@ -271,10 +269,8 @@ version: v1.0.x
 								&#125;
 							).catch( console.error );
 						</code></pre>
-
 					</tab>
 					<tab title="JavaScript ES5">
-
 						<pre><code class="javascript">
 							// ... initialize your Carbon objects
 
@@ -299,7 +295,6 @@ version: v1.0.x
 								&#125;
 							).catch( console.error );
 						</code></pre>
-
 					</tab>
 				</tabs>
 			</li>
@@ -309,7 +304,6 @@ version: v1.0.x
 				<br>
 				<tabs>
 					<tab title="TypeScript">
-
 						<pre><code class="typescript">
 							import * as HTTP from "carbonldp/HTTP";
 							import * as PersistedDocument from "carbonldp/PersistedDocument";
@@ -331,10 +325,8 @@ version: v1.0.x
 								&#125;
 							).catch( console.error );
 						</code></pre>
-
 					</tab>
 					<tab title="JavaScript ES2015">
-
 						<pre><code class="javascript">
 							// ... initialize your Carbon objects
 
@@ -353,10 +345,8 @@ version: v1.0.x
 								&#125;
 							).catch( console.error );
 						</code></pre>
-
 					</tab>
 					<tab title="JavaScript ES5">
-
 						<pre><code class="javascript">
 							// ... initialize your Carbon objects
 
@@ -377,7 +367,6 @@ version: v1.0.x
 								&#125;
 							).catch( console.error );
 						</code></pre>
-
 					</tab>
 				</tabs>
 			</li>
@@ -392,12 +381,12 @@ version: v1.0.x
 		</p>
 
 		<pre><code class="javascript">
-				carbonA.extendObjectSchema( &#123;
-					"content": &#123;
-						"@type": "string"
-					&#125;
-				&#125; );
-			</code></pre>
+			carbonA.extendObjectSchema( &#123;
+				"content": &#123;
+					"@type": "string"
+				&#125;
+			&#125; );
+		</code></pre>
 
 		<p>If application <strong>A</strong> has its object schema defined this way, there won't be a problem. The SDK will filter any "content" non-string value when retrieving the project.</p>
 		<p>The most common accepted types are:</p>
@@ -510,7 +499,7 @@ version: v1.0.x
 			first names while another one could use it to define their complete name. Or even worse, they could use it to define the name of a country.
 		</p>
 		<p>
-			That's why by default each time a new property is saved to your platform it is saved as a uniform resource identifier (URI). For example, if your JavaScript
+			That's why, by default, each time a new property is saved to your platform it is saved as a uniform resource identifier (URI). For example, if your JavaScript
 			application saves an object with a property <code>title</code>, the property will actually be saved as something like:
 		</p>
 		<p><code>http://localhost:8083/vocabulary/#title</code></p>
@@ -524,8 +513,7 @@ version: v1.0.x
 		</ul>
 		<p>This means that the property is saved using the id of a fragment, inside of a document called <code>vocabulary/</code> from your platform instance.</p>
 		<p>
-			By doing this, you are able to go and save data about the property itself.
-			You could, for example, go and add a description to the property by modifying the
+			By doing this, you are able to go and save data about the property itself. You could, for example, go and add a description to the property by modifying the
 			<code>vocabulary/</code> document:
 		</p>
 		<tabs>
@@ -553,12 +541,9 @@ version: v1.0.x
 						&#125;
 					).catch( console.error );
 				</code></pre>
-
 			</tab>
 			<tab title="JavaScript ES2015">
-				
 				<pre><code class="javascript">
-
 					// ... initialize your Carbon object
 
 					carbon.get( "vocabulary/" ).then(
@@ -576,12 +561,9 @@ version: v1.0.x
 						&#125;
 					).catch( console.error );
 				</code></pre>
-
 			</tab>
 			<tab title="JavaScript ES5">
-				
 				<pre><code class="javascript">
-
 					// ... initialize your Carbon object
 
 					carbon.get( "vocabulary/" ).then(
@@ -600,7 +582,6 @@ version: v1.0.x
 						&#125;
 					).catch( console.error );
 				</code></pre>
-
 			</tab>
 		</tabs>
 		<div class="ui message">
@@ -715,7 +696,6 @@ version: v1.0.x
 	<p>You can tag objects when saving them as documents:</p>
 	<tabs>
 		<tab title="TypeScript">
-			
 			<pre><code class="typescript">
 				import * as HTTP from "carbonldp/HTTP";
 				import * as PersistedDocument from "carbonldp/PersistedDocument";
@@ -734,7 +714,6 @@ version: v1.0.x
 					&#125;
 				).catch( console.error );
 			</code></pre>
-
 		</tab>
 		<tab title="JavaScript ES2015">
 			

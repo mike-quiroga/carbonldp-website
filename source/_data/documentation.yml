@@ -128,28 +128,28 @@ versions:
             description: Guide to install the SDK and start creating and manipulating data with it
           - title: Object model
             link: object-model
-            description: An in depth description of the Carbon Object Model.
+            description: An in depth description of the Carbon Object Model
           - title: Object schema
             link: object-schema
-            description: What is the object schema, how to define and use it.
+            description: What is the object schema, how to define and use it
+          - title: Querying
+            link: querying
+            description: How to make queries with SPARQLer
+          - title: Access points
+            link: access-points
+            description: What is an Access Point and how to use them
+          - title: Real-Time capabilities
+            link: real-time-capabilities
+            description: Discover the capabilities of a real-time linked data platform
           - title: Files
             link: files
             description: Not yet documented
-          - title: Querying
-            link: querying
-            description: How to make queries with SPARQLer.
           - title: Authentication
             link: authentication
             description: Not yet documented
           - title: Authorization
             link: authorization
             description: Not yet documented
-          - title: Access points
-            link: access-points
-            description: What is an Access Point and how to use them.
-          - title: Real-Time capabilities
-            link: real-time-capabilities
-            description: Discover the capabilities of a real-time linked data platform.
 #      - title: Java SDK
 #        description: Software Development Kit for Java (and other JVM languages)
 #        link: java-sdk
