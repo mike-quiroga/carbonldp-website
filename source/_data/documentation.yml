@@ -147,6 +147,9 @@ versions:
           - title: Access points
             link: access-points
             description: What is an Access Point and how to use them.
+          - title: Real-Time capabilities
+            link: real-time-capabilities
+            description: Discover the capabilities of a real-time linked data platform.
 #      - title: Java SDK
 #        description: Software Development Kit for Java (and other JVM languages)
 #        link: java-sdk

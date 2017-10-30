@@ -19,6 +19,13 @@ version: v1.0.x
 			<div class="title">Access points</div>
 		</div>
 	</div>
+	<a class="step" href="../real-time-capabilities">
+		<i class="arrow right icon"></i>
+		<div class="content">
+			<div class="title">Next</div>
+			<div class="description">Real-Time capabilities</div>
+		</div>
+	</a>
 </div>
 
 <div class="ui mobile only grid">
@@ -31,20 +38,23 @@ version: v1.0.x
 <section class="mainContent-section">
 	<h2 class="hidden">Introduction</h2>
 	<p>
-		One of the main goals of a Linked Data Platform is to link data (obviously). Such links could be made within a
-		domain or between different domains.<br>
+		One of the main goals of a Linked Data Platform is to link data (obviously).
+		Such links can exist within a domain or between different domains.<br>
 		With Carbon you can link data in two different ways:
 	</p>
 
 	<ul>
 		<li>
 			Parent-child relation (hard link)<br>
-			Denotes a direct parent-child like relation in which a document can have children documents. This means that whenever the parent is deleted, the children and the children of the children (and so on...) will also be deleted.
+			Denotes a direct parent-child-like relation in which a document can have children documents.
+			This means that whenever the parent is deleted, the children and the children of the children (and so on...) will also be deleted.
 		</li>
 		<li>
 			Membership relation (soft link)<br>
-			A soft link can be made if you want to list a document, let's say document <strong>B</strong>, as a <u>member</u> of another document, such as document <strong>A</strong>.
-			By creating this type of link, if you delete the document linking the children (document <strong>A</strong>), only that document is deleted, leaving untouched the members (now ex-members) documents.
+			A soft link can be made if you want to list a document, let's say document <strong>B</strong>,
+			as a <u>member</u> of another document, such as document <strong>A</strong>.
+			By creating this type of link, if you delete the document linking the children (document <strong>A</strong>)
+			only that document is deleted; any documents that were a member of it (e.g. document B) are left untouched.
 		</li>
 	</ul>
 
@@ -53,13 +63,13 @@ version: v1.0.x
 	<section class="mainContent-subSection">
 		<h3 class="hidden">Membership relation</h3>
 		<p>
-			Notice how the core of a soft link is listing documents as <u>members</u> of another one, but how is a membership relation made with Carbon?
+			Notably, the core of a soft link is listing documents as members of another one. Then, how is a membership relation made with Carbon?
 			<!--<br>-->
 			<!--Every <span class="highlight">document</span> has a series of properties that you define and some others which are reserved by Carbon. One of such reserved properties is called-->
 			<!--<span class="highlight">member</span> and is exactly this -unordered array- property which lists the members of a document. Let's see an example:-->
 			<br/>
 			All Carbon documents can maintain a list of members. The relation between the document and its members can be
-			configured, through the properties:
+			configured through the properties:
 		</p>
 		<ul>
 			<li>
@@ -68,7 +78,7 @@ version: v1.0.x
 			</li>
 			<li>
 				<code>isMemberOfRelation</code>: Name of the property that each member will have, that links back to the
-				document they are member of (none by default)
+				document they are members of (none by default)
 			</li>
 		</ul>
 		<p>
@@ -86,7 +96,7 @@ version: v1.0.x
 				<code>getMembers</code>: Returns an array of RESOLVED <code>PersistedDocument.Class</code> objects for each member
 			</li>
 			<li>
-				<code>removeMember/removeMembers/removeAllMembers</code>: Removes the specified members (without deleting them)
+				<code>removeMember/removeMembers/removeAllMembers</code>: Removes the specified members <i>from the relationship</i> (without deleting their actual documents)
 			</li>
 		</ul>
 
@@ -268,11 +278,11 @@ version: v1.0.x
 
 
 		<p>
-			So far we've seen how to configure a membership relation between documents, in this case we used the membership relation to list tasks of a project.
+			So far we've seen how to configure a membership relation between documents, in this case, we used the membership relation to list tasks of a project.
 		</p>
 		<p>
 			But membership relations have a limitation though; a <span class="highlight">document</span> can only maintain <u>one list</u> through <u>one property</u> (by default <code>members</code>).
-			This means that if now we want to add people to the project project, whenever we call the <code>addMembers</code> method, it will mix the people with the tasks of the project.
+			This means that if now we want to add people to the project, whenever we call the <code>addMembers</code> method, it will mix the people with the tasks of the project.
 			<br>
 			So, how would you add/list other documents through another property? Well, this can be accomplished by using access points.
 		</p>
@@ -288,7 +298,7 @@ version: v1.0.x
 <section class="mainContent-section">
 	<h2 class="hidden">What is an Access Point?</h2>
 	<p>
-		Access points are special documents whose purpose is to maintain a list of members of another document. Any document can have any number of access points, removing the limitation of membership relations.
+		Access points are special documents whose purpose is to maintain a list of members for another document. Any document can have any number of access points, removing the limitation of membership relations.
 		<br>
 		Like normal documents, access points can be customized by specifying a <code>hasMemberRelation</code> and an
 		<code>isMemberOfRelation</code>.
@@ -468,8 +478,8 @@ version: v1.0.x
 <section class="mainContent-subSection">
 	<h3 class="hidden">Deleting an Access Point</h3>
 	<p>
-		At the end, an access point is a <span class="highlight">document</span> with added functionality; because it's a <span class="highlight">document</span> it behaves by the rules of a regular <span class="highlight">document</span>
-		giving you access to the same methods a regular document already has. <br>
+		At the end, an access point is a <span class="highlight">document</span> with added functionality. Because it's a <span class="highlight">document</span>, it behaves by the rules of a regular <span class="highlight">document</span>,
+		giving you access to the same methods standard documents have. <br>
 		One of such methods is the <code>delete</code> method of the <span class="highlight">persistedDocument</span> class.
 		To delete an access point you can use the <code>delete</code> method
 		of the <code>documents</code> service or of a <code>PersistedDocument.Class</code> object.
@@ -651,8 +661,8 @@ version: v1.0.x
 
 
 	<p>
-		Because access points create soft links between documents, the members (person1 and person2) will still exist, but the property
-		that linked back to the document they were members of will also be deleted from them.
+		Because access points create soft links between documents, the member documents (person1 and person2) will still exist, but the property
+		that linked them back to the document they were members of will be deleted from them.
 	</p>
 
 </section>
@@ -663,15 +673,15 @@ version: v1.0.x
 <section class="mainContent-section">
 	<h2>Conclusion</h2>
 	<p>
-		There are two types of links between documents, <u>hard links</u> (direct parent-child relation) and <u>soft links</u> (document referencing other documents).
+		Overall, there are two types of links between documents: <u>hard links</u> (direct parent-child relation) and <u>soft links</u> (document referencing other documents).
 
 		You can set a soft link relationship with the membership relation. You can configure the membership relation by using the <span class="highlight">hasMemberRelation</span>
 		and the <span class="highlight">isMemberOfRelation</span>.
 	</p>
 	<p>
 		A document can only maintain <u>one list</u> through <u>one property</u>. If you want to add more members through another property you can use access points.
-		Access points are special documents whose purpose is to maintain a list of members of another document.
-		Because access points are special documents, they can still use the same methods of a document, so you can <code>createAccessPoints</code> or <code>delete</code> them using
+		Access points are special documents whose purpose is to maintain a list of members for another document.
+		Because access points are documents with added functionality, they can still use the same methods as any document, so you can <code>createAccessPoints</code> or <code>delete</code> them using
 		the <code>documents</code> service or the <code>PersistedDocument.Class</code>.
 	</p>
 </section>
