@@ -3,7 +3,6 @@ layout: documentation/document
 title: Access points
 description: Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web.
 date: 2017-02-08 11:58:19
-sidebar: disabled
 version: v1.0.x
 ---
 
@@ -16,16 +15,674 @@ version: v1.0.x
 		</div>
 	</a>
 	<div class="active step">
-		<!--<i class="payment icon"></i>-->
 		<div class="content">
 			<div class="title">Access points</div>
 		</div>
 	</div>
+	<a class="step" href="../real-time-capabilities">
+		<i class="arrow right icon"></i>
+		<div class="content">
+			<div class="title">Next</div>
+			<div class="description">Real-Time capabilities</div>
+		</div>
+	</a>
 </div>
-<div class="soon-to-be-documented">
-	<p>Sorry, this topic hasn't been documented :(</p>
+
+<div class="ui mobile only grid">
+	<div class="row">
+		<staticContentMenu content="mainContent"></staticContentMenu>
+	</div>
 </div>
-<p>
-	We are doing our best to catch up quickly with the documentation. If you have questions regarding
-	this topic you can always ask us directly through our community. See how <a href="/community-and-support">here</a>
-</p>
+
+<!-- START: Introduction -->
+<section class="mainContent-section">
+	<h2 class="hidden">Introduction</h2>
+	<p>
+		One of the main goals of a Linked Data Platform is to link data (obviously).
+		Such links can exist within a domain or between different domains.<br>
+		With Carbon you can link data in two different ways:
+	</p>
+
+	<ul>
+		<li>
+			Parent-child relation (hard link)<br>
+			Denotes a direct parent-child-like relation in which a document can have children documents.
+			This means that whenever the parent is deleted, the children and the children of the children (and so on...) will also be deleted.
+		</li>
+		<li>
+			Membership relation (soft link)<br>
+			A soft link can be made if you want to list a document, let's say document <strong>B</strong>,
+			as a <u>member</u> of another document, such as document <strong>A</strong>.
+			By creating this type of link, if you delete the document linking the children (document <strong>A</strong>)
+			only that document is deleted; any documents that were a member of it (e.g. document B) are left untouched.
+		</li>
+	</ul>
+
+
+	<!-- START: Membership relation -->
+	<section class="mainContent-subSection">
+		<h3 class="hidden">Membership relation</h3>
+		<p>
+			Notably, the core of a soft link is listing documents as members of another one. Then, how is a membership relation made with Carbon?
+			<!--<br>-->
+			<!--Every <span class="highlight">document</span> has a series of properties that you define and some others which are reserved by Carbon. One of such reserved properties is called-->
+			<!--<span class="highlight">member</span> and is exactly this -unordered array- property which lists the members of a document. Let's see an example:-->
+			<br/>
+			All Carbon documents can maintain a list of members. The relation between the document and its members can be
+			configured through the properties:
+		</p>
+		<ul>
+			<li>
+				<code>hasMemberRelation</code>: Name of the property that will hold the array of members
+				(by default <code>members</code>)
+			</li>
+			<li>
+				<code>isMemberOfRelation</code>: Name of the property that each member will have, that links back to the
+				document they are members of (none by default)
+			</li>
+		</ul>
+		<p>
+			These properties are configured in the document that will maintain the member array. Members can be added, removed,
+			listed or retrieved through the following methods in the <code>documents</code> service (and the document itself too):
+		</p>
+		<ul>
+			<li>
+				<code>addMember/addMembers</code>: Adds the provided pointers as members of the document
+			</li>
+			<li>
+				<code>listMembers</code>: Returns an array of unresolved <code>PersistedDocument.Class</code> objects for each member
+			</li>
+			<li>
+				<code>getMembers</code>: Returns an array of RESOLVED <code>PersistedDocument.Class</code> objects for each member
+			</li>
+			<li>
+				<code>removeMember/removeMembers/removeAllMembers</code>: Removes the specified members <i>from the relationship</i> (without deleting their actual documents)
+			</li>
+		</ul>
+
+
+		<!-- START: Code example of defining a membership relation -->
+		<tabs>
+			<tab title="TypeScript">
+
+				<pre><code class="typescript">
+					// ... additional imports
+					import * as PersistedDocument from "carbonldp/PersistedDocument";
+					import * as Response from "carbonldp/HTTP/Response";
+
+					let carbon:Carbon;
+
+					// ... initialize your Carbon object
+
+					let project:Project = &#123;
+						name: "Important project",
+
+						hasMemberRelation: "tasks",
+						isMemberOfRelation: "project"
+					&#125;;
+
+					let task1:Task = &#123; name: "Task 1" &#125;; // Being "Task" a business specific interface defined somewhere
+					let task2:Task = &#123; name: "Task 2" &#125;;
+					let task3:Task = &#123; name: "Task 3" &#125;;
+
+					// ... project, task1, task2 and task3 persistence (createChild, etc)
+
+					project.addMembers( [ task1, task2, task3 ] ).then(
+						( response:Response.Class ) => &#123;
+							return project.resolve&lt;Project&gt;();
+						&#125;
+					).then(
+						( [ project, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => &#123;
+							console.log( project.tasks ); // Pointers for task1, task2 and task3. Added because of the configured hasMemberRelation
+							console.log( project.tasks.indexOf( task1 ) !== -1 ); // true (remember, pointers are cached and reused)
+
+							return project.listMembers&lt;Task&gt;();
+						&#125;
+					).then(
+						( [ unresolvedTasks, response ]:[ Task & PersistedDocument.Class, Response.Class ] ) => &#123;
+							console.log( unresolvedTasks ); // Pointers for task1, task2 and task3
+
+							return project.removeMember( task2 );
+						&#125;
+					).then(
+						( response:Response.Class ) => &#123;
+							console.log( "Task 2 is no longer a member of the project" );
+
+							return project.getMembers&lt;Task&gt;();
+						&#125;
+					).then(
+						( [ resolvedTasks, response ]:[ Task & PersistedDocument.Class, Response.Class ] ) => &#123;
+							console.log( resolvedTasks ); // task1 and task3 documents
+							console.log( task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
+						&#125;
+					).catch( console.error );
+				</code></pre>
+
+			</tab>
+			<tab title="JavaScript ES2015">
+
+				<pre><code class="javascript">
+					// ... imports
+
+					let carbon;
+
+					// ... initialize your Carbon object
+
+					let project = &#123;
+						name: "Important project",
+
+						hasMemberRelation: tasks,
+						isMemberOfRelation: project
+					&#125;;
+
+					let task1 = &#123; name: "Task 1" &#125;;
+					let task2 = &#123; name: "Task 2" &#125;;
+					let task3 = &#123; name: "Task 3" &#125;;
+
+					// ... project, task1, task2 and task3 persistence (createChild, etc)
+
+					project.addMembers( [ task1, task2, task3 ] ).then(
+						( response ) => &#123;
+							return project.resolve();
+						&#125;
+					).then(
+						( [ project, response ] ) => &#123;
+							console.log( project.tasks ); // Pointers for task1, task2 and task3. Added because of the configured hasMemberRelation
+							console.log( project.tasks.indexOf( task1 ) !== -1 ); // true (remember, pointers are cached and reused)
+
+							return project.listMembers();
+						&#125;
+					).then(
+						( [ unresolvedTasks, response ] ) => &#123;
+							console.log( unresolvedTasks ); // Pointers for task1, task2 and task3
+
+							return project.removeMember( task2 );
+						&#125;
+					).then(
+						( response ) => &#123;
+							console.log( "Task 2 is no longer a member of the project" );
+
+							return project.getMembers();
+						&#125;
+					).then(
+						( [ resolvedTasks, response ] ) => &#123;
+							console.log( resolvedTasks ); // task1 and task3 documents
+							console.log( task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
+						&#125;
+					).catch( console.error );
+				</code></pre>
+
+			</tab>
+			<tab title="JavaScript ES5">
+
+				<pre><code class="javascript">
+					var carbon;
+
+					// ... initialize your Carbon object
+
+					var project = &#123;
+						name: "Important project",
+
+						hasMemberRelation: tasks,
+						isMemberOfRelation: project
+					&#125;;
+
+					var task1 = &#123; name: "Task 1" &#125;;
+					var task2 = &#123; name: "Task 2" &#125;;
+					var task3 = &#123; name: "Task 3" &#125;;
+
+					// ... project, task1, task2 and task3 persistence (createChild, etc)
+
+					project.addMembers( [ task1, task2, task3 ] ).then(
+						function( response ) &#123;
+							return project.resolve();
+						&#125;
+					).then(
+						function( result ) &#123;
+							var project = result[ 0 ];
+							var response = result[ 1 ];
+
+							console.log( project.tasks ); // Pointers for task1, task2 and task3. Added because of the configured hasMemberRelation
+							console.log( project.tasks.indexOf( task1 ) !== -1 ); // true (remember, pointers are cached and reused)
+
+							return project.listMembers();
+						&#125;
+					).then(
+						function( result ) &#123;
+							var unresolvedTasks = result[ 0 ];
+							var response = result[ 1 ];
+
+							console.log( unresolvedTasks ); // Pointers for task1, task2 and task3
+
+							return project.removeMember( task2 );
+						&#125;
+					).then(
+						function( response ) &#123;
+							console.log( "Task 2 is no longer a member of the project" );
+
+							return project.getMembers();
+						&#125;
+					).then(
+						function( result ) &#123;
+							var resolvedTasks = result[ 0 ];
+							var response = result[ 1 ];
+
+							console.log( resolvedTasks ); // task1 and task3 documents
+							console.log( task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
+						&#125;
+					).catch( console.error );
+				</code></pre>
+			</tab>
+		</tabs>
+		<!-- END: Code example of defining a membership relation -->
+
+
+		<p>
+			So far we've seen how to configure a membership relation between documents, in this case, we used the membership relation to list tasks of a project.
+		</p>
+		<p>
+			But membership relations have a limitation though; a <span class="highlight">document</span> can only maintain <u>one list</u> through <u>one property</u> (by default <code>members</code>).
+			This means that if now we want to add people to the project, whenever we call the <code>addMembers</code> method, it will mix the people with the tasks of the project.
+			<br>
+			So, how would you add/list other documents through another property? Well, this can be accomplished by using access points.
+		</p>
+	</section>
+	<!-- END: Membership relation -->
+
+
+</section>
+<!-- END: Introduction -->
+
+
+<!-- START: What is an Access Point? -->
+<section class="mainContent-section">
+	<h2 class="hidden">What is an Access Point?</h2>
+	<p>
+		Access points are special documents whose purpose is to maintain a list of members for another document. Any document can have any number of access points, removing the limitation of membership relations.
+		<br>
+		Like normal documents, access points can be customized by specifying a <code>hasMemberRelation</code> and an
+		<code>isMemberOfRelation</code>.
+	</p>
+</section>
+<!-- END: What is an Access Point? -->
+
+
+<!-- START: Creating an access point-->
+<section class="mainContent-subSection">
+	<h3 class="hidden">Creating an Access Point</h3>
+	<p>
+		To create an access point for a document you can use the <code>createAccessPoint</code> method
+		of the <code>documents</code> service or of a <code>PersistedDocument.Class</code> object.
+	</p>
+
+	<!-- START: Code example of creating an access point-->
+	<tabs>
+		<tab title="TypeScript">
+
+				<pre><code class="typescript">
+					// ... additional imports
+					import * as AccessPoint from "carbonldp/AccessPoint";
+					import * as PersistedAccessPoint from "carbonldp/PersistedAccessPoint";
+					import * as PersistedDocument from "carbonldp/PersistedDocument";
+					import * as Response from "carbonldp/HTTP/Response";
+
+					let project:Project & PersistedDocument.Class;
+					let person1:Person & PersistedDocument.Class;
+					let person2:Person & PersistedDocument.Class;
+
+					// ... project, person1 and person2 document retrieval
+
+					let projectMembersAccessPoint:AccessPoint = {
+					    hasMemberRelation: "people", // property used to store the member list in the accessPoint's document
+					    isMemberOfRelation: "projects" // property used to link back members to the document they are members of
+					};
+
+					// Create the Access Point
+					project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+					    ( [ persistedProjectMembersAccessPoint, response ]:[ PersistedAccessPoint.Class, Response.Class ] ) => {
+					        console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
+
+							// Add members to the Access Point
+					        return persistedProjectMembersAccessPoint.addMembers( [ person1, person2 ] );
+					    }
+					).then(
+					    ( response:Response.Class ) => {
+							// Refresh the project so it can have the property listing the members
+					        return project.refresh&lt;Project&gt;();
+					    }
+					).then(
+					    ( [ refreshedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
+					        console.log( project === refreshedProject ); // true
+					        console.log( refreshedProject.people ); // Pointers to person1 and person2
+
+							// Refresh a person so it can have the property pointing back to the document a person is member of
+					        return person1.refresh&lt;Person&gt;();
+					    }
+					).then(
+					    ( [ refreshedPerson1, response ]:[ Person & PersistedDocument.Class, Response.Class ] ) => {
+					        console.log( person1 === refreshedPerson1 ); // true
+					        console.log( refreshedPerson1.projects ); // Pointer to project
+					    }
+					).catch( console.error );
+				</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES2015">
+
+				<pre><code class="javascript">
+					// ... imports
+
+					let project;
+					let person1;
+					let person2;
+
+					// ... project, person1 and person2 document retrieval
+
+					let projectMembersAccessPoint = &#123;
+						hasMemberRelation: "people", // property used to store the member list in the accessPoint's document
+						isMemberOfRelation: "projects" // property used to link back members to the document they are members of
+					&#125;;
+
+					// Create the Access Point
+					project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+						( [ persistedProjectMembersAccessPoint, response ] ) => &#123;
+							console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
+
+							// Add members to the Access Point
+							return persistedProjectMembersAccessPoint.addMembers( [ person1, person2 ] );
+						&#125;
+					).then(
+						( response ) => &#123;
+							// Refresh the project so it can have the property listing the members
+							return project.refresh&lt;Project&gt;();
+						&#125;
+					).then(
+						( [ refreshedProject, response ] ) => &#123;
+							console.log( project === refreshedProject ); // true
+							console.log( refreshedProject.people ); // Pointers to person1 and person2
+
+							// Refresh a person so it can have the property pointing back to the document a person is member of
+							return person1.refresh&lt;Person&gt;();
+						&#125;
+					).then(
+						( [ refreshedPerson1, response ] ) => &#123;
+							console.log( person1 === refreshedPerson1 ); // true
+							console.log( refreshedPerson1.projects ); // Pointer to project
+						&#125;
+					).catch( console.error );
+				</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES5">
+
+				<pre><code class="javascript">
+					// ... imports
+
+					var project;
+					var person1;
+					var person2;
+
+					// ... project, person1 and person2 document retrieval
+
+					var projectMembersAccessPoint = &#123;
+						hasMemberRelation: "people", // property used to store the member list in the accessPoint's document
+						isMemberOfRelation: "projects" // property used to link back members to the document they are members of
+					&#125;;
+
+					// Create the Access Point
+					project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+						function( result ) &#123;
+							var persistedProjectMembersAccessPoint = result[ 0 ];
+							var response = result[ 1 ];
+
+							console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
+
+							// Add members to the Access Point
+							return persistedProjectMembersAccessPoint.addMembers( [ person1, person2 ] );
+						&#125;
+					).then(
+						function( response ) &#123;
+							// Refresh the project so it can have the property listing the members
+							return project.refresh&lt;Project&gt;();
+						&#125;
+					).then(
+						function( result ) &#123;
+							var refreshedProject = result[ 0 ];
+							var response = result[ 1 ];
+
+							console.log( project === refreshedProject ); // true
+							console.log( refreshedProject.people ); // Pointers to person1 and person2
+
+							// Refresh a person so it can have the property pointing back to the document a person is member of
+							return person1.refresh&lt;Person&gt;();
+						&#125;
+					).then(
+						function( result ) &#123;
+							var refreshedPerson1 = result[ 0 ];
+							var response = result[ 1 ];
+
+							console.log( person1 === refreshedPerson1 ); // true
+							console.log( refreshedPerson1.projects ); // Pointer to project
+						&#125;
+					).catch( console.error );
+				</code></pre>
+		</tab>
+	</tabs>
+	<!-- END: Code example of creating an access point-->
+
+</section>
+<!-- END: Creating an access point-->
+
+
+<!-- START: Deleting an access point-->
+<section class="mainContent-subSection">
+	<h3 class="hidden">Deleting an Access Point</h3>
+	<p>
+		At the end, an access point is a <span class="highlight">document</span> with added functionality. Because it's a <span class="highlight">document</span>, it behaves by the rules of a regular <span class="highlight">document</span>,
+		giving you access to the same methods standard documents have. <br>
+		One of such methods is the <code>delete</code> method of the <span class="highlight">persistedDocument</span> class.
+		To delete an access point you can use the <code>delete</code> method
+		of the <code>documents</code> service or of a <code>PersistedDocument.Class</code> object.
+	</p>
+
+
+	<!-- START: Code example of deleting an access point-->
+	<tabs>
+		<tab title="TypeScript">
+
+				<pre><code class="typescript">
+					// ... additional imports
+					import * as AccessPoint from "carbonldp/AccessPoint";
+					import * as PersistedAccessPoint from "carbonldp/PersistedAccessPoint";
+					import * as PersistedDocument from "carbonldp/PersistedDocument";
+					import * as Response from "carbonldp/HTTP/Response";
+
+					let project:Project & PersistedDocument.Class;
+					let person1:Person & PersistedDocument.Class;
+					let person2:Person & PersistedDocument.Class;
+
+					// ... project, person1 and person2 document retrieval
+
+					let projectMembersAccessPoint:AccessPoint = {
+					    hasMemberRelation: "people", // property used to store the member list in the accessPoint's document
+					    isMemberOfRelation: "projects" // property used to link back members to the document they are members of
+					};
+
+					// Create the Access Point
+					project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+					    ( [ persistedProjectMembersAccessPoint, response ]:[ PersistedAccessPoint.Class, Response.Class ] ) => {
+					        console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
+
+							// Add members to the Access Point
+					        return persistedProjectMembersAccessPoint.addMembers( [ person1, person2 ] );
+					    }
+					).then(
+					    ( response:Response.Class ) => {
+							// Refresh the project so it can have the property listing the members
+					        return project.refresh&lt;Project&gt;();
+					    }
+					).then(
+						( [ refreshedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
+					        console.log( project === refreshedProject ); // true
+					        console.log( refreshedProject.people ); // Pointers to person1 and person2
+
+							// Delete the access point
+					        return projectMembersAccessPoint.delete();
+					    }
+					).then(
+					    ( response:Response.Class ) => {
+
+							// Refresh the project so it doesn't have the property listing the members
+					        return project.refresh&lt;Project&gt;();
+					    }
+					).then(
+					    ( [ refreshedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
+					        console.log( project === refreshedProject ); // true
+					        console.log( refreshedProject.people ); // undefined
+					    }
+					).catch( console.error );
+				</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES2015">
+
+				<pre><code class="javascript">
+					// ... imports
+
+					let project;
+					let person1;
+					let person2;
+
+					// ... project, person1 and person2 document retrieval
+
+					let projectMembersAccessPoint = &#123;
+						hasMemberRelation: "people", // property used to store the member list in the accessPoint's document
+						isMemberOfRelation: "projects" // property used to link back members to the document they are members of
+					&#125;;
+
+					// Create the Access Point
+					project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+						( [ persistedProjectMembersAccessPoint, response ] ) => {
+					        console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
+
+							// Add members to the Access Point
+					        return persistedProjectMembersAccessPoint.addMembers( [ person1, person2 ] );
+					    }
+					).then(
+					    ( response ) => {
+							// Refresh the project so it can have the property listing the members
+					        return project.refresh();
+					    }
+					).then(
+						( [ refreshedProject, response ] ) => {
+					        console.log( project === refreshedProject ); // true
+					        console.log( refreshedProject.people ); // Pointers to person1 and person2
+
+							// Delete the access point
+					        return projectMembersAccessPoint.delete();
+					    }
+					).then(
+					    ( response:Response.Class ) => {
+
+							// Refresh the project so it doesn't have the property listing the members
+					        return project.refresh();
+					    }
+					).then(
+					    ( [ refreshedProject, response ] ) => {
+					        console.log( project === refreshedProject ); // true
+					        console.log( refreshedProject.people ); // undefined
+					    }
+					).catch( console.error );
+				</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES5">
+
+				<pre><code class="javascript">
+					// ... imports
+
+					var project;
+					var person1;
+					var person2;
+
+					// ... project, person1 and person2 document retrieval
+
+					var projectMembersAccessPoint = &#123;
+						hasMemberRelation: "people", // property used to store the member list in the accessPoint's document
+						isMemberOfRelation: "projects" // property used to link back members to the document they are members of
+					&#125;;
+
+					// Create the Access Point
+					project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+						function( result ) &#123;
+							var persistedProjectMembersAccessPoint = result[ 0 ];
+							var response = result[ 1 ];
+
+							console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
+
+							// Add members to the Access Point
+							return persistedProjectMembersAccessPoint.addMembers( [ person1, person2 ] );
+						&#125;
+					).then(
+						function( response ) &#123;
+							// Refresh the project so it can have the property listing the members
+					        return project.refresh();
+						&#125;
+					).then(
+						( result ) => {
+							var refreshedProject = result[ 0 ];
+							var response = result[ 1 ];
+
+					        console.log( project === refreshedProject ); // true
+					        console.log( refreshedProject.people ); // Pointers to person1 and person2
+
+							// Delete the access point
+					        return projectMembersAccessPoint.delete();
+					    }
+					).then(
+					    ( response ) => {
+
+							// Refresh the project so it doesn't have the property listing the members
+					        return project.refresh();
+					    }
+					).then(
+					    ( result ) => {
+							var refreshedProject = result[ 0 ];
+							var response = result[ 1 ];
+
+					        console.log( project === refreshedProject ); // true
+					        console.log( refreshedProject.people ); // undefined
+					    }
+					).catch( console.error );
+				</code></pre>
+		</tab>
+	</tabs>
+	<!-- END: Code example of deleting an access point-->
+
+
+	<p>
+		Because access points create soft links between documents, the member documents (person1 and person2) will still exist, but the property
+		that linked them back to the document they were members of will be deleted from them.
+	</p>
+
+</section>
+<!-- END: Deleting an access point-->
+
+
+<!-- START: Conclusion -->
+<section class="mainContent-section">
+	<h2>Conclusion</h2>
+	<p>
+		Overall, there are two types of links between documents: <u>hard links</u> (direct parent-child relation) and <u>soft links</u> (document referencing other documents).
+
+		You can set a soft link relationship with the membership relation. You can configure the membership relation by using the <span class="highlight">hasMemberRelation</span>
+		and the <span class="highlight">isMemberOfRelation</span>.
+	</p>
+	<p>
+		A document can only maintain <u>one list</u> through <u>one property</u>. If you want to add more members through another property you can use access points.
+		Access points are special documents whose purpose is to maintain a list of members for another document.
+		Because access points are documents with added functionality, they can still use the same methods as any document, so you can <code>createAccessPoints</code> or <code>delete</code> them using
+		the <code>documents</code> service or the <code>PersistedDocument.Class</code>.
+	</p>
+</section>
+<!-- END: Conclusion -->

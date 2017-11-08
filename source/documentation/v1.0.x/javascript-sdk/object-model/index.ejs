@@ -1,7 +1,7 @@
 ---
 layout: documentation/document
 title: Object Model
-description: An in depth description of the Carbon Object Model.
+description: An in depth description of the Carbon Object Model
 date: 2017-02-08 11:56:53
 version: v1.0.x
 ---
@@ -33,16 +33,22 @@ version: v1.0.x
 	</div>
 </div>
 
+<!-- START: Documents -->
 <section class="mainContent-section">
 	<h2>Documents</h2>
+	<p>The main model object handled by Carbon LDP is called a Document.</p>
 	<p>
-		The main model object handled by Carbon LDP is called a Document. A Document begins as a normal JavaScript object containing any
+		A Document begins as a normal JavaScript object containing any
 		number of data attributes (key/value pairs) that you care to define. Typically, a Document represents a data <em>entity</em>
 		of a given type (e.g. Person, Project, Product, Invoice). It can have literal datatype properties (e.g. string, date, number) and
-		pointers that link to other resources. When a normal JavaScript object is saved to Carbon, it receives a URI that uniquely
+		pointers that link to other resources.
+	</p>
+	<p>
+		When a normal JavaScript object is saved to Carbon, it receives a URI that uniquely
 		identifies it on a network or the web. That URI can then be used to retrieve the document or to query for specific
 		data attributes within it. Of course, queries can also be used to find data across multiple documents.
 	</p>
+	<!-- URI's as identifiers -->
 	<section class="mainContent-subSection">
 		<h3>URIs as identifiers</h3>
 		<p>
@@ -65,10 +71,12 @@ version: v1.0.x
 			or <code>https</code> scheme (depending on the platform's configuration).
 		</p>
 		<p>
-			Using URIs as identifiers allow Carbon documents to be <strong>unique</strong>, <strong>resolvable</strong> and <strong>relative to
-				the network</strong>.
+			Using URIs as identifiers allow Carbon documents to be <strong>unique</strong>, <strong>resolvable</strong> and
+			<strong>relative to the network</strong>.
 		</p>
 	</section>
+
+	<!-- Properties -->
 	<section class="mainContent-subSection">
 		<h3>Properties</h3>
 		<p>
@@ -89,12 +97,14 @@ version: v1.0.x
 			<li><code>isMemberOfRelation</code>: Specifies the property that a member Document will acquire that links back to its container Document.</li>
 		</ul>
 	</section>
+
+	<!-- Fragments and Named Fragments -->
 	<section class="mainContent-subSection">
 		<h3>Fragments and named fragments</h3>
 		<p>
 			Documents may also contain nested objects. There are two types of nested objects, <code>fragments</code> and <code>named fragments</code>:
 		</p>
-		
+
 		<pre><code class="javascript">
 			var document = &#123;                                        // =================== Document
 				id: "https://.../projects/project-x/",
@@ -110,7 +120,7 @@ version: v1.0.x
 				&#125;                                                   // -------- End: Named Fragment
 			&#125;;                                                      // =================== End: Document
 		</code></pre>
-		
+
 		<p>
 			Fragments are identified by an ID, just like documents, but the key difference is that their ID is not a URI. Instead
 			fragments use IDs of the form <code><strong>_:</strong>RANDOM-STRING</code>. These IDs are local to the document, making it impossible to link
@@ -137,6 +147,10 @@ version: v1.0.x
 		</div>
 	</section>
 </section>
+<!-- END: Documents -->
+
+
+<!-- START: Object types -->
 <section class="mainContent-section">
 	<h2>Object types</h2>
 	<p>
@@ -165,7 +179,7 @@ version: v1.0.x
 				console.log( project.hasType( "project" ) ); // true
 				console.log( project.types.length !== 2 ); // true, remember Carbon may add more types to the document
 			</code></pre>
-			
+
 		</tab>
 		<tab title="JavaScript ES2015">
 			
@@ -180,7 +194,7 @@ version: v1.0.x
 					console.log( project.hasType( "project" ) ); // true
 					console.log( project.types.length !== 2 ); // true, remember Carbon may add more types to the document
 				</code></pre>
-				
+
 		</tab>
 		<tab title="JavaScript ES5">
 			
@@ -194,11 +208,14 @@ version: v1.0.x
 				console.log( project.hasType( "project" ) ); // true
 				console.log( project.types.length !== 2 ); // true, remember Carbon may add more types to the document
 			</code></pre>
-			
+
 		</tab>
 	</tabs>
 </section>
+<!-- END: Object types -->
 
+
+<!-- START: Conclusion -->
 <section class="mainContent-section">
 	<h2>Conclusion</h2>
 	<p>JavaScript objects can be defined with datatype properties, pointers (links) to other resources, fragments (inner-objects),
@@ -210,6 +227,7 @@ version: v1.0.x
 	<p>Document objects are the main data objects you work with using the JavaScript SDK and the primary means by which you create,
 		read, update, and delete data.</p>
 </section>
+<!-- END: Conclusion -->
 
 <div class="documentation-steps ui fluid steps">
 	<a class="step" href="../getting-started">

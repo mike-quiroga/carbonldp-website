@@ -1,0 +1,999 @@
+---
+layout: documentation/document
+title: Real-time capabilities
+description: Discover the capabilities of a real-time linked data platform.
+date: 2017-29-09 11:57:18
+version: v1.0.x
+---
+<div class="documentation-steps ui fluid steps">
+	<a class="step" href="../access-points">
+		<i class="arrow left icon"></i>
+		<div class="content">
+			<div class="title">Previous</div>
+			<div class="description">Access Points</div>
+		</div>
+	</a>
+	<div class="active step">
+		<div class="content">
+			<div class="title">Real-Time capabilities</div>
+		</div>
+	</div>
+</div>
+
+<div class="ui mobile only grid">
+	<div class="row">
+		<staticContentMenu content="mainContent"></staticContentMenu>
+	</div>
+</div>
+
+<!-- START: Introduction -->
+<section class="mainContent-section">
+	<h2 class="hidden">Introduction</h2>
+	<p>
+		In the current world, accessibility to information is crucial. Moreover, it's not only important to have the information available,
+		but when it's available has gained great importance; the time to access new information is a key factor that many companies heavily rely on.
+		To address this issue, Carbon provides real-time capabilities in its platform.
+	</p>
+</section>
+<!-- END: Introduction -->
+
+
+<!-- START: Configure message broker -->
+<div class="ui warning icon message">
+	<i class="warning icon"></i>
+	<div class="content">
+		<p>
+			To use real-time features, the platform instance must have access to a message broker.<br>
+			If you haven't configured your instance to do so, read this guide to learn how to do it:<br>
+			<!-- TODO change link to configure a message broker -->
+			<a target="_blank" href="../../platform/configuration">Configuring the platform</a>
+		</p>
+	</div>
+</div>
+<!-- END: Configure message broker -->
+
+
+<!-- START: Subscribing -->
+<section class="mainContent-section">
+	<h2 class="hidden">Subscribing</h2>
+	<p>
+		The real-time capabilities that Carbon provides come in the form of subscriptions to events that occur within the platform.
+		To start subscribing to events with the SDK, first and foremost, you need to know three things: the <strong>subject</strong> (document) you are interested in,
+		the <strong>event</strong> you're going to subscribe to, and the <strong>action</strong> that will be triggered after the event takes place.
+	</p>
+	<p>
+		Once you have identified the three of them, you can start writing a subscription with the SDK.
+	</p>
+	<p>
+		Let's start this guide by using an example to subscribe to: Imagine that you have a company and you want to know whenever a client is added to your company
+		so that you can perform some adjustments to the company's budget; you have defined the following structure in your platform instance:
+	</p>
+	<div class="ui list">
+		<div class="item">
+			<i class="file icon"></i>
+			<div class="content">
+				<div class="header">/</div>
+				<div class="description">Your platform's root (usually <code>http://you-platform-domain:8080/</code>)</div>
+				<div class="list">
+					<div class="item">
+						<i class="file icon"></i>
+						<div class="content">
+							<div class="header">clients/</div>
+							<div class="description">The document that contains the clients</div>
+							<div class="list">
+								<div class="item">
+									<i class="file icon"></i>
+									<div class="content">
+										<div class="header">client-1/</div>
+										<div class="description">Document defining client 1 properties</div>
+									</div>
+								</div>
+								<div class="item">
+									<i class="file icon"></i>
+									<div class="content">
+										<div class="header">client-2/</div>
+										<div class="description">Document defining client 2 properties</div>
+									</div>
+								</div>
+								<div class="item">
+									<i class="file icon"></i>
+									<div class="content">
+										<div class="header">client-n.../</div>
+										<div class="description">And so on...</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="item">
+						<i class="file icon"></i>
+						<div class="content">
+							<div class="header">department/</div>
+							<div class="description">Document that contains the departments of your company</div>
+						</div>
+					</div>
+					<div class="item">
+						<i class="file icon"></i>
+						<div class="content">
+							<div class="header">etc...</div>
+							<div class="description">Other aspects your company has</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<p>
+		With this in mind, we can start to define our subscription.
+	</p>
+
+
+	<!-- START: The Subject -->
+	<section class="mainContent-subSection">
+		<h3 class="hidden">The Subject (document)</h3>
+		<p>
+			First, we need to identify the subject we want to subscribe to. In this example, we want to know whenever a client is added to your clients;
+			because the <span class="highlight">clients/</span> document contains all the clients as <span class="highlight">children</span>, this will be the subject
+			we want to subscribe to.
+		</p>
+		<p>
+			Now that we've identified the subject we want to subscribe to (<span class="highlight">clients/</span>), we need to retrieve that document.
+		</p>
+
+
+		<!-- START: Code example defining the subject -->
+		<tabs>
+			<tab title="TypeScript">
+
+				<pre><code class="typescript">
+					import * as PersistedDocument from "carbonldp/PersistedDocument";
+					import * as Response from "carbonldp/HTTP/Response";
+
+					let carbon:Carbon;
+
+					// ... initialize your Carbon object
+
+					carbon.documents.get( "clients/" ).then(
+						( [ clientsDocument, response ]:[ PersistedDocument.Class, Response.Class ] ) => &#123;
+							// We've retrieved the subject
+							console.log( clientsDocument );
+						&#125;
+					).catch( console.error );
+				</code></pre>
+
+			</tab>
+			<tab title="JavaScript ES2015">
+
+				<pre><code class="javascript">
+					let carbon;
+
+					// ... initialize your Carbon object
+
+					carbon.documents.get( "clients/" ).then(
+						( [ clientsDocument, response ] ) => &#123;
+							// We've retrieved the subject
+							console.log( clientsDocument );
+						&#125;
+					).catch( console.error );
+				</code></pre>
+
+			</tab>
+			<tab title="JavaScript ES5">
+
+				<pre><code class="javascript">
+					var carbon;
+
+					// ... initialize your Carbon object
+
+					carbon.documents.get( "clients/" ).then(
+						( result ) => &#123;
+							var clientsDocument = result[ 0 ];
+							var response = result[ 1 ];
+
+							// We've retrieved the subject
+							console.log( clientsDocument );
+						&#125;
+					).catch( console.error );
+				</code></pre>
+			</tab>
+		</tabs>
+		<!-- END: Code example defining the subject -->
+
+		<p>
+			With the retrieved subject, now we need to identify the events to which we can subscribe.
+		</p>
+	</section>
+	<!-- END: The Subject -->
+
+
+	<!-- START: The Event -->
+	<section class="mainContent-subSection">
+		<h3 class="hidden">The Event</h3>
+		<p>
+			Once we've identified and retrieved the subject, we have to specify the event we want to subscribe to.<br>
+			To specify the event, Carbon provides a series of predefined events that it can subscribe; such events are defined
+			in the <span class="highlight">Carbon/Messaging/Event</span> file.
+		</p>
+		<p>
+			The list of events we can subscribe to are the following:
+		</p>
+		<div class="ui list">
+			<div class="item">
+				<i class="lightning icon"></i>
+				<div class="content">
+					<div class="header">CHILD_CREATED</div>
+					<div class="description">Whenever a subject's child is created</div>
+				</div>
+			</div>
+			<div class="item">
+				<i class="lightning icon"></i>
+				<div class="content">
+					<div class="header">ACCESS_POINT_CREATED</div>
+					<div class="description">Whenever an <a target="_blank" href="../access-points#creating-an-access-point">access point</a> is created</div>
+				</div>
+			</div>
+			<div class="item">
+				<i class="lightning icon"></i>
+				<div class="content">
+					<div class="header">DOCUMENT_CREATED</div>
+					<div class="description">Whenever a new document is created</div>
+				</div>
+			</div>
+			<div class="item">
+				<i class="lightning icon"></i>
+				<div class="content">
+					<div class="header">DOCUMENT_MODIFIED</div>
+					<div class="description">Whenever any of a document's properties are modified</div>
+				</div>
+			</div>
+			<div class="item">
+				<i class="lightning icon"></i>
+				<div class="content">
+					<div class="header">DOCUMENT_DELETED</div>
+					<div class="description">Whenever an existing document is deleted</div>
+				</div>
+			</div>
+			<div class="item">
+				<i class="lightning icon"></i>
+				<div class="content">
+					<div class="header">MEMBER_ADDED</div>
+					<div class="description">Whenever a new <a href="../access-points#membership-relation" target="_blank">member</a> is added to a document</div>
+				</div>
+			</div>
+			<div class="item">
+				<i class="lightning icon"></i>
+				<div class="content">
+					<div class="header">MEMBER_REMOVED</div>
+					<div class="description">Whenever an existing <a href="../access-points#membership-relation" target="_blank">member</a> is removed from a document</div>
+				</div>
+			</div>
+		</div>
+		<p>
+			To subscribe to any of these events, the <span class="highlight">documents</span> service as well as the
+			<span class="highlight">PersistedDocument.Class</span> provide three main methods to handle event subscriptions.
+			Such methods are the following:
+		</p>
+
+		<div class="ui bulleted list">
+			<div class="item">
+				<div class="content">
+					<div class="header"><code>on</code></div>
+					<div class="description">Activates a subscription to an event</div>
+				</div>
+			</div>
+			<div class="item">
+				<div class="content">
+					<div class="header"><code>off</code></div>
+					<div class="description">Deactivates the subscription of an event</div>
+				</div>
+			</div>
+			<div class="item">
+				<div class="content">
+					<div class="header"><code>one</code></div>
+					<div class="description">A one time only subscription, once it triggers the specified action it will not trigger it again</div>
+				</div>
+			</div>
+		</div>
+
+		<p>
+			Along with the methods mentioned above, we can make use of the following ones to avoid having to import the <code>Carbon/Messaging/Event</code> enum
+			to state the desired event:
+		</p>
+		<table class="ui collapsed striped compact small celled table">
+			<thead>
+				<tr>
+					<th>Event</th>
+					<th>Return type</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<code>onChildCreated</code><br>
+					</td>
+					<td>
+						<code>ChildCreated.Class</code><br><br>
+						<span>With properties:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code><br>
+						- <code>details</code>:<code>DocumentCreatedDetails.Class</code>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<code>onAccessPointCreated</code><br>
+					</td>
+					<td>
+						<code>AccessPointCreated.Class</code><br><br>
+						<span>With properties:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code><br>
+						- <code>details</code>:<code>DocumentCreatedDetails.Class</code>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<code>onDocumentCreated</code><br>
+					</td>
+					<td>
+						<code>DocumentCreated.Class</code><br><br>
+						<span>With properties:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code><br>
+						- <code>details</code>:<code>DocumentCreatedDetails.Class</code>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<code>onDocumentModified</code><br>
+					</td>
+					<td>
+						<code>DocumentModified.Class</code><br><br>
+						<span>With property:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<code>onDocumentDeleted</code><br>
+					</td>
+					<td>
+						<code>DocumentDeleted.Class</code><br><br>
+						<span>With property:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<code>onMemberAdded</code><br>
+					</td>
+					<td>
+						<code>MemberAdded.Class</code><br><br>
+						<span>With properties:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code><br>
+						- <code>details</code>:<code>MemberAddedDetails.Class</code>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<code>onMemberRemoved</code><br>
+					</td>
+					<td>
+						<code>MemberRemoved.Class</code><br><br>
+						<span>With properties:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code><br>
+						- <code>details</code>:<code>MemberRemovedDetails.Class</code>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>
+			Each one of these methods returns a special object of the type of the event that was triggered.
+			As you can see, every one of them has a property called <code>target</code>, which is basically a <code>pointer</code> to the document originating the event.
+			This property is added to each of the return types because they inherit it from the <code>Carbon/Messaging/Message.Class</code>
+		</p>
+		<p>
+			As you may have noticed, some methods also return a property called <code>details</code>. This property gives you more information
+			of the documents produced by the event. For example, in the cases in which the <code>details</code> properties are of the type
+			<code>DocumentCreatedDetails.Class</code>, it returns an array of pointers of the documents that were created.
+			Something similar occurs with the <code>MemberAddedDetails.Class</code> and <code>MemberDeletedDetails.Class</code>, with the difference
+			that they return the pointers of the members that were added/removed.
+		</p>
+
+		<p>
+			Going back to our example, we have identified the <span class="highlight">clients/</span> document as the <strong>subject</strong>, and now we want
+			to know whenever a client is added to the company. Because the <span class="highlight">clients/</span> document contains all the clients
+			as its <span class="highlight">children</span> and we want to know whenever a client is added, we can portrait this rule by saying:
+			Whenever a <span class="highlight">client</span> (child of <span class="highlight">clients/</span>) is created (<code>CHILD_CREATED</code>),
+			we want to adjust the budget of the company.<br>
+		</p>
+
+	</section>
+	<!-- END: The Event -->
+
+
+	<!-- START: Putting it all together -->
+	<section class="mainContent-subSection">
+		<h3 class="hidden">Putting it all together</h3>
+		<p>With code, this rule would be portraited as:</p>
+
+		<!-- START: Code example defining the subscription to an event -->
+		<tabs>
+			<tab title="TypeScript">
+
+				<pre><code class="typescript">
+					import * as PersistedDocument from "carbonldp/PersistedDocument";
+					import * as Response from "carbonldp/HTTP/Response";
+					import * as ChildCreated from "carbonldp/Messaging/ChildCreated";
+
+					let carbon:Carbon;
+
+					// ... initialize your Carbon object
+
+
+					// Function to execute whenever the event happens
+					function adjustBudget( event:ChildCreated.Class ):void {
+
+						console.log( event.details.createdDocuments.length );
+						console.log( "The budget has been updated" );
+					}
+
+					// Function to execute whenever the event fails
+					function handleError( error:Error ):void { /* ... */ }
+
+					// Retrieve the subject
+					carbon.documents.get( "clients/" ).then(
+						( [ clientsDocument, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
+							// We've retrieved the subject
+							console.log( clientsDocument );
+
+							// Subscribing to CHILD_CREATED event
+							clientsDocument.onChildCreated( adjustBudget, handleError );
+							// It could also be done with clientsDocument.on( Events.CHILD_CREATED, adjustBudget, handleError );
+
+							let newClient:Client = {
+								name: "Nikola",
+								headquarters: "USA"
+							};
+
+							return clientsDocument.createChild( newClient );
+						}
+					).then(
+						( [ persistedClient, response ]:[ Client & PersistedDocument.Class, Response.Class ] ) => {
+
+							// Will print: 1 "The budget has been updated"
+
+							console.log( persistedClient.name ); // "Nikola"
+						}
+					).catch( console.error );
+
+					interface Client {
+						name:string,
+						headquarters:string
+					}
+				</code></pre>
+
+			</tab>
+			<tab title="JavaScript ES2015">
+
+				<pre><code class="javascript">
+					let carbon:Carbon;
+
+					// ... initialize your Carbon object
+
+
+					// Function to execute whenever the event happens
+					function adjustBudget( event ) {
+
+						console.log( event.details.createdDocuments.length );
+						console.log( "The budget has been updated" );
+					}
+
+					// Function to execute whenever the event fails
+					function handleError( error ) { /* ... */ }
+
+					// Retrieve the subject
+					carbon.documents.get( "clients/" ).then(
+						( [ clientsDocument, response ] ) => {
+							// We've retrieved the subject
+							console.log( clientsDocument );
+
+							// Subscribing to CHILD_CREATED event
+							clientsDocument.onChildCreated( adjustBudget, handleError );
+							// It could also be done with clientsDocument.on( Events.CHILD_CREATED, adjustBudget, handleError );
+
+							let newClient = {
+								name: "Nikola",
+								headquarters: "USA"
+							};
+
+							return clientsDocument.createChild( newClient );
+						}
+					).then(
+						( [ persistedClient, response ] ) => {
+
+							// Will print: 1 "The budget has been updated"
+
+							console.log( persistedClient.name ); // "Nikola"
+						}
+					).catch( console.error );
+				</code></pre>
+
+			</tab>
+			<tab title="JavaScript ES5">
+
+				<pre><code class="javascript">
+					var carbon;
+
+					// ... initialize your Carbon object
+
+
+					// Function to execute whenever the event happens
+					function adjustBudget( event ) {
+
+						console.log( event.details.createdDocuments.length );
+						console.log( "The budget has been updated" );
+					}
+
+					// Function to execute whenever the event fails
+					function handleError( error ) { /* ... */ }
+
+					// Retrieve the subject
+					carbon.documents.get( "clients/" ).then(
+						( result ) => {
+
+					        var clientsDocument = result[ 0 ];
+					        var response = result[ 1 ];
+
+							// We've retrieved the subject
+							console.log( clientsDocument );
+
+							// Subscribing to CHILD_CREATED event
+							clientsDocument.onChildCreated( adjustBudget, handleError );
+							// It could also be done with clientsDocument.on( Events.CHILD_CREATED, adjustBudget, handleError );
+
+							var newClient = {
+								name: "Nikola",
+								headquarters: "USA"
+							};
+
+							return clientsDocument.createChild( newClient );
+						}
+					).then(
+						( result ) => {
+
+					        var persistedClient = result[ 0 ];
+					        var response = result[ 1 ];
+
+							// Will print: 1 "The budget has been updated"
+
+							console.log( persistedClient.name ); // "Nikola"
+						}
+					).catch( console.error );
+				</code></pre>
+			</tab>
+		</tabs>
+		<!-- END: Code example defining the subscription to an event -->
+
+		<p>And that's it, we have successfully created two subscriptions to handle events using the <span class="highlight">PersistedDocument.Class</span>.</p>
+
+	</section>
+	<!-- END: Putting it all together -->
+
+
+</section>
+<!-- END: Subscribing -->
+
+
+<!-- START: Using the Documents Service -->
+<section class="mainContent-subSection">
+	<h3 class="hidden">Using the Documents Service</h3>
+	<p>
+		Notice how we managed to create the subscriptions using the <span class="highlight">PersistedDocument.Class</span>.
+	</p>
+	<p>
+		First, we had to retrieve the subject, then identify the events and their respective actions and finally we proceeded to code the subscriptions.
+	</p>
+	<p>
+		Now, suppose that you want to know whenever a <span class="highlight">client</span> signs a contract for a new project so that you can update the company's
+		sales forecast.
+	</p>
+	<p>
+		To do so, you've decided to store every project as a child of a <span class="highlight">client</span>. If we look at the list of
+		<a href="#the-event">available events</a>, someone could say:
+	</p>
+	<p>
+		<i>"Because every project will be a <u>child</u> of a client,
+			perhaps I could subscribe to <code>CHILD_CREATED</code> events for every client"</i> and then proceed to code those subscriptions.
+	</p>
+	<p>
+		Well, this approach introduces a lot of issues because the number of clients will vary and for every client you'll also have to create
+		a subscription, which could easily result in a massive amount of requests just to keep the subscriptions alive. This of course is not efficient aside
+		from also being very cumbersome to maintain. Therefore, it is by no means recommended when developing any application.
+	</p>
+	<p>
+		So, how could we create a subscription that handles that requirement?
+	</p>
+	<p>
+		If we look at the <a href="#subscribing">structure</a> of the example platform, every <span class="highlight">client</span> is a child of
+		<span class="highlight">clients/</span> and because we decided that every <span class="highlight">project</span> will be stored as a child of <span class="highlight">client</span>,
+		this means that every <span class="highlight">project/</span> will be a <i>grandchild</i> of the <span class="highlight">clients/</span> document.
+	</p>
+	<p>
+		If we look again at the list of events, there isn't a <code>GRANDCHILD_CREATED</code> event to subscribe from <span class="highlight">clients/</span>,
+		so how can we detect whenever a grandchild is created?
+	</p>
+	<p>
+		Well, there is another powerful way to create subscriptions with the SDK and is by using the <span class="highlight">documents</span> service.
+	</p>
+	<p>
+		As mentioned in the <a href="#the-event">events</a> section, the <span class="highlight">documents</span> service allows us to use the same methods that
+		<span class="highlight">PersistedDocument.Class</span> provides to subscribe to events. Nevertheless, the difference when using the <span class="highlight">documents</span>
+		service is that it also lets us specify an <a href="https://ant.apache.org/manual/dirtasks.html" target="_blank">Ant pattern</a> to work with hierarchical subscriptions.
+	</p>
+	<p>
+		The patterns that can be used are the following:
+	</p>
+	<table class="ui collapsed striped compact small table">
+		<thead>
+			<tr>
+				<th>Ant pattern</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>*</td>
+				<td>Every children only</td>
+			</tr>
+			<tr>
+				<td>**</td>
+				<td>Every children or children of the children and so on...</td>
+			</tr>
+		</tbody>
+	</table>
+	<p>
+		Typically, <a href="https://ant.apache.org/manual/dirtasks.html" target="_blank">Ant patterns</a> allow us to search for something in a given directory (*) or in any sub-level of a directory (**). However, with Carbon they
+		are being used with subscriptions to specify <span class="highlight">document</span>s to subscribe to.
+		Therefore, the patterns allow us to subscribe to whatever happens in a given <span class="highlight">document</span> (*) or in any sub-level of that <span class="highlight">document</span> (**).
+		With that in mind, now we can create the subscriptions to meet the requirement successfully:
+	</p>
+
+	<!-- START: Code example defining the subscription to an event using the documents service -->
+	<tabs>
+		<tab title="TypeScript">
+
+				<pre><code class="typescript">
+					import * as PersistedDocument from "carbonldp/PersistedDocument";
+					import * as Response from "carbonldp/HTTP/Response";
+					import * as ChildCreated from "carbonldp/Messaging/ChildCreated";
+					import { Event } from "carbonldp/Messaging/Event";
+
+
+					let carbon:Carbon;
+
+					// ... initialize your Carbon object
+
+					// Function to execute whenever the event happens
+					function adjustBudget( event:ChildCreated.Class ):void {
+
+						console.log( event.details.createdDocuments.length );
+						console.log( "The budget has been updated" );
+					}
+
+					// Function to execute whenever a project of a client is created
+					function updateSalesForecast( event:ChildCreated.Class ):void {
+
+						console.log( event.details.createdDocuments.length );
+						console.log( "The Sales forecast has been updated" );
+					}
+
+					// Function to execute whenever the event fails
+					function handleError( error:Error ):void { /* ... */ }
+
+
+					// Retrieve the subject
+					carbon.documents.get( "clients/" ).then(
+						( [ clientsDocument, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
+							// We've retrieved the subject
+							console.log( clientsDocument );
+
+							// Subscribing to CHILD_CREATED event
+							clientsDocument.onChildCreated( adjustBudget );
+							// It could also be done with clientsDocument.on( Events.CHILD_CREATED, adjustBudget, handleError );
+
+							// Subscribing to CHILD_CREATED event of every client
+							carbon.documents.on( Event.CHILD_CREATED, "clients/*", updateSalesForecast, handleError );
+
+
+							let newClient:Client = {
+								name: "Nikola",
+								headquarters: "USA"
+							};
+
+							// Persist the client to trigger the adjustBudget subscription
+							return clientsDocument.createChild( newClient );
+						}
+					).then(
+						( [ persistedClient, response ]:[ Client & PersistedDocument.Class, Response.Class ] ) => {
+
+							// Will print: 1 "The budget has been updated"
+
+							console.log( persistedClient.name ); // "Nikola"
+
+							let project:Project = {
+								name: "Brand Renovation",
+								duration: "90 days"
+							};
+
+							// Persist the project to trigger the updateSalesForecast subscription
+							return persistedClient.createChild( project );
+						}
+					).then(
+						( [ persistedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
+
+							// Will print: 1 "The Sales forecast has been updated"
+
+							console.log( persistedProject.name ); // "Brand Renovation"
+							console.log( persistedProject.duration ); // "90 days"
+						}
+					).catch( console.error );
+
+					interface Client {
+						name:string,
+						headquarters:string
+					}
+
+					interface Project {
+						name:string,
+						duration:string
+					}
+				</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES2015">
+
+				<pre><code class="javascript">
+					import { Event } from "carbonldp/Messaging/Event";
+
+
+					let carbon;
+
+					// ... initialize your Carbon object
+
+					// Function to execute whenever the event happens
+					function adjustBudget( event ) {
+
+						console.log( event.details.createdDocuments.length );
+						console.log( "The budget has been updated" );
+					}
+
+					// Function to execute whenever a project of a client is created
+					function updateSalesForecast( event ) {
+
+						console.log( event.details.createdDocuments.length );
+						console.log( "The Sales forecast has been updated" );
+					}
+
+					// Function to execute whenever the event fails
+					function handleError( error ) { /* ... */ }
+
+
+					// Retrieve the subject
+					carbon.documents.get( "clients/" ).then(
+						( [ clientsDocument, response ] ) => {
+							// We've retrieved the subject
+							console.log( clientsDocument );
+
+							// Subscribing to CHILD_CREATED event
+							clientsDocument.onChildCreated( adjustBudget );
+							// It could also be done with clientsDocument.on( Events.CHILD_CREATED, adjustBudget, handleError );
+
+							// Subscribing to CHILD_CREATED event of every client
+							carbon.documents.on( Event.CHILD_CREATED, "clients/*", updateSalesForecast, handleError );
+
+
+							let newClient = {
+								name: "Nikola",
+								headquarters: "USA"
+							};
+
+							// Persist the client to trigger the adjustBudget subscription
+							return clientsDocument.createChild( newClient );
+						}
+					).then(
+						( [ persistedClient, response ] ) => {
+
+							// Will print: 1 "The budget has been updated"
+
+							console.log( persistedClient.name ); // "Nikola"
+
+							let project = {
+								name: "Brand Renovation",
+								duration: "90 days"
+							};
+
+							// Persist the project to trigger the updateSalesForecast subscription
+							return persistedClient.createChild( project );
+						}
+					).then(
+						( [ persistedProject, response ] ) => {
+
+							// Will print: 1 "The Sales forecast has been updated"
+
+							console.log( persistedProject.name ); // "Brand Renovation"
+							console.log( persistedProject.duration ); // "90 days"
+						}
+					).catch( console.error );
+				</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES5">
+
+				<pre><code class="javascript">
+					var carbon;
+
+					// ... initialize your Carbon object
+
+					// Function to execute whenever the event happens
+					function adjustBudget( event ) {
+
+						console.log( event.details.createdDocuments.length );
+						console.log( "The budget has been updated" );
+					}
+
+					// Function to execute whenever a project of a client is created
+					function updateSalesForecast( event ) {
+
+						console.log( event.details.createdDocuments.length );
+						console.log( "The Sales forecast has been updated" );
+					}
+
+					// Function to execute whenever the event fails
+					function handleError( error ) { /* ... */ }
+
+
+					// Retrieve the subject
+					carbon.documents.get( "clients/" ).then(
+						( result ) => {
+
+							var clientsDocument = result[ 0 ];
+							var response = result[ 1 ];
+
+
+							// We've retrieved the subject
+							console.log( clientsDocument );
+
+							// Subscribing to CHILD_CREATED event
+							clientsDocument.onChildCreated( adjustBudget );
+							// It could also be done with clientsDocument.on( Events.CHILD_CREATED, adjustBudget, handleError );
+
+							// Subscribing to CHILD_CREATED event of every client
+							carbon.documents.on( Carbon.Messaging.Event.CHILD_CREATED, "clients/*", updateSalesForecast, handleError );
+
+
+							let newClient = {
+								name: "Nikola",
+								headquarters: "USA"
+							};
+
+							// Persist the client to trigger the adjustBudget subscription
+							return clientsDocument.createChild( newClient );
+						}
+					).then(
+						( result ) => {
+
+							var persistedClient = result[ 0 ];
+							var response = result[ 1 ];
+
+
+							// Will print: 1 "The budget has been updated"
+
+							console.log( persistedClient.name ); // "Nikola"
+
+							let project = {
+								name: "Brand Renovation",
+								duration: "90 days"
+							};
+
+							// Persist the project to trigger the updateSalesForecast subscription
+							return persistedClient.createChild( project );
+						}
+					).then(
+						( result ) => {
+
+							var persistedProject = result[ 0 ];
+							var response = result[ 1 ];
+
+
+							// Will print: 1 "The Sales forecast has been updated"
+
+							console.log( persistedProject.name ); // "Brand Renovation"
+							console.log( persistedProject.duration ); // "90 days"
+						}
+					).catch( console.error );
+				</code></pre>
+		</tab>
+	</tabs>
+	<!-- END: Code example defining the subscription to an event using the documents service -->
+
+</section>
+<!-- END: Using the Documents Service -->
+
+
+<!-- START: Messaging Service -->
+<section class="mainContent-subSection">
+	<h3 class="hidden">Messaging Service</h3>
+	<p>
+		We just saw how to subscribe to an event and execute a function depending on the event we subscribed to.
+	</p>
+	<p>
+		If you noticed, we didn't have to configure anything to actively check for events that occurred in the platform, we just had
+		to code our desired subscriptions and that was it.
+		So, how did the SDK know an event happened in the platform?
+	</p>
+	<p>
+		Well, the platform provides an endpoint which the SDK actively queries to verify whenever a subscription
+		has occurred, that endpoint is <span class="highlight">http://your-platform-instance:8080/broker/</span>.The class in charge to establish connections to that endpoint is the <code>Carbon.Messaging.Service</code>, which
+		provides the following methods to handle the connection:
+	</p>
+	<div class="ui bulleted list">
+
+		<div class="item">
+			<div class="content">
+				<div class="header"><code>setOptions</code></div>
+				<div class="description">You can specify the maxReconnectAttempts (10 attemps), and the reconnectDelay (1000ms) when a connection fails</div>
+			</div>
+		</div>
+
+		<div class="item">
+			<div class="content">
+				<div class="header"><code>connect</code></div>
+				<div class="description">Connects the service to the platform messaging broker. If the service is already connected, an error will be thrown.</div>
+			</div>
+		</div>
+
+		<div class="item">
+			<div class="content">
+				<div class="header"><code>reconnect</code></div>
+				<div class="description">Reconnects the service to the Platform broker. If the service is already connected, it will be closed and opened again.</div>
+			</div>
+		</div>
+
+	</div>
+
+
+	<p>
+		Whenever you subscribe to an event, if you haven't called the <code>connect</code> or <code>reconnect</code> methods, the SDK will automatically
+		connect to the <span class="highlight">broker/</span> endpoint and will actively poll that connection. That gives you the flexibility to just dive into
+		coding the subscriptions without worrying about opening and closing connections.
+	</p>
+	<p>
+		If you ever want to change the default options -maxReconnectAttempts (10 attemps), -reconnectDelay (1000ms) of the connection, you can do so whenever you want,
+		even if the service is already connected.
+	</p>
+</section>
+<!-- END: Messaging Service -->
+
+
+<!-- START: Conclusion -->
+<section class="mainContent-section">
+	<h2>Conclusion</h2>
+	<p>
+		The SDK immediately notifies you whenever an event occurs thanks to subscriptions.
+	</p>
+	<p>
+		A subscription is formed of a <u>subject</u> (<span class="highlight">document</span>), an <u>event</u> and an <u>action</u> to trigger when the event occurs.
+	</p>
+	<p>
+		A subscription can be created using the <code>on</code> method of the <span class="highlight">PersistedDocument.Class</span> or the <span class="highlight">documents</span> service.
+	</p>
+	<p>
+		The difference between using the <span class="highlight">PersistedDocument.Class</span> or the <span class="highlight">documents</span> service is that the <span class="highlight">documents</span> service
+		lets you specify <a href="https://ant.apache.org/manual/dirtasks.html" target="_blank">Ant patterns</a> to subscribe to multiple levels of an endpoint whereas the
+		<span class="highlight">PersistedDocument.Class</span> doesn't.
+	</p>
+	<p>
+		The <code>Carbon.Messaging.Service</code> is the responsible of handling the connections to the <span class="highlight">broker/</span> endpoint of the platform and with it, you can configure
+		the maxReconnectAttempts and the reconnectDelay of the active connection to that endpoint.
+	</p>
+</section>
+<!-- END: Conclusion -->
