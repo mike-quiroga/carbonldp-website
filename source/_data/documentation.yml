@@ -105,18 +105,21 @@ versions:
         documents:
           - title: Getting started
             link: getting-started
-            description: Not yet documented
+            description: Guide to get you started on how to interact directly with the Carbon LDP platform's REST API.
           - title: Object model
             link: object-model
             description: Not yet documented
-          - title: Interaction models
-            link: interaction-models
+          - title: Documents
+            link: documents
+            description: Guide to get you working with Carbon documents over HTTP.
+          - title: Access Points
+            link: access-points
             description: Not yet documented
-          - title: Containers
-            link: containers
+          - title: Querying
+            link: querying
             description: Not yet documented
-          - title: RDF Source
-            link: rdf-source
+          - title: Real-time capabilities
+            link: real-time
             description: Not yet documented
       - title: JavaScript SDK
         description: The JavaScript Software Development Kit, available from the npm package manager, allows you to manage RDF data using familiar JavaScript and TypeScript programming techniques and tools. Build for execution within a web browser or Node.js.
