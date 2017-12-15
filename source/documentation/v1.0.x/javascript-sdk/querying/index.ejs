@@ -39,7 +39,8 @@ version: v1.0.x
 
 	<p>Carbon LDP resources can be queried using <a href="https://www.w3.org/TR/sparql11-query/">SPARQL</a>, a W3C standard query language.</p>
 
-	<p>SPARQL has <em>some</em> similarities to SQL, the Structured Query Language for relational databases, but there are also fundamental differences.
+	<p>
+		SPARQL has <em>some</em> similarities to SQL, the Structured Query Language for relational databases, but there are also fundamental differences.
 		The main difference with SPARQL is that, instead of filtering results to get a desired outcome (like in SQL),
 		you apply <strong>patterns</strong> that are tested over the data to retrieve results. These patterns are given along with <strong>query form</strong> to define the shape of the results.
 	</p>
@@ -1297,24 +1298,594 @@ version: v1.0.x
 		</tabs>
 	</section>
 
+</section>
+
+<section class="mainContent-section">
+	<h2>Using the documents service</h2>
+
+	<p>
+		Another powerful way of creating queries is by using the <code>documents</code> service, particularly the <code>documents.get</code> method of such service.
+	</p>
+
+	<h4>Example</h4>
+	<p>Let's assume we have the following objects stored in our platform as children of <code>http://localhost:8083/clients/</code>:</p>
+	<pre><code class="typescript">
+				[
+					{
+						// Document URI
+						"@id": "http://localhost:8083/clients/rpa/",
+						// Types of the document
+						"@types":[ "http://localhost:8083/vocabulary/#Client" ]
+
+						// Properties
+						name: "Real Psychology Association",
+						countryOfOrigin: "France",
+						foundationYear: 1990,
+						numberOfEmployees: 150,
+					},
+					{
+						// Document URI
+						"@id": "http://localhost:8083/clients/peoplestruck/",
+						// Types of the document
+						"@types":[ "http://localhost:8083/vocabulary/#Client" ]
+
+						// Properties
+						name: "Peoplestruck",
+						countryOfOrigin: "Germany",
+						foundationYear: 1945,
+						numberOfEmployees: 25000,
+					},
+					{
+						// Document URI
+						"@id": "http://localhost:8083/clients/rivi/",
+						// Types of the document
+						"@types":[ "http://localhost:8083/vocabulary/#Client" ]
+
+						// Properties
+						name: "Remote Island Vehicular Institute",
+						countryOfOrigin: "United States",
+						foundationYear: 2001,
+						numberOfEmployees: 100,
+					}
+				];
+	</code></pre>
+	<p>With this in mind, let's use the <code>documents.get</code> to normally retrieve a document.</p>
+
 	<section class="mainContent-section">
-		<h2>Conclusion</h2>
+		<h3>Getting a document</h3>
 
-		<p>In this guide, we've demonstrated two alternative ways to query with SPARQL using the SDK:</p>
+		<p>
+			To retrieve a <i>document containing all of its properties</i>, we have to use the <code>documents.get</code> method.<br>
+			For example purposes, let's retrieve the <code>http://localhost:8083/clients/rivi/</code> document, like this:
+		</p>
 
-		<ul>
-			<li>Using the <strong>SPARQL Query Builder</strong> (a.k.a. SPARQLER) - a fluent chain of methods assembled in a dot-notation to build up a query.</li>
-			<li>Using <strong>SPARQL Services</strong> - methods that accept a standard SPARQL query string passed in a parameter to the method.</li>
-		</ul>
+		<tabs>
+			<tab title="TypeScript">
+			<pre><code class="typescript">
+				import * as HTTP from "carbonldp/HTTP";
+				import * as PersistedDocument from "carbonldp/PersistedDocument";
 
-		<p>We also provided an overview, with code examples, for the different query forms <code>SELECT</code>, <code>ASK</code>, <code>CONSTRUCT</code>, <code>DESCRIBE</code>, and <code>UPDATE</code>.</p>
+				let carbon:Carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.get( "clients/rivi/" ).then( ( [ client, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
+
+					console.log( client );
+					// countryOfOrigin:"United States"
+					// created: Wed Nov 15 2017 19:05:21 GMT-0600 (CST) {}
+					// foundationYear: 2001
+					// hasMemberRelation: {_id: "http://www.w3.org/ns/ldp#member", _resolved: false, isResolved: ƒ, resolve: ƒ}
+					// insertedContentRelation: {_id: "http://www.w3.org/ns/ldp#MemberSubject", _resolved: false, isResolved: ƒ, resolve: ƒ}
+					// membershipResource: {name: "Remote Island Vehicular Institute", countryOfOrigin: "United States", foundationYear: 2001, numberOfEmployees: 100, hasMemberRelation: {…}, …}
+					// modified: Wed Nov 15 2017 19:05:21 GMT-0600 (CST) {}
+					// name: "Remote Island Vehicular Institute"
+					// numberOfEmployees: 100
+					// Other inherited properties ...
+
+				} );
+			</code></pre>
+			</tab>
+			<tab title="JavaScript ES2015">
+			<pre><code class="javascript">
+				let carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", `
+					BASE     &lt;http://localhost:8083/>
+					DESCRIBE &lt;projects/project-01/>
+				` )
+					.then( ( [ result, response ] ) => {
+						// ... process the result JSON-LD string
+					} )
+					;
+				</code></pre>
+			</tab>
+			<tab title="JavaScript ES5">
+			<pre><code class="javascript">
+				var carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", "" +
+					"BASE     &lt;http://localhost:8083/>" +
+					"DESCRIBE &lt;projects/project-01/>"
+				)
+					.then( function( [ result, response ] ) {
+						// ... process the result JSON-LD string
+					} )
+					;
+			</code></pre>
+			</tab>
+		</tabs>
+
+		<p>
+			With the previous example, we retrieved a simple document and printed all of its properties.
+			Now, imagine that instead of all the properties, you only want the <i>name of the company</i> and the <i>number of employees</i> this company has.
+			How would you do that?
+		</p>
+		<p>Well this is where querying comes into play.</p>
 
 	</section>
+
+
+	<section class="mainContent-section">
+		<h3>Querying properties of a document</h3>
+
+		<p>
+			To get a document with only some desired properties, a <i>query function</i> defining the desired properties should be passed to the <code>documents.get</code> method.<br>
+		</p>
+
+
+		<tabs>
+			<tab title="TypeScript">
+			<pre><code class="typescript">
+				import * as HTTP from "carbonldp/HTTP";
+				import * as PersistedDocument from "carbonldp/PersistedDocument";
+
+				let carbon:Carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.get( "clients/rivi/", _ => {   // Function defining the desired properties
+					return _.properties( {
+						"name": _.inherit,
+						"numberOfEmployees": _.inherit
+					} );
+				} ).then( ( [ client, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
+
+					console.log( client );
+					// name: "Remote Island Vehicular Institute"
+					// numberOfEmployees: 100
+					// Other inherited properties ...
+
+				} );
+			</code></pre>
+			</tab>
+			<tab title="JavaScript ES2015">
+			<pre><code class="javascript">
+				let carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", `
+					BASE     &lt;http://localhost:8083/>
+					DESCRIBE &lt;projects/project-01/>
+				` )
+					.then( ( [ result, response ] ) => {
+						// ... process the result JSON-LD string
+					} )
+					;
+				</code></pre>
+			</tab>
+			<tab title="JavaScript ES5">
+			<pre><code class="javascript">
+				var carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", "" +
+					"BASE     &lt;http://localhost:8083/>" +
+					"DESCRIBE &lt;projects/project-01/>"
+				)
+					.then( function( [ result, response ] ) {
+						// ... process the result JSON-LD string
+					} )
+					;
+			</code></pre>
+			</tab>
+		</tabs>
+
+		<p>
+			What we did was to use a function that returns a <code>QueryDocumentBuilder</code> object, which lets us construct a query with the desired properties
+			by using the <code>properties</code> function.
+			<!--But this helper function can also let us retrieve -->
+		</p>
+
+	</section>
+
+
+	<section class="mainContent-subSection">
+		<h3>The query function</h3>
+
+		<p>Take a look again at the function passed to the <code>get</code> method and let's break down its structure by parts:</p>
+
+		<pre><code class="typescript">
+				...
+				carbon.documents.get( "clients/rivi/", _ => {   // Function defining the desired properties
+					return _.properties( {
+						"name": _.inherit,
+						"numberOfEmployees": _.inherit
+					} );
+				} )
+				...
+		</code></pre>
+
+		<div class="ui ordered list">
+			<div class="item">
+				<div class="content">
+					<div class="header">It's an anonymous function</div>
+					<div class="description">
+						It's an <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/function" target="_blank">anonymous function</a> that returns
+						the result of calling the <span class="highlight">properties</span> function of the <span class="highlight">_</span> variable.
+					</div>
+				</div>
+			</div>
+			<div class="item">
+				<div class="content">
+					<div class="header">The underscore <span class="highlight">_</span> variable</div>
+					<div class="description">
+						<p>
+							This is just the name suggested for the function's parameter that will help us build the query, feel free to use
+							whichever name suits you better.
+							This variable is a <code>QueryDocumentBuilder</code> type of object that, when used with the <code>get</code> method, let's us specify the
+							<code>properties</code> to get from the document.
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="item">
+				<div class="content">
+					<div class="header">The <code>_.inherit</code> property</div>
+					<div class="description">
+						<p>
+							To build a query in order to get the desired properties of a document, we have to list them through the <code>_.properties</code> function.
+							Because what we are passing is an object with the desired properties, we must assign a value to each property, and since
+							we do not know/nor care for the values of the properties because we just want them, the <code>_.inherit</code> instruction let's us
+							do exactly that.<br>
+							In other words, the <code>_.inherit</code> property it's another way of saying "I want property 'X' but I don't
+							care/know which value or type that property has, just retrieve it".
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</section>
+
+
+	<section class="mainContent-subSection">
+		<h3>Getting a document with a type</h3>
+
+		<div class="ui info icon message">
+			<i class="info circle icon"></i>
+			<div class="content">
+				<p>
+					If you have not worked with object schemas before or have no idea of what they are, please refer to the
+					<a href="../object-schema#what-is-an-object-schema-" target="_blank">What is an object schema?</a>
+					section to better understand the use of types while querying.
+				</p>
+			</div>
+		</div>
+
+		<p>
+			Carbon stores all of its documents with a property called <span class="highlight">@types</span>.
+			This property allows the platform to identify the way to interact with the documents (as a document or as a container) while also allowing us to
+			better organize our information to avoid name collisions by using the SDK's <a href="../object-schema#object-types" target="_blank">object schema's types </a>.
+		</p>
+
+		<p>
+			When querying, you can make use of this property to improve your query performance by using the <code>_.withType</code> function before the
+			<code>properties</code> function call, like this:
+		</p>
+
+		<tabs>
+			<tab title="TypeScript">
+			<pre><code class="typescript">
+				import * as HTTP from "carbonldp/HTTP";
+				import * as PersistedDocument from "carbonldp/PersistedDocument";
+
+				let carbon:Carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.get( "clients/rivi/", _ => {   // Function defining the desired properties
+					return _.withType( "Client" )
+						.properties( {
+							"name": _.inherit,
+							"numberOfEmployees": _.inherit
+						} );
+				} ).then( ( [ client, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
+
+					console.log( client );
+					// name: "Remote Island Vehicular Institute"
+					// numberOfEmployees: 100
+					// Other inherited properties ...
+
+				} );
+			</code></pre>
+			</tab>
+			<tab title="JavaScript ES2015">
+			<pre><code class="javascript">
+				let carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", `
+					BASE     &lt;http://localhost:8083/>
+					DESCRIBE &lt;projects/project-01/>
+				` )
+					.then( ( [ result, response ] ) => {
+						// ... process the result JSON-LD string
+					} )
+					;
+				</code></pre>
+			</tab>
+			<tab title="JavaScript ES5">
+			<pre><code class="javascript">
+				var carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", "" +
+					"BASE     &lt;http://localhost:8083/>" +
+					"DESCRIBE &lt;projects/project-01/>"
+				)
+					.then( function( [ result, response ] ) {
+						// ... process the result JSON-LD string
+					} )
+					;
+			</code></pre>
+			</tab>
+		</tabs>
+
+		<p>
+			By doing this, we facilitate the SDK's objects types inferring by saving time checking all the existing object schemas to find the
+			type of value that each property will have. All of this while also building efficient queries by calling just the desired properties,
+			which allows us to save time and data consumed by each call.
+		</p>
+
+	</section>
+
+
+	<section class="mainContent-subSection">
+		<h3>Getting the children of a container</h3>
+
+		<p>
+			Until here, we've just talked about two things: retrieving a <span class="highlight">document</span> with all of its properties and retrieving a document with some properties.<br>
+		</p>
+		<p>
+			The SDK also allows us to get all the existing children from a single call by using the <code>getChildren</code> function.<br>
+			When using this function, an array of all the existing direct children with all of their properties will be returned.
+		</p>
+		<p>You can see this in the following code:</p>
+
+		<tabs>
+			<tab title="TypeScript">
+			<pre><code class="typescript">
+				import * as HTTP from "carbonldp/HTTP";
+				import * as PersistedDocument from "carbonldp/PersistedDocument";
+
+				let carbon:Carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.getChildren( "clients/" ).then( ( [ clients, response ]:[ PersistedDocument.Class[], HTTP.Response.Class ] ) => {
+
+					console.log( clients );
+					// (3) [{…}, {…}, {…}]
+					//	0:{_id: "http://localhost:8083/clients/peopletrucks/", _resolved: true, isResolved: ƒ, resolve: ƒ, …}
+					//	1:{_id: "http://localhost:8083/clients/rivi/", _resolved: true, isResolved: ƒ, resolve: ƒ, …}
+					//	2:{_id: "http://localhost:8083/clients/rpa/", _resolved: true, isResolved: ƒ, resolve: ƒ, …}
+
+				} );
+			</code></pre>
+			</tab>
+			<tab title="JavaScript ES2015">
+			<pre><code class="javascript">
+				let carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", `
+					BASE     &lt;http://localhost:8083/>
+					DESCRIBE &lt;projects/project-01/>
+				` )
+					.then( ( [ result, response ] ) => {
+						// ... process the result JSON-LD string
+					} )
+					;
+				</code></pre>
+			</tab>
+			<tab title="JavaScript ES5">
+			<pre><code class="javascript">
+				var carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", "" +
+					"BASE     &lt;http://localhost:8083/>" +
+					"DESCRIBE &lt;projects/project-01/>"
+				)
+					.then( function( [ result, response ] ) {
+						// ... process the result JSON-LD string
+					} )
+					;
+			</code></pre>
+			</tab>
+		</tabs>
+
+		<p>
+			Until here, nothing new has happened. We just retrieved all the children of the <span class="highlight">clients/</span> container and printed them.
+			But <code>getChildren</code> also allows us to pass a query to be applied when retrieving the children, allowing us to fetch only some properties of each one of them
+			or even applying complex queries, like getting documents matching a filtering criteria, e.g. All the clients with number of employees greater than X, etc...
+		</p>
+		<p>
+			Let's use the <code>getChildren</code> querying functionality to fetch the <u>name of the company</u> and the <u>amount of employees</u> of those companies with
+			<u>more than 100 employees</u>. In code, this requirement will be portrayed like this:
+		</p>
+
+		<tabs>
+			<tab title="TypeScript">
+			<pre><code class="typescript">
+				import * as HTTP from "carbonldp/HTTP";
+				import * as PersistedDocument from "carbonldp/PersistedDocument";
+
+				let carbon:Carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.getChildren( "clients/", _ => {
+					return _.withType( "Client" )
+						.properties( {
+							"name": _.inherit,
+							"numberOfEmployees": _.inherit
+						} ).filter( `${ _.property( "numberOfEmployees" ) } > ${ _.value( 100 ) }` )
+				} ).then( ( [ clients, response ]:[ PersistedDocument.Class[], HTTP.Response.Class ] ) => {
+
+					console.log( clients );
+					//	(2) [{…}, {…}]
+					//  0: {numberOfEmployees: 25000, _id: "http://localhost:8083/clients/peopletrucks/", _resolved: true, isResolved: ƒ, …}
+					//  1: {numberOfEmployees: 150, _id: "http://localhost:8083/clients/rpa/", _resolved: true, isResolved: ƒ, …}
+
+					console.log( clients.length ); // 2
+
+				} ).catch( ( error ) => {
+					console.error( error );
+				} );
+			</code></pre>
+			</tab>
+			<tab title="JavaScript ES2015">
+			<pre><code class="javascript">
+				let carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", `
+					BASE     &lt;http://localhost:8083/>
+					DESCRIBE &lt;projects/project-01/>
+				` )
+					.then( ( [ result, response ] ) => {
+						// ... process the result JSON-LD string
+					} )
+					;
+				</code></pre>
+			</tab>
+			<tab title="JavaScript ES5">
+			<pre><code class="javascript">
+				var carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", "" +
+					"BASE     &lt;http://localhost:8083/>" +
+					"DESCRIBE &lt;projects/project-01/>"
+				)
+					.then( function( [ result, response ] ) {
+						// ... process the result JSON-LD string
+					} )
+					;
+			</code></pre>
+			</tab>
+		</tabs>
+
+		<p>
+			Now, let's take a closer look to the query function that we passed to the <code>getChildren</code> method.
+		</p>
+
+		<pre><code class="typescript">
+				...
+				carbon.documents.getChildren( "clients/", _ => {
+					return _.withType( "Client" )
+						.properties( {
+							"name": _.inherit,
+							"numberOfEmployees": _.inherit
+						} ).filter( `${ _.property( "numberOfEmployees" ) } > ${ _.value( 100 ) }` )
+				} )
+				...
+		</code></pre>
+
+		It's pretty similar to the query function we used before but, with the difference that in this case, we did three
+		things:
+		<ol>
+			<li>
+				<strong>Set the type</strong>: we used the <code>.withType</code> function to easily match the properties when the SDK builds the JavaScript object.
+			</li>
+			<li>
+				<strong>Defined desired properties</strong>: we used the <code>.properties</code> function to state the two properties we wanted,
+				<span class="highlight">name</span> and <span class="highlight">numberOfEmployees</span>.
+			</li>
+			<li>
+				<strong>Set a filter</strong>: we used the <code>.filter</code> function with a string containing the filter criteria.
+				This filter is a string concatenating the result of calling <code>property</code> and the <code>value</code> functions.
+			</li>
+		</ol>
+
+		<p>
+			Notice how in the <code>filter</code> section of the query, we made use of the <code>property</code> and the <code>value</code> functions.
+			These two functions come from the <code>QueryDocumentBuilder</code> class, and they can only be used when applying filters when creating the querying
+			function.
+		</p>
+
+	</section>
+</section>
+
+<section class="mainContent-section">
+	<h2>Conclusion</h2>
+
+	<p>In this guide, we've demonstrated two alternative ways to query with SPARQL using the SDK:</p>
+
+	<ul>
+		<li>Using the <strong>SPARQL Query Builder</strong> (a.k.a. SPARQLER) - a fluent chain of methods assembled in a dot-notation to build up a query.</li>
+		<li>Using <strong>SPARQL Services</strong> - methods that accept a standard SPARQL query string passed in a parameter to the method.</li>
+	</ul>
+
+	<p>We also provided an overview, with code examples, for the different query forms <code>SELECT</code>, <code>ASK</code>, <code>CONSTRUCT</code>, <code>DESCRIBE</code>, and <code>UPDATE</code>.</p>
 
 </section>
 
 <div class="ui section divider"></div>
-
 
 
 <h3>Want to know more?</h3>
