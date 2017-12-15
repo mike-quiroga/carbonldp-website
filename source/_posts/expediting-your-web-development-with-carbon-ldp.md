@@ -17,9 +17,9 @@ When providing a full stack solution, developers must build a back-end layer own
 4. Build a front-end service layer to consume said API
 5. Build the user interfaces using the service layer
 
-Steps one through three make up the back-end work required of web developers during these projects. This means that only then – after they completed these steps - can they now start to code the front-end (customer facing) side of the solution.
+The first three steps make up the back-end work required of web developers during these projects. This means that only then – after they've completed these steps - can they now start to code the front-end.
 
-But what happens when the time-consuming database schema requires a change? For example, a new requirement pops up during one of the client meetings (which is a common aspect of agile methodologies) or a problem in your initial design is found. These problems would require the developer to start at the beginning once again to modify the database structure, re-build the database, expose the changes through the API and code the front-end service to consume the API. And what happens when another change pops up? Rinse and repeat.
+But what happens when the time-consuming database schema requires a change? For example, a new requirement emerges during one of the client meetings (which is a common aspect of agile methodologies) or a problem in your initial design is found. These problems would require the developer to start at the beginning once again to modify the database structure, re-build the database, expose the changes through the API and code the front-end service to consume the API. And what happens when another change pops up? Rinse and repeat.
 
 As you may have noticed, this consumes a lot of time and effort from both parties, the back-end and the front-end side of the web development area. This can be problematic if you don't have a lot of resources to dedicate to the back-end tasks.
 
@@ -28,7 +28,7 @@ Carbon LDP was designed to provide a schema-less database that also comes with a
 > *This means that whenever you require a database modification, you just add/remove the properties in the database, without having to go through steps one through three again.*
 > *No more rinse and repeat!*
 
-Another potential issue that Carbon LDP tackles are the risk of writing a non-compliant/standardized RESTful API by less experienced back-end developers. This is possible because Carbon strictly adheres to the W3C's HTTP Method Definitions guidelines, meaning that you will no longer face the risk of providing an API that may not be complying with a worldwide standard.
+Another potential issue that Carbon LDP tackles are the risk of writing a non-compliant/standardized RESTful API by less experienced back-end developers. This is possible because Carbon strictly adheres to the [W3C's HTTP Method Definitions guidelines](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html), meaning that you will no longer face the risk of providing an API that may not be complying with a worldwide standard.
 
 Using Carbon LDP means that you would only have to do the following when creating a Web app:
 
@@ -45,5 +45,5 @@ Further, Carbon LDP is a semantic linked-data platform. Stored data can easily b
 
 Carbon LDP will save a lot of time and effort with cumbersome development tasks. Now there is more time for the developer to focus on providing a well-developed application that the client and end-user will love!
 
-Want to learn more about Carbon? [Contact Base22 here](https://base22.com/wps/portal/base22/contact/contact), or just **[get started](https://carbonldp.com/documentation/v1.0.x/quick-start-guide/)** with Carbon right now!
+Want to learn more about Carbon? [Contact us here](https://base22.com/wps/portal/base22/contact/contact), or just **[get started](https://carbonldp.com/documentation/v1.0.x/quick-start-guide/)** with Carbon right now!
 
