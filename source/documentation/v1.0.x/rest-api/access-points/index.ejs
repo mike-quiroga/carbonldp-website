@@ -267,12 +267,12 @@ version: v1.0.x
 			</div>
 			<div class="active content">
 				<p>
-					The <code>Prefer</code> header uses a link relation to specify the <em>interaction model</em> of the target resource. When you issue a request, you are targeting a specific resource where your request will be applied; in this case the root (<code>/</code>) resource.
-					By specifying its interaction model, we're defining how we want the root resource to behave.
+					The <code>Prefer</code> header uses a link relation to specify the <em>interaction model</em> of the target resource. When you issue a request, you are targeting a specific resource where your request will be applied; in this case the <code>project-x/</code> resource.
+					By specifying its interaction model, we're defining how we want this resource to behave.
 				</p>
 				<p>
-					In Carbon LDP resources can behave as either Documents (<code>RDFSource</code>) or Containers. When you're creating a document, you want the target resource to interact as a <code>Container</code>.
-					Because we're adding a member resource to the container, we need it to behave like a container as opposed to an <code>RDFSource</code>.
+					In Carbon LDP resources can behave as either Documents (<code>RDFSource</code>) or Containers. When you're creating an access point, you want the target resource to interact as an <code>RDFSource</code>.
+					Because we're adding an access point resource to the document, we need it to behave like a document as opposed to a <code>Container</code>.
 					Carbon supports the following interaction model values for the <code>Prefer</code> header:
 				</p>
 				<ul>
@@ -357,6 +357,362 @@ version: v1.0.x
 </section>
 <!-- END: Create an Access Point -->
 
+<!-- START: Member management -->
+<section class="mainContent-section">
+	<h2 class="ui header">Member management</h2>
+	<p>
+		Once you have created an access point, Carbon LDP let's you add and remove members to it. It is important that you remember that these changes will be reflected in the document to which the access point belongs to (<code>ldp:membershipResource</code>). Within this section we will review examples
+		on how to either add or remove members from your access point documents. To achieve this, Carbon LDP implements two methods that execute via REST requests in the platform:
+	</p>
+	<ul>
+		<li><code>https://carbonldp.com/ns/v1/platform#AddMemberAction</code></li>
+		<li><code>https://carbonldp.com/ns/v1/platform#RemoveMemberAction</code></li>
+	</ul>
+
+	<p>Let's see how you can access both of these methods through REST requests.</p>
+
+	<section class="mainContent-subSection">
+		<h3 class="ui header">Add a member</h3>
+		<p>
+			Following our previous example where we created an access point, now we will add a member to our document. In this case, we mentioned we want to use the access point to link the employees participating in a project with the document that represents said project. So, let's add the employee
+			"John Doe" as a member of the document "Project X" in the <code>ex:participant</code> property.
+		</p>
+		<p>When adding a member you are modifying the access point in a particular way. Therefore, this is done through a PUT request. Issue a PUT request through HTTP in order to add a member to our access point.</p>
+		<section>
+			<h4 class="ui header">Create the PUT request</h4>
+			<p>Create the following HTTP request to add a member to the project-x/participants/ access point.</p>
+			<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/project-x/participants/</code></p>
+			<table class="ui celled table">
+				<thead>
+					<tr>
+						<th><span>HTTP Header</span></th>
+						<th>Value</th>
+						<th>Required/Optional</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Content-Type</td>
+						<td>
+							application/ld+json<br>
+							or<br>
+							application/trig<br>
+						</td>
+						<td>Required</td>
+					</tr>
+					<tr>
+						<td>Prefer</td>
+						<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+						<td>Required</td>
+					</tr>
+					<tr>
+						<td>Accept</td>
+						<td>
+							application/ld+json<br>
+							or<br>
+							application/trig<br>
+						</td>
+						<td>Optional (default is <code>text/turtle</code>)</td>
+					</tr>
+				</tbody>
+			</table>
+			<tabs>
+				<tab title="JSON-LD">
+				<pre><code class="json">
+					{
+						"@context": {
+							"@base": "http://localhost:8083/",
+							"c": { "@id": "https://carbonldp.com/ns/v1/platform#" }
+						},
+						"@id": "_:b0",
+						"@type": [ "c:AddMemberAction" ],
+						"c:targetMember": {
+							"@id": "john-doe/"
+						}
+					}
+				</code></pre>
+				</tab>
+				<tab title="TriG">
+				<pre><code class="html">
+					@base &lt;http://localhost:8083/> .
+					@prefix c: &lt;https://carbonldp.com/ns/v1/platform#> .
+					@prefix ex: &lt;http://example.org/ns#> .
+
+					_:b0
+						a c:AddMemberAction ;
+						c:targetMember &lt;john-doe/> .
+				</code></pre>
+				</tab>
+			</tabs>
+		</section>
+		<section>
+			<h4 class="ui header">Review the PUT request</h4>
+			<p>It is important that before issuing this request, you understand all its parts. Next, you'll get more information about each part in the request.</p>
+			<div class="ui styled fluid accordion">
+				<div class="title">
+					<i class="dropdown icon"></i> Content-Type
+				</div>
+				<div class="content">
+					<p>
+						Since the request method is PUT it requires a body. Therefore, the Content-Type HTTP header tells the platform what kind of content to expect in the body of the request. In the examples we use either <a href="https://www.w3.org/TR/json-ld/">JSON-LD</a>
+						(<code>application/ld+json</code>) or <a href="https://www.w3.org/TR/trig/">TriG</a> (<code>application/trig</code>) RDF Dataset Languages because they are brief and also support named graphs. Whether you decide to use JSON-LD or the TriG language,
+						you'll find that each one provides their own advantages. If you're familiar with JSON objects and JavaScript you might find JSON-LD easier to understand. On the other hand, you might find TriG a bit less verbose and easier to read when it comes to identifying specific
+						RDF structures.
+					</p>
+					<p>Note that Carbon also supports other content types for RDF such as:</p>
+					<ul>
+						<li>Turtle: <code>text/turtle</code></li>
+						<li>RDF XML: <code>application/rdf+xml</code></li>
+					</ul>
+				</div>
+				<div class="title">
+					<i class="dropdown icon"></i> Prefer
+				</div>
+				<div class="content">
+					<p>
+						The <code>Prefer</code> header uses a link relation to specify the <em>interaction model</em> of the target resource. When you issue a request, you are targeting a specific resource where your request will be applied; in this case the <code>participants/</code> resource.
+						By specifying its interaction model, we're defining how we want this resource to behave.
+					</p>
+					<p>
+						In Carbon LDP resources can behave as either Documents (<code>RDFSource</code>) or Containers. When you're modifying an access point, you want the target resource to interact as a <code>Container</code>.
+						Because we're adding a member resource to the container, we need it to behave like a container as opposed to an <code>RDFSource</code>.
+						Carbon supports the following interaction model values for the <code>Prefer</code> header:
+					</p>
+					<ul>
+						<li><code>http://www.w3.org/ns/ldp#Container; rel=interaction-model</code></li>
+						<li><code>http://www.w3.org/ns/ldp#RDFSource; rel=interaction-model</code></li>
+					</ul>
+				</div>
+				<div class="title">
+					<i class="dropdown icon"></i> Accept
+				</div>
+				<div class="content">
+					<p>
+						Once your request gets executed by the platform, you might get a response body from the Carbon LDP server. In this case we recommend you define the <code>Accept</code> header to receive this body in a known format; it's simpler to be consistent and use the same format
+						used to send the request body. If this header is not defined Carbon LDP will send a response in Turtle (<code>text/turtle</code>) by default. Note that Carbon can send response bodies in other formats, such as:
+					</p>
+					<ul>
+						<li>JSON-LD: <code>application/ld+json</code></li>
+						<li>TriG: <code>application/trig</code></li>
+						<li>RDF XML: <code>application/rdf+xml</code></li>
+						<li>Binary: <code>application/x-binary-rdf</code></li>
+						<li>N-Triples: <code>application/n-triples</code></li>
+						<li>N3: <code>text/n3</code>, <code>text/rdf+n3</code></li>
+						<li>Trix: <code>application/trix</code></li>
+						<li>N-Quads: <code>application/n-quads</code>, <code>text/x-nquads</code>, <code>text/nquads</code></li>
+						<li>JSON-RDF: <code>application/rdf+json</code></li>
+
+					</ul>
+				</div>
+				<div class="title">
+					<i class="dropdown icon"></i> Body
+				</div>
+				<div class="content">
+					<p>The body of the request is a graph of at least one BNode written in the RDF syntax matching the Content-Type header.</p>
+					<p>
+						In this case we are defining the BNode's type as <code>c:AddMemberAction</code> which is the method we want the platform to perform. Furthermore, the BNode you define should also include at least one <code>c:targetMember</code> with the URI of the document you want to
+						add as a member. In this case, <code>http://localhost:8083/john-doe/</code>.
+					</p>
+					<p>If you want to add multiple documents as members in a single request you can do this by adding multiple <code>c:targetMember</code> properties.</p>
+					<p>If there is anything from the request body you don't understand you can check the <a href="https://www.w3.org/TR/json-ld/">JSON-LD</a> or <a href="https://www.w3.org/TR/trig/">TriG</a> W3C specifications, which Carbon LDP complies to.</p>
+				</div>
+			</div>
+		</section>
+		<section>
+			<h4 class="ui header">Issue the PUT request</h4>
+			<p>A successful request will result in HTTP status code <strong>204 No Content</strong>.</p>
+			<table class="ui celled table">
+				<thead>
+					<tr>
+						<th>HTTP Header</th>
+						<th>Value</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>ETag</td>
+						<td><span>"342258740"</span></td>
+					</tr>
+				</tbody>
+			</table>
+			<p>As part of the response headers:
+			<ul>
+				<li>The ETag header will confirm the member's addition to the document the access point belongs to.</li>
+			</ul>
+		</section>
+	</section>
+	<section class="mainContent-subSection">
+		<h3 class="ui header">Remove a member</h3>
+		<p>
+			Following our previous example where we added a member through our access point, now we will remove it from our document. In this case, we will remove the employee "John Doe" as a member of the document "Project X" in the <code>ex:participant</code> property.
+		</p>
+		<p>When removing a member you are modifying the access point in a particular way. Therefore, this is done through a DELETE request. Issue a DELETE request through HTTP in order to remove a member from our access point.</p>
+		<section>
+			<h4 class="ui header">Create the DELETE request</h4>
+			<p>Create the following HTTP request to remove a member from the project-x/participants/ access point.</p>
+			<p><span class="ui blue horizontal label">DELETE</span> <code>http://localhost:8083/project-x/participants/</code></p>
+			<table class="ui celled table">
+				<thead>
+					<tr>
+						<th><span>HTTP Header</span></th>
+						<th>Value</th>
+						<th>Required/Optional</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Content-Type</td>
+						<td>
+							application/ld+json<br>
+							or<br>
+							application/trig<br>
+						</td>
+						<td>Required</td>
+					</tr>
+					<tr>
+						<td>Prefer</td>
+						<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+						<td>Required</td>
+					</tr>
+					<tr>
+						<td>Accept</td>
+						<td>
+							application/ld+json<br>
+							or<br>
+							application/trig<br>
+						</td>
+						<td>Optional (default is <code>text/turtle</code>)</td>
+					</tr>
+				</tbody>
+			</table>
+			<tabs>
+				<tab title="JSON-LD">
+				<pre><code class="json">
+					{
+						"@context": {
+							"@base": "http://localhost:8083/",
+							"c": { "@id": "https://carbonldp.com/ns/v1/platform#" }
+						},
+						"@id": "_:b0",
+						"@type": [ "c:RemoveMemberAction" ],
+						"c:targetMember": {
+							"@id": "john-doe/"
+						}
+					}
+				</code></pre>
+				</tab>
+				<tab title="TriG">
+				<pre><code class="html">
+					@base &lt;http://localhost:8083/> .
+					@prefix c: &lt;https://carbonldp.com/ns/v1/platform#> .
+					@prefix ex: &lt;http://example.org/ns#> .
+
+					_:b0
+						a c:RemoveMemberAction ;
+						c:targetMember &lt;john-doe/> .
+				</code></pre>
+				</tab>
+			</tabs>
+		</section>
+		<section>
+			<h4 class="ui header">Review the DELETE request</h4>
+			<p>It is important that before issuing this request, you understand all its parts. Next, you'll get more information about each part in the request.</p>
+			<div class="ui styled fluid accordion">
+				<div class="title">
+					<i class="dropdown icon"></i> Content-Type
+				</div>
+				<div class="content">
+					<p>
+						Since the request method is DELETE it can include a body. Therefore, the Content-Type HTTP header tells the platform what kind of content to expect in the body of the request. In the examples we use either <a href="https://www.w3.org/TR/json-ld/">JSON-LD</a>
+						(<code>application/ld+json</code>) or <a href="https://www.w3.org/TR/trig/">TriG</a> (<code>application/trig</code>) RDF Dataset Languages because they are brief and also support named graphs. Whether you decide to use JSON-LD or the TriG language,
+						you'll find that each one provides their own advantages. If you're familiar with JSON objects and JavaScript you might find JSON-LD easier to understand. On the other hand, you might find TriG a bit less verbose and easier to read when it comes to identifying specific
+						RDF structures.
+					</p>
+					<p>Note that Carbon also supports other content types for RDF such as:</p>
+					<ul>
+						<li>Turtle: <code>text/turtle</code></li>
+						<li>RDF XML: <code>application/rdf+xml</code></li>
+					</ul>
+				</div>
+				<div class="title">
+					<i class="dropdown icon"></i> Prefer
+				</div>
+				<div class="content">
+					<p>
+						The <code>Prefer</code> header uses a link relation to specify the <em>interaction model</em> of the target resource. When you issue a request, you are targeting a specific resource where your request will be applied; in this case the <code>participants/</code> resource.
+						By specifying its interaction model, we're defining how we want this resource to behave.
+					</p>
+					<p>
+						In Carbon LDP resources can behave as either Documents (<code>RDFSource</code>) or Containers. When you're modifying an access point, you want the target resource to interact as a <code>Container</code>.
+						Because we're removing a member resource from the container, we need it to behave like a container as opposed to an <code>RDFSource</code>.
+						Carbon supports the following interaction model values for the <code>Prefer</code> header:
+					</p>
+					<ul>
+						<li><code>http://www.w3.org/ns/ldp#Container; rel=interaction-model</code></li>
+						<li><code>http://www.w3.org/ns/ldp#RDFSource; rel=interaction-model</code></li>
+					</ul>
+				</div>
+				<div class="title">
+					<i class="dropdown icon"></i> Accept
+				</div>
+				<div class="content">
+					<p>
+						Once your request gets executed by the platform, you might get a response body from the Carbon LDP server. In this case we recommend you define the <code>Accept</code> header to receive this body in a known format; it's simpler to be consistent and use the same format
+						used to send the request body. If this header is not defined Carbon LDP will send a response in Turtle (<code>text/turtle</code>) by default. Note that Carbon can send response bodies in other formats, such as:
+					</p>
+					<ul>
+						<li>JSON-LD: <code>application/ld+json</code></li>
+						<li>TriG: <code>application/trig</code></li>
+						<li>RDF XML: <code>application/rdf+xml</code></li>
+						<li>Binary: <code>application/x-binary-rdf</code></li>
+						<li>N-Triples: <code>application/n-triples</code></li>
+						<li>N3: <code>text/n3</code>, <code>text/rdf+n3</code></li>
+						<li>Trix: <code>application/trix</code></li>
+						<li>N-Quads: <code>application/n-quads</code>, <code>text/x-nquads</code>, <code>text/nquads</code></li>
+						<li>JSON-RDF: <code>application/rdf+json</code></li>
+
+					</ul>
+				</div>
+				<div class="title">
+					<i class="dropdown icon"></i> Body
+				</div>
+				<div class="content">
+					<p>The body of the request is a graph of at least one BNode written in the RDF syntax matching the Content-Type header.</p>
+					<p>
+						In this case we are defining the BNode's type as <code>c:RemoveMemberAction</code> which is the method we want the platform to perform. Furthermore, the BNode you define should also include at least one <code>c:targetMember</code> with the URI of the document you want to
+						remove as a member. In this case, <code>http://localhost:8083/john-doe/</code>.
+					</p>
+					<p>If you want to remove multiple documents as members in a single request you can do this by adding multiple <code>c:targetMember</code> properties.</p>
+					<p>If there is anything from the request body you don't understand you can check the <a href="https://www.w3.org/TR/json-ld/">JSON-LD</a> or <a href="https://www.w3.org/TR/trig/">TriG</a> W3C specifications, which Carbon LDP complies to.</p>
+				</div>
+			</div>
+		</section>
+		<section>
+			<h4 class="ui header">Issue the PUT request</h4>
+			<p>A successful request will result in HTTP status code <strong>204 No Content</strong>.</p>
+			<table class="ui celled table">
+				<thead>
+					<tr>
+						<th>HTTP Header</th>
+						<th>Value</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Date</td>
+						<td><span>Thu, 21 Dec 2017 23:45:00 GMT</span></td>
+					</tr>
+				</tbody>
+			</table>
+			<p>As part of the response headers:
+			<ul>
+				<li>The Date header will confirm the date and time when the member got removed from the document the access point belongs to.</li>
+			</ul>
+		</section>
+	</section>
+</section>
+<!-- END: Member management -->
+
 <!-- START: Read an Access Point -->
 <section class="mainContent-section">
 	<h2 class="ui header">Read an Access Point</h2>
@@ -375,12 +731,4 @@ version: v1.0.x
 </section>
 <!-- END: Modify an Access Point -->
 
-<!-- START: Member management -->
-<section class="mainContent-section">
-	<h2 class="ui header">Member management</h2>
-	<p>
-		<!-- FIXME: Work in progress -->
-	</p>
-</section>
-<!-- END: Member management -->
 
