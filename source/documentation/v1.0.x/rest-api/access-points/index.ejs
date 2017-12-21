@@ -3,6 +3,384 @@ layout: documentation/document
 title: Access points
 description: An explanation on the Access Point concept and how to manage relations between documents using them.
 date: 2017-02-08 11:01:03
-notDocumented: true
+notDocumented: false
 version: v1.0.x
 ---
+
+<div class="ui message">
+	<div class="content">
+		<p>In this guide, we'll use different scenarios to go through the REST API methods (detailing the different headers and basic request bodies) you can use to interact with the Carbon LDP platform when creating or modifying Access Points.</p>
+		<p>We have created a <a href="https://www.getpostman.com/collections/307f7898c630698ce5a8">Postman Collection</a> with all the examples featured in this documentation. The examples for this section are contained in the <strong>access-points</strong> folder.</p>
+	</div>
+</div>
+
+<section class="mainContent-subSection">
+	<h2 class="ui header">Relationships in Carbon LDP</h2>
+	<p>Of course, the power of link data relies on the linking of resources. Therefore, a Linked Data Platform must be capable of handling these links or relations between resources in an ordered manner. To achieve this, Carbon LDP divides the relationships into two kinds:</p>
+
+	<ul>
+		<li>Parent-child relation (<strong>hard link</strong>)</li>
+		<li>Membership relation (<strong>soft link</strong>)</li>
+	</ul>
+
+	<!-- FIXME: Add the more you know on how links are not limited by domain taking you to the semantic web concept. -->
+
+	<p>Let's review both of these links Carbon uses to understand the need for Access Points.</p>
+
+	<section class="mainContent-subSection">
+		<h3 class="ui header">Parent-child relation</h3>
+		<p>In Carbon, documents can have children documents. Whenever you create a document, you need a container; this is because Carbon LDP relates the new document to the container by defining it as its direct child. Therefore, everything in Carbon has a parent, even if that is your application's root resource.</p>
+		<p>Furthermore, the importance of the hard links comes into play when deleting the documents. Whenever a parent document is deleted, all of its children, and the children of the children (and so on...) will be deleted. On the other hand, this situation does not occur when you are working with soft links.</p>
+		<!-- FIXME: Add The more you know... on how children are listed in the contains property and documents work as Basic Containers -->
+
+	</section>
+
+	<!--
+	<pre><code class="html">
+			@base &lt;http://example.org/> .
+			@prefix ex: &lt;http://example.org/ns#> .
+			@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#> .
+			@prefix schema: &lt;http://schema.org/> .
+			@prefix dbpedia: &lt;http://dbpedia.org/resource/> .
+
+			&lt;Paul>
+				a &lt;schema:Person> ;
+			    &lt;schema:birthDate> "1989-04-17T03:36:00-06:00"^^schema:Date ;
+				&lt;ex:livesIn> &lt;dbpedia:San_Francisco> ;
+				&lt;ex:worksFor> &lt;dbpedia:Twitter> .
+		</code></pre>
+
+	<pre><code class="html">
+			@base &lt;http://example.org/> .
+			@prefix ex: &lt;http://example.org/ns#> .
+
+			&lt;Paul>
+				&lt;ex:livesIn> &lt;ex:San_Francisco> .
+
+		</code></pre>
+	-->
+
+	<!-- START: Membership relation -->
+	<section class="mainContent-section">
+		<h3 class="ui header">Membership relation</h3>
+		<p>
+			Unlike a hard link, a soft link is valuable when you want to demonstrate a relationship between two resources that in essence can still be independent; in other words, when you want a document to be a member of another. In this case, when deleting a document, its members won't
+			be deleted from the platform. Simply, every relationship with the deleted document will disappear from all other documents.
+		</p>
+		<p>All Carbon LDP documents can maintain a list of members. To achieve this, Carbon uses certain properties in the documents:</p>
+		<ul>
+			<li><code>ldp:membershipResource</code>: Configures the document where the member documents will be added. On a regular document it is the document itself.</li>
+			<li><code>ldp:hasMemberRelation</code>: Configures the property that holds an array containing the members of that document (by default <code>ldp:members</code>).</li>
+			<li><code>ldp:isMemberOfRelation</code>: Configures the property that a member document will acquire when declared as a member of the container document (none by default).</li>
+		</ul>
+		<p>
+			If you don't modify the <code>ldp:hasMemberRelation</code> property, an array of member documents will be maintained in the property <code>ldp:members</code>. This list can be either retrieved or modified through different requests from the REST API, however there's a limitation to it.
+			<em>A document can only maintain one member list through one property</em> (by default <code>ldp:members</code>). Therefore, if you wanted to have members of different types, they will get mixed within the same array. Let's clarify this with an example.
+		</p>
+		<p>
+			Imagine you created a document that represents a project your company is developing called "Project X". Now, you want to know which employees will be a part of that project, so you add them as members in your "Project X" document. Then, when the project begins you
+			want to link it to different tasks that are standardized in your company. If you add the tasks in the same <code>ldp:members</code> property, you would have an array of documents some of which represent a person and others a task.
+		</p>
+	</section>
+	<p>To prevent this from happening, while allowing you to maintain multiple lists of members per document, Carbon LDP uses Access Points.</p>
+</section>
+<!-- START: What is an Access Point? -->
+<section class="mainContent-section">
+	<h2 class="ui header">What is an Access Point?</h2>
+	<p>
+		Access points are special documents, whose purpose is to maintain a list of members for another document. Documents can have an unlimited number of access points, removing the limitation of membership relations. Like with normal documents, you can customize the properties that manage membership relations:
+		<code>ldp:membershipResource</code>, <code>ldp:hasMemberRelation</code>, and <code>ldp:isMemberOfRelation</code>.
+	</p>
+	<!-- FIXME: Add a The more you know... on how access points are actually direct containers -->
+	<p>Note that the <code>ldp:membershipResource</code> property configures the document where the member documents will be added. In this case, the property will be pointing to the document the access point belongs to.</p>
+	<!-- FIXME: Work in progress -->
+</section>
+<!-- END: What is an Access Point? -->
+
+<!-- START: Create an Access Point -->
+<section class="mainContent-section">
+	<h2 class="ui header">Create an Access Point</h2>
+	<p>Creating an access point is similar to creating a document. However, there are certain differences you should pay attention to. First, we'll need some test documents to experiment relating them. You can use the requests stored in our
+		<a href="https://www.getpostman.com/collections/307f7898c630698ce5a8">Postman Collection</a> in the <strong>access-point</strong> folder.
+	</p>
+	<p>Let's create a "project-x" document with the following body:</p>
+	<tabs>
+		<tab title="JSON-LD">
+				<pre><code class="json">
+					{
+						"@context": {
+							"ex": { "@id": "http://example.org/ns#" },
+							"xsd": { "@id": "http://www.w3.org/2001/XMLSchema#" },
+							"ex:name": {
+								"@type": "xsd:string"
+							},
+						},
+						"@id": "",
+						"@type": [ "ex:Project" ],
+						"ex:name": "Project X"
+					}
+					</code></pre>
+		</tab>
+		<tab title="TriG">
+				<pre><code class="html">
+					@prefix ex:  &lt;http://example.org/ns#> .
+					@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#> .
+
+					<>{
+						<>
+							a ex:Project;
+							ex:name "Project X" .
+					}
+					</code></pre>
+		</tab>
+	</tabs>
+
+	<p>Let's also create a "john-doe" employee that will take part of the Project X with the following body:</p>
+	<tabs>
+		<tab title="JSON-LD">
+				<pre><code class="json">
+					{
+						"@context": {
+							"ex": { "@id": "http://example.org/ns#" },
+							"xsd": { "@id": "http://www.w3.org/2001/XMLSchema#" },
+							"ex:name": {
+								"@type": "xsd:string"
+							},
+						},
+						"@id": "",
+						"@type": [ "ex:Person" ],
+						"ex:name": "John Doe"
+					}
+					</code></pre>
+		</tab>
+		<tab title="TriG">
+				<pre><code class="html">
+					@prefix ex:  &lt;http://example.org/ns#> .
+					@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#> .
+
+					<>{
+						<>
+							a ex:Person;
+							ex:name "John Doe" .
+					}
+					</code></pre>
+		</tab>
+	</tabs>
+
+	<p>If you can't recall how to create a Carbon document, see <a href="../documents/#create-a-document">Create a Document</a>.</p>
+
+	<p>Issue a POST request through HTTP in order to create our first basic access point.</p>
+	<section class="mainContent-subSection">
+		<h3 class="ui header">Create the POST request</h3>
+		<p>Create the following HTTP request to create a test document.</p>
+		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/project-x/</code></p>
+		<table class="ui celled table">
+			<thead>
+				<tr>
+					<th><span>HTTP Header</span></th>
+					<th>Value</th>
+					<th>Required/Optional</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Content-Type</td>
+					<td>
+						application/ld+json<br>
+						or<br>
+						application/trig<br>
+					</td>
+					<td>Required</td>
+				</tr>
+				<tr>
+					<td>Prefer</td>
+					<td><span class="nolink">http://www.w3.org/ns/ldp#RDFSource</span>; rel=interaction-model</td>
+					<td>Required</td>
+				</tr>
+				<tr>
+					<td>Accept</td>
+					<td>
+						application/ld+json<br>
+						or<br>
+						application/trig<br>
+					</td>
+					<td>Optional (default is <code>text/turtle</code>)</td>
+				</tr>
+				<tr>
+					<td>Slug</td>
+					<td>participants</td>
+					<td>Optional</td>
+				</tr>
+			</tbody>
+		</table>
+		<tabs>
+			<tab title="JSON-LD">
+
+			<pre><code class="json">
+				{
+					"@context": {
+						"ex": { "@id": "http://example.org/ns#" },
+						"ldp": { "@id": "http://www.w3.org/ns/ldp#" }
+					},
+					"@id": "",
+					"ldp:hasMemberRelation": "ex:participant"
+				}
+			</code></pre>
+
+			</tab>
+			<tab title="TriG">
+				<pre><code>
+					@prefix ex: &lt;http://example.org/ns#> .
+					@prefix ldp: &lt;http://www.w3.org/ns/ldp#> .
+
+					<>{
+						<>
+							ldp:hasMemberRelation ex:participant .
+					}
+				</code></pre>
+
+			</tab>
+		</tabs>
+	</section>
+	<section class="mainContent-subSection">
+		<h3 class="ui header">Review the POST request</h3>
+		<p>It is important that before issuing this request, you understand all its parts. Next, you'll get more information about each part in the request.</p>
+		<div class="ui styled fluid accordion">
+			<div class="active title">
+				<i class="dropdown icon"></i> Content-Type
+			</div>
+			<div class="active content">
+				<p>
+					Since the request method is POST it requires a body. Therefore, the Content-Type HTTP header tells the platform what kind of content to expect in the body of the request. In the examples we use either <a href="https://www.w3.org/TR/json-ld/">JSON-LD</a>
+					(<code>application/ld+json</code>) or <a href="https://www.w3.org/TR/trig/">TriG</a> (<code>application/trig</code>) RDF Dataset Languages because they are brief and also support named graphs. Whether you decide to use JSON-LD or the TriG language,
+					you'll find that each one provides their own advantages. If you're familiar with JSON objects and JavaScript you might find JSON-LD easier to understand. On the other hand, you might find TriG a bit less verbose and easier to read when it comes to identifying specific
+					RDF structures.
+				</p>
+				<p>Note that Carbon also supports other content types for RDF such as:</p>
+				<ul>
+					<li>Turtle: <code>text/turtle</code></li>
+					<li>RDF XML: <code>application/rdf+xml</code></li>
+				</ul>
+			</div>
+			<div class="active title">
+				<i class="dropdown icon"></i> Prefer
+			</div>
+			<div class="active content">
+				<p>
+					The <code>Prefer</code> header uses a link relation to specify the <em>interaction model</em> of the target resource. When you issue a request, you are targeting a specific resource where your request will be applied; in this case the root (<code>/</code>) resource.
+					By specifying its interaction model, we're defining how we want the root resource to behave.
+				</p>
+				<p>
+					In Carbon LDP resources can behave as either Documents (<code>RDFSource</code>) or Containers. When you're creating a document, you want the target resource to interact as a <code>Container</code>.
+					Because we're adding a member resource to the container, we need it to behave like a container as opposed to an <code>RDFSource</code>.
+					Carbon supports the following interaction model values for the <code>Prefer</code> header:
+				</p>
+				<ul>
+					<li><code>http://www.w3.org/ns/ldp#Container; rel=interaction-model</code></li>
+					<li><code>http://www.w3.org/ns/ldp#RDFSource; rel=interaction-model</code></li>
+				</ul>
+			</div>
+			<div class="active title">
+				<i class="dropdown icon"></i> Accept
+			</div>
+			<div class="active content">
+				<p>
+					Once your request gets executed by the platform, you might get a response body from the Carbon LDP server. In this case we recommend you define the <code>Accept</code> header to receive this body in a known format; it's simpler to be consistent and use the same format
+					used to send the request body. If this header is not defined Carbon LDP will send a response in Turtle (<code>text/turtle</code>) by default. Note that Carbon can send response bodies in other formats, such as:
+				</p>
+				<ul>
+					<li>JSON-LD: <code>application/ld+json</code></li>
+					<li>TriG: <code>application/trig</code></li>
+					<li>RDF XML: <code>application/rdf+xml</code></li>
+					<li>Binary: <code>application/x-binary-rdf</code></li>
+					<li>N-Triples: <code>application/n-triples</code></li>
+					<li>N3: <code>text/n3</code>, <code>text/rdf+n3</code></li>
+					<li>Trix: <code>application/trix</code></li>
+					<li>N-Quads: <code>application/n-quads</code>, <code>text/x-nquads</code>, <code>text/nquads</code></li>
+					<li>JSON-RDF: <code>application/rdf+json</code></li>
+
+				</ul>
+			</div>
+			<div class="active title">
+				<i class="dropdown icon"></i> Slug
+			</div>
+			<div class="active content">
+				<p>
+					The <code>Slug</code> header is intended to give the server a hint about how to mint a new URI for the resource being created. If a slug is not provided, Carbon will generate a random number when minting the URI. In this case, however, we're specifying a preference
+					to use <code>participants</code>. Therefore, if it is available for use, the server will mint the following URI:
+				</p>
+				<p><code>http://localhost:8083/project-x/participants/</code></p>
+				<p>If the URI you're trying to create already exists, the platform will respond with a <strong>409 Conflict</strong> HTTP status code. Keep in mind that URIs are unique identifiers, therefore, the platform will not allow you to create a duplicate resource.</p>
+			</div>
+			<div class="active title">
+				<i class="dropdown icon"></i> Body
+			</div>
+			<div class="active content">
+				<p>The body of the request is a graph of triples written in the RDF syntax matching the Content-Type header.</p>
+				<p>
+					In this case we are defining the <code>ldp:hasMemberRelation</code> property as <code>ex:participant</code> so that the people that participate in the Project X are added in the project-x document using that property. Please note that the platform automatically
+					configures the property <code>ldp:membershipResource</code>, therefore when you add member documents to the recently created access point they will be added in the document you targeted in your request.
+				</p>
+				<!-- FIXME: Minimum recommended request body, add that if isMemberOfRelation is configured, a bilateral relation will be achieved -->
+				<p>Also, this case exemplifies the simplest request body required to create an access point. Since access points are just a special type of document bear in mind that they can contain as many properties as you desire.</p>
+				<p>If there is anything from the request body you don't understand you can check the <a href="https://www.w3.org/TR/json-ld/">JSON-LD</a> or <a href="https://www.w3.org/TR/trig/">TriG</a> W3C specifications, which Carbon LDP complies to.</p>
+			</div>
+		</div>
+	</section>
+	<section class="mainContent-subSection">
+		<h3 class="ui header">Issue the POST request</h3>
+		<p>A successful request will result in HTTP status code <strong>201 Created</strong>.</p>
+		<table class="ui celled table">
+			<thead>
+				<tr>
+					<th>HTTP Header</th>
+					<th>Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>ETag</td>
+					<td><span>"342258740"</span></td>
+				</tr>
+				<tr>
+					<td>Location</td>
+					<td><span>http://localhost:8083/project-x/participants/</span></td>
+				</tr>
+			</tbody>
+		</table>
+		<p>As part of the response headers:
+		<ul>
+			<li>The ETag header will confirm the time of the access point's creation.</li>
+			<li>The Location header will provide the server minted URI for the new access point.</li>
+		</ul>
+	</section>
+</section>
+<!-- END: Create an Access Point -->
+
+<!-- START: Read an Access Point -->
+<section class="mainContent-section">
+	<h2 class="ui header">Read an Access Point</h2>
+	<p>
+		<!-- FIXME: Add link to Document documentation -->
+	</p>
+</section>
+<!-- END: Read an Access Point -->
+
+<!-- START: Modify an Access Point -->
+<section class="mainContent-section">
+	<h2 class="ui header">Modify an Access Point</h2>
+	<p>
+		<!-- FIXME: Add link to Document documentation -->
+	</p>
+</section>
+<!-- END: Modify an Access Point -->
+
+<!-- START: Member management -->
+<section class="mainContent-section">
+	<h2 class="ui header">Member management</h2>
+	<p>
+		<!-- FIXME: Work in progress -->
+	</p>
+</section>
+<!-- END: Member management -->
+

@@ -3,7 +3,7 @@ layout: documentation/document
 title: Object model
 description: A summary of the various types of resources you can manage and interact with using REST.
 date: 2017-02-08 11:01:03
-notDocumented: true
+notDocumented: false
 version: v1.0.x
 ---
 
@@ -24,7 +24,7 @@ version: v1.0.x
 <section class="mainContent-section">
 	<h2>Object Model</h2>
 
-	<p>The following diagram depicts the all of the objects you can manage and interact with using REST. All objects are RDF resources. You can think of them as RDF <em>documents
+	<p>The following diagram depicts all of the objects you can manage and interact with using REST. All objects are RDF resources. You can think of them as RDF <em>documents
 		</em> which, once created, are identified by a URI. You can create, update, read, and delete these objects by issuing HTTP requests to the URI of the resource or its
 		parent container (e.g. POST, PUT, GET, DELETE). There are also other types of RESTful operations that each object might expose depending on the type of the object. The
 		object hierarchy depicts how certain objects extend others and thus would have the same RESTful operations or behavior as the parent type.
@@ -55,6 +55,7 @@ version: v1.0.x
 			<code>ex:tag</code>, <code>ex:like</code> all on the same BlogPost resource with each property managing one or more members. The comments or tag resources may
 			be stored in child comments and tags containers, but they are managed and enumerated by the parent BlogPost container.</p>
 	</div>
+	<!--
 	<div class="ui vertical segment">
 		<h3>AccessControlList</h3>
 		<p>A configuration resource that defines the security access control for a given resource. An AccessControlList controls access
@@ -66,9 +67,10 @@ version: v1.0.x
 	</div>
 	<div class="ui vertical segment">
 		<h3>Backup</h3>
-		<p>An RDFRepresentation that describes the zip archive created by an ExportBackup job; it contains information such as the archive's format, size, and cretaion time, for
+		<p>An RDFRepresentation that describes the zip archive created by an ExportBackup job; it contains information such as the archive's format, size, and creation time, for
 			example.</p>
 	</div>
+	-->
 	<div class="ui vertical segment">
 		<h3>BasicContainer</h3>
 		<p>An LDP Container whose members are stored within itself.</p>
@@ -93,62 +95,64 @@ version: v1.0.x
 			<code>ldp:BasicContainer</code>, <code>ldp:DirectContainer</code>, or <code>ldp:IndirectContainer</code>.</p>
 		<p>See also: <a href="https://www.w3.org/TR/ldp/#ldpc">Linked Data Platform Containers</a> [LDP]</p>
 	</div>
+	<!--
+		<div class="ui vertical segment">
+			<h3>DirectContainer</h3>
+			<p>See AccessPoint</p>
+		</div>
+		<div class="ui vertical segment">
+			<h3>Execution</h3>
+			<p>A resource that represents the execution of a Job and contains information about the job's execution such as the start time, end time, state of the job's execution, and,
+				for certain types of jobs, where the results of the job execution are stored.</p>
+		</div>
+		<div class="ui vertical segment">
+			<h3>ExportBackupJob</h3>
+			<p>A type of Job that, when executed, will export the data of a Carbon application for backup purposes or for importing into another server. When an ExportBackup job is
+				executed, it creates a zip archive file inside of which can be found a <code>*.trig</code> file that has all the application data (e.g. triples), and a folder
+				containing
+				all of the application's NonRDFSource resources such as images and files. The archive produced by an ExportBackup can be subsequently imported with an ImportBackup job.
+			</p>
+		</div>
+		<div class="ui vertical segment">
+			<h3>ImportBackupJob</h3>
+			<p>A type of Job that, when executed, will replace a Carbon application's resources with the resources created by an ExportBackup job.</p>
+		</div>
+		<div class="ui vertical segment">
+			<h3>ImportLDAPUsersJob</h3>
+			<p>A type of Job that, when executed, creates LDAPUsers that contain properties that can be used as credentials for authentication. This Job can be configured so only
+				certain user properties are copied from the LDAP server when the representative LDAPUser is created.</p>
+		</div>
+		<div class="ui vertical segment">
+			<h3>IndirectContainer</h3>
+			<p>Though defined in the W3C Linked Data Platform 1.0 specification [LDP], IndirectContainers are not yet supported by Carbon.</p>
+		</div>
+		<div class="ui vertical segment">
+			<h3>Job</h3>
+			<p>
+				A Job is a resource that defines one or more specialized tasks to be executed on the server. A Job may be scheduled or configured to run on demand. Each time the job
+				runs,
+				an Execution document is created with information about the job's execution.
+			</p>
+		</div>
+		<div class="ui vertical segment">
+			<h3>LDAPServer</h3>
+			<p>An LDP RDFSource that contains the required configuration information to connect to an LDAP server.</p>
+		</div>
+		<div class="ui vertical segment">
+			<h3>LDAPUser</h3>
+			<p>A special type of User that is created based on the information retrieved from an LDAP server when an ImportLDAPAgentsJob is executed.</p>
+		</div>
+		<div class="ui vertical segment">
+			<h3>RDFRepresentation</h3>
+			<p>An RDFRepresentation is an RDF Source that contains meta-data (properties) about a Non-RDFSource (a file or binary). When a file is uploaded into a Carbon app or
+				otherwise created by Carbon, the RDFRepresentation is also created to describe and store various information about the file.</p>
+		</div>
+	-->
 	<div class="ui vertical segment">
-		<h3>DirectContainer</h3>
-		<p>See AccessPoint</p>
-	</div>
-	<div class="ui vertical segment">
-		<h3>Execution</h3>
-		<p>A resource that represents the execution of a Job and contains information about the job's execution such as the start time, end time, state of the job's execution, and,
-			for certain types of jobs, where the results of the job execution are stored.</p>
-	</div>
-	<div class="ui vertical segment">
-		<h3>ExportBackupJob</h3>
-		<p>A type of Job that, when executed, will export the data of a Carbon application for backup purposes or for importing into another server. When an ExportBackup job is
-			executed, it creates a zip archive file inside of which can be found a <code>*.trig</code> file that has all the application data (e.g. triples), and a folder
-			containing
-			all of the application's NonRDFSource resources such as images and files. The archive produced by an ExportBackup can be subsequently imported with an ImportBackup job.
-		</p>
-	</div>
-	<div class="ui vertical segment">
-		<h3>ImportBackupJob</h3>
-		<p>A type of Job that, when executed, will replace a Carbon application's resources with the resources created by an ExportBackup job.</p>
-	</div>
-	<div class="ui vertical segment">
-		<h3>ImportLDAPUsersJob</h3>
-		<p>A type of Job that, when executed, creates LDAPUsers that contain properties that can be used as credentials for authentication. This Job can be configured so only
-			certain user properties are copied from the LDAP server when the representative LDAPUser is created.</p>
-	</div>
-	<div class="ui vertical segment">
-		<h3>IndirectContainer</h3>
-		<p>Though defined in the W3C Linked Data Platform 1.0 specification [LDP], IndirectContainers are not yet supported by Carbon.</p>
-	</div>
-	<div class="ui vertical segment">
-		<h3>Job</h3>
+		<h3>RDF Source</h3>
 		<p>
-			A Job is a resource that defines one or more specialized tasks to be executed on the server. A Job may be scheduled or configured to run on demand. Each time the job
-			runs,
-			an Execution document is created with information about the job's execution.
-		</p>
-	</div>
-	<div class="ui vertical segment">
-		<h3>LDAPServer</h3>
-		<p>An LDP RDFSource that contains the required configuration information to connect to an LDAP server.</p>
-	</div>
-	<div class="ui vertical segment">
-		<h3>LDAPUser</h3>
-		<p>A special type of User that is created based on the information retrieved from an LDAP server when an ImportLDAPAgentsJob is executed.</p>
-	</div>
-	<div class="ui vertical segment">
-		<h3>RDFRepresentation</h3>
-		<p>An RDFRepresentation is an RDFSource that contains meta-data (properties) about a Non-RDFSource (a file or binary). When a file is uploaded into a Carbon app or
-			otherwise created by Carbon, the RDFRepresentation is also created to describe and store various information about the file.</p>
-	</div>
-	<div class="ui vertical segment">
-		<h3>RDFSource</h3>
-		<p>
-			A resource (basically, a <em>document</em> in Carbon) whose state is fully represented in RDF. An RDFSource is identified by a URI, which can be used
-			with HTTP requests (GET, PUT, POST, DELETE). The content of an RDFSource document is an RDF graph - a set of RDF triples. The triples are the data properties of the
+			A resource (basically, a <em>document</em> in Carbon) whose state is fully represented in RDF. An RDF Source is identified by a URI, which can be used
+			with HTTP requests (GET, PUT, POST, DELETE). The content of an RDF Source document is an RDF graph - a set of RDF triples. The triples are the data properties of the
 			resource, which can be either literal properties (string, date, number, etc.) or object properties (links to other resource URIs). All resources you create within a
 			Carbon application, with the exception of ACLs, are RDFSource documents. That is to say, they are described by the <code>rdf:type</code> of
 			<code>http://www.w3.org/ns/ldp#RDFSource</code>, even if also described by additional types such as those that define the object classes of your application.
@@ -159,16 +163,18 @@ version: v1.0.x
 			<li><a href="https://www.w3.org/TR/ldp/#ldprs">RDF Source</a> [LDP]</li>
 		</ul>
 	</div>
-	<div class="ui vertical segment">
-		<h3>Role</h3>
-		<p>An RDFSource document that is used to control access to resources. A Role defines what kind of access a group of users have on one or more
-			resources.</p>
-		<p>A Role is defined by the <code>rdf:type</code> of <code>https://carbonldp.com/ns/v1/security#Role</code> (or <code>cs:Role</code>, for short).</p>
-	</div>
-	<div class="ui vertical segment">
-		<h3>User</h3>
-		<p>An RDFSource document that represents a user or system account that can authenticate with the Carbon platform.</p>
-	</div>
+	<!--
+		<div class="ui vertical segment">
+			<h3>Role</h3>
+			<p>An RDFSource document that is used to control access to resources. A Role defines what kind of access a group of users have on one or more
+				resources.</p>
+			<p>A Role is defined by the <code>rdf:type</code> of <code>https://carbonldp.com/ns/v1/security#Role</code> (or <code>cs:Role</code>, for short).</p>
+		</div>
+		<div class="ui vertical segment">
+			<h3>User</h3>
+			<p>An RDFSource document that represents a user or system account that can authenticate with the Carbon platform.</p>
+		</div>
+	-->
 
 
 </section>

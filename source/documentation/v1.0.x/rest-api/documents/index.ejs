@@ -20,7 +20,7 @@ version: v1.0.x
 	</div>
 </div>
 
-<!-- START: Document introduction -->
+<!-- START: Document model -->
 <section class="mainContent-section">
 	<h2 class="ui header">Document model</h2>
 	<p>
@@ -52,9 +52,10 @@ version: v1.0.x
 			<li><code>types</code>: An array holding one or more named classes that describe the type of the document (e.g. Person, Project Product, Invoice).</li>
 			<li><code>created</code>: Date when the document was created.</li>
 			<li><code>modified</code>: Date when the document was last modified.</li>
-			<!-- FIXME: Define pending properties -->
-			<!--<li><code>hasMemberRelation</code>: An array holding .</li> -->
-			<!--<li><code>isMemberOfRelation</code>: An array holding .</li>-->
+			<!-- FIXME: Fix links to other documentation resources -->
+			<li><code>membershipResource</code>: Configures the document where the member documents will be added. On a document it is the document itself, on an access point it is the document the access point belongs to. See <a href="../access-points/#">Access Points</a>.</li>
+			<li><code>hasMemberRelation</code>: Configures the property that holds an array containing the members of that document. By default is <code>ldp:Member</code>. See <a href="../access-points/#membership-relation">Membership relation</a>.</li>
+			<li><code>isMemberOfRelation</code>: Configures the property that a member document will acquire when declared as a member of the container document. This property will not exist if the document has no members. See <a href="../access-points/#membership-relation">Membership relation</a>.</li>
 		</ul>
 
 		<p>Bear in mind that some of these, for example created or modified, are <em>System Reserved Properties</em>, which means you can read them but only the platform is allowed to modify them.</p>
@@ -227,7 +228,7 @@ version: v1.0.x
 
 
 </section>
-<!-- END: Document introduction -->
+<!-- END: Document model -->
 
 <!-- START: Create a Document -->
 <section class="mainContent-section">
@@ -396,12 +397,7 @@ version: v1.0.x
 			</div>
 			<div class="active content">
 				<p>The body of the request is a graph of triples written in the RDF syntax matching the Content-Type header.</p>
-
-				<p>
-					If there is anything from the request body you don't understand you can check the <!-- short guide we developed on basic JSON-LD and TriG <a href="">here</a>. Also, you can check the --> <a href="https://www.w3.org/TR/json-ld/">JSON-LD</a> or <a href="https://www.w3.org/TR/trig/">TriG</a>
-					W3C specifications, which Carbon LDP complies to.
-				</p>
-				<!-- FIXME: Change body explanation to Getting Started section and add links -->
+				<p>If there is anything from the request body you don't understand you can check the <a href="https://www.w3.org/TR/json-ld/">JSON-LD</a> or <a href="https://www.w3.org/TR/trig/">TriG</a> W3C specifications, which Carbon LDP complies to.</p>
 				<!--
 				<tabs>
 				<tab title="JSON-LD">
@@ -837,7 +833,7 @@ version: v1.0.x
 				</tr>
 				<tr>
 					<td>If-Match</td>
-					<td>"-1122003795" (or latest ETag obtained from the resource)</td>
+					<td>"-1122003795" (latest ETag obtained from the resource)</td>
 					<td>Required</td>
 				</tr>
 				<tr>
@@ -1015,10 +1011,9 @@ version: v1.0.x
 			<div class="content">
 				<p>The body of the request is a graph of triples written in the RDF syntax matching the Content-Type header.</p>
 				<p>
-					If there is anything from the request body you don't understand you can check the <!-- short guide we developed on basic JSON-LD and TriG <a href="">here</a>. Also, you can check the --> <a href="https://www.w3.org/TR/json-ld/">JSON-LD</a> or <a href="https://www.w3.org/TR/trig/">TriG</a>
+					If there is anything from the request body you don't understand you can check the <a href="https://www.w3.org/TR/json-ld/">JSON-LD</a> or <a href="https://www.w3.org/TR/trig/">TriG</a>
 					W3C specifications, which Carbon LDP complies to.
 				</p>
-				<!-- FIXME: Change body explanation to Getting Started section and add links -->
 				<p>
 					Since we are issuing a PUT request, it should contain the same properties as the resource currently stored in the platform, along with whichever properties you want to modify. Please note that this includes <em>System Reserved Properties.</em>
 					If these are not contained within the body of your request, or their values differ from the ones on the request body, the platform will send a <strong>412 Precondition Failed</strong> response. Alongside, a response body will warn you about trying to modify
@@ -1085,7 +1080,7 @@ version: v1.0.x
 				</tr>
 				<tr>
 					<td>If-Match</td>
-					<td>"-1122003795" (or latest ETag obtained from the resource)</td>
+					<td>"1159301007" (latest ETag obtained from the resource)</td>
 					<td>Optional</td>
 				</tr>
 				<tr>
@@ -1202,7 +1197,7 @@ version: v1.0.x
 			<tbody>
 				<tr>
 					<td>ETag</td>
-					<td>"1126128674"</td>
+					<td>"2035489282"</td>
 				</tr>
 			</tbody>
 		</table>
@@ -1217,7 +1212,133 @@ version: v1.0.x
 
 <section class="mainContent-section">
 	<h2>Delete a Document</h2>
-	<!-- FIXME: Pending to write -->
+	<p>Issue a DELETE request through HTTP in order to delete the sample document we have been working with.</p>
+	<section class="mainContent-subSection">
+		<h3>Create the DELETE request</h3>
+		<p>Create the following HTTP request to delete the test document we have been working with.</p>
+		<p><span class="ui blue horizontal label">DELETE</span> <code>http://localhost:8083/test-document/</code></p>
+		<table class="ui celled table">
+			<thead>
+				<tr>
+					<th><span>HTTP Header</span></th>
+					<th>Value</th>
+					<th>Required/Optional</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Prefer</td>
+					<td><span class="nolink">http://www.w3.org/ns/ldp#RDFSource</span>; rel=interaction-model</td>
+					<td>Optional (default is <code>http://www.w3.org/ns/ldp#RDFSource</code>)</td>
+				</tr>
+				<tr>
+					<td>If-Match</td>
+					<td>"2035489282" (latest ETag obtained from the resource)</td>
+					<td>Optional</td>
+				</tr>
+				<tr>
+					<td>Accept</td>
+					<td>
+						application/ld+json<br>
+						or<br>
+						application/trig
+					</td>
+					<td>Optional</td>
+				</tr>
+			</tbody>
+		</table>
+	</section>
+	<section class="mainContent-subSection">
+		<h3>Review the DELETE request</h3>
+		<p>It is important that before issuing this request, you understand all its parts. Next, you'll get more information about each part in the request.</p>
+		<div class="ui styled fluid accordion">
+			<div class="title">
+				<i class="dropdown icon"></i> Prefer
+			</div>
+			<div class="content">
+				<p>
+					The <code>Prefer</code> header uses a link relation to specify the <em>interaction model</em> of the target resource. When you issue a request, you are targeting a specific resource where your request will be applied; in this case the test-document
+					(<code>test-document/</code>) resource we previously worked with. By specifying its interaction model, we're defining how we want this resource to behave.
+				</p>
+				<p>
+					In Carbon LDP resources can behave as either Documents (<code>RDFSource</code>) or Containers. When you're deleting a document, you want the target resource to interact as a <code>RDFSource</code>.
+					Because we're deleting a document, we need it to behave like a Document (<code>RDFSource</code>) as opposed to an <code>Container</code>.
+					Carbon supports the following interaction model values for the <code>Prefer</code> header:
+				</p>
+				<ul>
+					<li><code>http://www.w3.org/ns/ldp#Container; rel=interaction-model</code></li>
+					<li><code>http://www.w3.org/ns/ldp#RDFSource; rel=interaction-model</code></li>
+				</ul>
+			</div>
+			<div class="title">
+				<i class="dropdown icon"></i> If-Match
+			</div>
+			<div class="content">
+				<p>
+					The <code>If-Match</code> header allows you to ensure that the data you are modifying is accurate before changing anything within your document; this is necessary to maintain data consistency. Your application might not be the
+					only one modifying the resource, so the platform needs a way to assure that no data is overridden when executing the PUT request.
+				</p>
+				<p>
+					To achieve this Carbon uses ETags, therefore it only allows changes that won't override each other.
+					In case the ETags do not match, you should first execute a GET request, update your PUT request with the new body and ETag, and retry it.
+				</p>
+			</div>
+			<div class="title">
+				<i class="dropdown icon"></i> Accept
+			</div>
+			<div class="content">
+				<p>
+					Once your request gets executed by the platform, you might get a response body from the Carbon LDP server. In this case we recommend you define the <code>Accept</code> header to receive this body in a known format; it's simpler to be consistent and use a single format
+					through all your requests. If this header is not defined Carbon LDP will send a response in Turtle (<code>text/turtle</code>) by default. Note that Carbon can send response bodies in other formats, such as:
+				</p>
+				<ul>
+					<li>JSON-LD: <code>application/ld+json</code></li>
+					<li>TriG: <code>application/trig</code></li>
+					<li>RDF XML: <code>application/rdf+xml</code></li>
+					<li>Binary: <code>application/x-binary-rdf</code></li>
+					<li>N-Triples: <code>application/n-triples</code></li>
+					<li>N3: <code>text/n3</code>, <code>text/rdf+n3</code></li>
+					<li>Trix: <code>application/trix</code></li>
+					<li>N-Quads: <code>application/n-quads</code>, <code>text/x-nquads</code>, <code>text/nquads</code></li>
+					<li>JSON-RDF: <code>application/rdf+json</code></li>
+
+				</ul>
+			</div>
+		</div>
+	</section>
+	<section class="mainContent-subSection">
+		<h3>Issue the DELETE request</h3>
+		<p>A successful request will result in HTTP status code <strong>204 No Content</strong>.</p>
+
+		<table class="ui celled table">
+			<thead>
+				<tr>
+					<th><span>HTTP Header</span></th>
+					<th>Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Date</td>
+					<td>Fri, 08 Dec 2017 18:33:17 GMT</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>As part of the response headers:
+		<ul>
+			<li>The Date header will confirm the time when the document got removed from your platform.</li>
+		</ul>
+		<p>Note that your document and every reference to it, will be removed from the platform. Carbon LDP takes care of this, so that with a single request you can completely eliminate a resource from your platform.</p>
+		<div class="ui info icon message">
+			<i class="info circle icon"></i>
+			<div class="content">
+				<div class="header">The more you know...</div>
+				<p>
+					When you delete a document that is referenced in one or many lists, Carbon deletes the entries that hold that reference, not just the reference.
+				</p>
+			</div>
+		</div>
+	</section>
 </section>
 <section class="mainContent-section">
 	<h2 class="ui header">Conclusion</h2>

@@ -105,9 +105,9 @@ versions:
         documents:
           - title: Getting started
             link: getting-started
-            description: Guide to get you started on how to interact directly with the Carbon LDP platform's REST API.
+            description: Guide which describes the previous knowledge and tools we recommend before you begin learning about Carbon LDP's REST API.
           - title: Object model
-            link: object-model
+            link: interaction-models
             description: Not yet documented
           - title: Documents
             link: documents

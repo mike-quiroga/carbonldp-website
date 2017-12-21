@@ -1,7 +1,7 @@
 ---
 layout: documentation/document
-title: Getting started with the REST API
-description: Guide to get you started on how to interact directly with the Carbon LDP platform's REST API.
+title: Getting started with the REST API documentation
+description: Guide which describes the previous knowledge and tools we recommend before you begin learning about Carbon LDP's REST API.
 date: 2017-02-07 19:01:07
 notDocumented: false
 version: v1.0.x
@@ -9,8 +9,14 @@ version: v1.0.x
 
 <div class="ui message">
 	<div class="content">
-		<p>This guide describes how to use the Carbon LDP REST API. The REST API provides a way for applications to interact with the Carbon platform using HTTP verbs (GET, POST, PUT, DELETE, etc.) and resources identified by URIs.</p>
-		<p>The REST API is a lower-level API than a Software Developing Kit (SDK) and doing things directly with the REST API is generally more tedious than with an SDK. However, understanding the REST API provides insight into how the platform works and can be advantageous in certain scenarios.</p>
+		<p>
+			This guide describes what you'll find on the Carbon LDP REST API documentation and how you can improve your learning experience by using all the resources we are providing. The REST API provides a way for applications to interact with the Carbon platform using HTTP
+			verbs (GET, POST, PUT, DELETE, etc.) and resources identified by URIs.
+		</p>
+		<p>
+			The REST API is a lower-level API than a Software Developing Kit (SDK) and doing things directly with the REST API is generally more tedious than with an SDK. However, understanding the REST API provides insight into how the platform works and can be advantageous
+			in certain scenarios.
+		</p>
 	</div>
 </div>
 
@@ -24,27 +30,70 @@ version: v1.0.x
 <section class="mainContent-section">
 	<h2 class="ui header">Previous knowledge</h2>
 	<p>
-		In this guide, we'll use different scenarios to go through the REST API methods, detailing the different headers and basic request bodies you can use to interact with the Carbon LDP platform.
-		In order to achieve this, examples for requests generated will be included in this documentation. Note that Carbon LDP can handle requests issued using JSON-LD, TriG, Turtle, and RDF XML.
-		Nevertheless, since we want to keep this guide simple, the examples provided use only JSON-LD or TriG.</p>
+		In this documentation, we'll use different scenarios to go through the REST API methods, detailing the different headers and basic request bodies you can use to interact with the Carbon LDP platform.
+		In order to achieve this, examples for requests generated are included to detail every interaction you can have with the Carbon LDP platform.
+	</p>
+	<p>
+		Note that Carbon LDP can handle requests issued using JSON-LD, TriG, Turtle, and RDF XML. Nevertheless, since we want to keep the documentation simple, the examples provided use only JSON-LD or TriG. For this reason you might want to check the
+		<a href="https://www.w3.org/TR/json-ld/">JSON-LD</a> and <a href="https://www.w3.org/TR/trig/">TriG</a> specifications the World Wide Web Consortium (W3C) has developed and to which Carbon LDP complies.
+	</p>
+</section>
+<!-- END: Previous knowledge -->
 
+<!-- START: Recommended tools -->
+<section class="mainContent-section">
+	<h2 class="ui header">Recommended tools</h2>
 	<p>
 		Since this guide focuses on the REST API, you'll need a tool that can help you create and send HTTP requests. We recommend <a href="https://www.getpostman.com/">Postman</a>.
 		It's a great tool, it's free, and it's the one we'll be featuring in this guide. But feel free to use the tool you're most comfortable with. <br> <br>
 		<img src="/assets/images/postman-logo.png" width="197" height="68">
 	</p>
-	<p><em><strong>Note:</strong> This guide assumes the typical host and port for a local dev environment, <code>localhost:8083</code>. If your host and port differs, you'll need to make adjustments when using the given examples.</em></p>
 	<p>Also, we have created a Postman Collection with all the examples featured in this documentation. Feel free to <a href="https://www.getpostman.com/collections/307f7898c630698ce5a8">import it</a> and try all the examples yourself.</p>
+	<p><em><strong>Note:</strong> This guide assumes the typical host and port for a local dev environment, <code>localhost:8083</code>. If your host and port differs, you'll need to make adjustments when using the given examples.</em></p>
 
 </section>
-<!-- END: Previous knowledge -->
+<!-- END: Recommended tools -->
 
-<!-- FIXME: Pending work, develop sections on Interaction Model, The more you know sections, Information on JSON-LD and TriG -->
+<!-- START: About the documentation -->
+<section class="mainContent-section">
+	<h2 class="ui header">About the documentation</h2>
+	<p>Let us give you a brief introduction on what you'll find when using our documentation.</p>
+	<section class="mainContent-subSection">
+		<h3 class="ui header">About the request examples.</h3>
+		<p>
+			Whenever an example is presented on how to make a request to the platform it will follow a basic structure. The request will be described listing the method to use, the end point where the request will be made, and the headers and body it should include.
+			Not all requests should include a body; whenever this is not needed, it will not be outlined. Nevertheless, whenever a request body is included it will be in both JSON-LD or TriG formats.
+		</p>
+		<p>
+			Following this, you'll find a section detailing all the headers and the content of the request body. Refer to the external links in case you don't understand anything from these explanations. Finally, a brief explanation of the response you should get for
+			each request is also included.
+		</p>
+	</section>
+	<section class="mainContent-subSection">
+		<h3 class="ui header">The more you know ...</h3>
+		<p>Throughout the documentation you will find some messages that look like this:</p>
+		<div class="ui info icon message">
+			<i class="info circle icon"></i>
+			<div class="content">
+				<div class="header">The more you know...</div>
+				<p>Some interesting fact about Carbon LDP and Linked Data.</p>
+			</div>
+		</div>
+		<p>
+			These boxes include some complementary information which gives you a more in depth knowledge on how Carbon LDP works. If you are new to Linked Data some of the concepts included in them might not result familiar, do not worry about this. As we mentioned,
+			this is complementary information and you will be fine using Carbon LDP's REST API without its full understanding.
+		</p>
+	</section>
+
+</section>
+<!-- END: About the documentation -->
+
+<!-- FIXME: Pending work, develop sections on Interaction Model -->
 
 <section class="mainContent-section">
 	<h2 class="ui header">Conclusion</h2>
 	<p>
-		This guide described how to build an example application using the Carbon LDP REST API. Normally, developers will prefer use of the Carbon LDP Workbench (GUI) and an SDK, which together simplify the process of building an app. Still, all functions of the platform can be accessed
-		through the REST API and those developers who understand the REST API may find it advantageous to use in some cases.
+		This guide described the basic knowledge and tools we believe you might need to getting the most out of this documentation. Remember that normally, developers will prefer use of the Carbon LDP Workbench (GUI) and an SDK, which together simplify the process of building an
+		app. Still, all functions of the platform can be accessed through the REST API and those developers who understand the REST API may find it advantageous to use in some cases.
 	</p>
 </section>
