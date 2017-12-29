@@ -1,7 +1,7 @@
 ---
 layout: documentation/document
 title: Access points
-description: An explanation on the Access Point concept and how to manage relations between documents using them.
+description: An explanation on Carbon LDP Access Points and how to use them to manage relations between documents.
 date: 2017-02-08 11:01:03
 notDocumented: false
 version: v1.0.x
@@ -23,42 +23,32 @@ version: v1.0.x
 		<li>Membership relation (<strong>soft link</strong>)</li>
 	</ul>
 
-	<!-- FIXME: Add the more you know on how links are not limited by domain taking you to the semantic web concept. -->
-
 	<p>Let's review both of these links Carbon uses to understand the need for Access Points.</p>
+
+	<div class="ui info icon message">
+		<i class="info circle icon"></i>
+		<div class="content">
+			<div class="header">The more you know...</div>
+			<p>
+				Links in Carbon LDP are not limited to your application's domain, therefore you can use readily existing models and public data that form the Semantic Web.
+			</p>
+		</div>
+	</div>
 
 	<section class="mainContent-subSection">
 		<h3 class="ui header">Parent-child relation</h3>
 		<p>In Carbon, documents can have children documents. Whenever you create a document, you need a container; this is because Carbon LDP relates the new document to the container by defining it as its direct child. Therefore, everything in Carbon has a parent, even if that is your application's root resource.</p>
 		<p>Furthermore, the importance of the hard links comes into play when deleting the documents. Whenever a parent document is deleted, all of its children, and the children of the children (and so on...) will be deleted. On the other hand, this situation does not occur when you are working with soft links.</p>
-		<!-- FIXME: Add The more you know... on how children are listed in the contains property and documents work as Basic Containers -->
-
+		<div class="ui info icon message">
+			<i class="info circle icon"></i>
+			<div class="content">
+				<div class="header">The more you know...</div>
+				<p>
+					Carbon LDP Documents work as Basic Containers, therefore listing containment triples and providing a way for creating a containment hierarchy of arbitrary resources.
+				</p>
+			</div>
+		</div>
 	</section>
-
-	<!--
-	<pre><code class="html">
-			@base &lt;http://example.org/> .
-			@prefix ex: &lt;http://example.org/ns#> .
-			@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#> .
-			@prefix schema: &lt;http://schema.org/> .
-			@prefix dbpedia: &lt;http://dbpedia.org/resource/> .
-
-			&lt;Paul>
-				a &lt;schema:Person> ;
-			    &lt;schema:birthDate> "1989-04-17T03:36:00-06:00"^^schema:Date ;
-				&lt;ex:livesIn> &lt;dbpedia:San_Francisco> ;
-				&lt;ex:worksFor> &lt;dbpedia:Twitter> .
-		</code></pre>
-
-	<pre><code class="html">
-			@base &lt;http://example.org/> .
-			@prefix ex: &lt;http://example.org/ns#> .
-
-			&lt;Paul>
-				&lt;ex:livesIn> &lt;ex:San_Francisco> .
-
-		</code></pre>
-	-->
 
 	<!-- START: Membership relation -->
 	<section class="mainContent-section">
@@ -74,7 +64,7 @@ version: v1.0.x
 			<li><code>ldp:isMemberOfRelation</code>: Configures the property that a member document will acquire when declared as a member of the container document (none by default).</li>
 		</ul>
 		<p>
-			If you don't modify the <code>ldp:hasMemberRelation</code> property, an array of member documents will be maintained in the property <code>ldp:members</code>. This list can be either retrieved or modified through different requests from the REST API, however there's a limitation to it.
+			For any Carbon document, if you don't modify the <code>ldp:hasMemberRelation</code> property, an array of member documents will be maintained in the property <code>ldp:members</code>. This list can be either retrieved or modified through different requests from the REST API, however there's a limitation to it.
 			<em>A document can only maintain one member list through one property</em> (by default <code>ldp:members</code>). Therefore, if you wanted to have members of different types, they will get mixed within the same array. Let's clarify this with an example.
 		</p>
 		<p>
@@ -84,6 +74,7 @@ version: v1.0.x
 	</section>
 	<p>To prevent this from happening, while allowing you to maintain multiple lists of members per document, Carbon LDP uses Access Points.</p>
 </section>
+
 <!-- START: What is an Access Point? -->
 <section class="mainContent-section">
 	<h2 class="ui header">What is an Access Point?</h2>
@@ -91,19 +82,37 @@ version: v1.0.x
 		Access points are special documents, whose purpose is to maintain a list of members for another document. Documents can have an unlimited number of access points, removing the limitation of membership relations. Like with normal documents, you can customize the properties that manage membership relations:
 		<code>ldp:membershipResource</code>, <code>ldp:hasMemberRelation</code>, and <code>ldp:isMemberOfRelation</code>.
 	</p>
-	<!-- FIXME: Add a The more you know... on how access points are actually direct containers -->
+	<div class="ui info icon message">
+		<i class="info circle icon"></i>
+		<div class="content">
+			<div class="header">The more you know...</div>
+			<p>
+				A Carbon LDP Access Point can be regarded as equivalent to an LDP Direct Container.
+			</p>
+		</div>
+	</div>
 	<p>Note that the <code>ldp:membershipResource</code> property configures the document where the member documents will be added. In this case, the property will be pointing to the document the access point belongs to.</p>
-	<!-- FIXME: Work in progress -->
+	<p>It is important that you always remember access points work as member managers for documents. However, they do not contain member documents themselves.</p>
 </section>
 <!-- END: What is an Access Point? -->
 
 <!-- START: Create an Access Point -->
 <section class="mainContent-section">
 	<h2 class="ui header">Create an Access Point</h2>
-	<p>Creating an access point is similar to creating a document. However, there are certain differences you should pay attention to. First, we'll need some test documents to experiment relating them. You can use the requests stored in our
-		<a href="https://www.getpostman.com/collections/307f7898c630698ce5a8">Postman Collection</a> in the <strong>access-point</strong> folder.
-	</p>
+	<p>Creating an access point is similar to creating a document. However, there are certain differences you should pay attention to.</p>
+
+	<p>First, when creating an access point you should focus on configuring the properties used to manage relationships within documents:</p>
+	<ul>
+		<li><code>ldp:hasMemberRelation</code></li>
+		<li><code>ldp:membershipResource</code></li>
+		<li><code>ldp:isMemberOfRelation</code></li>
+	</ul>
+	<p>Beware that once an access point has been created these properties cannot be modified. Therefore, pay close attention to them when creating your access point and be sure that they have been correctly configured.</p>
+
+	<p>Also, we'll need some test documents to experiment relating them. You can use the requests stored in our <a href="https://www.getpostman.com/collections/307f7898c630698ce5a8">Postman Collection</a> in the <strong>access-point</strong> folder.</p>
+
 	<p>Let's create a "project-x" document with the following body:</p>
+	<p>(<strong>This document will work as our container document in this example.</strong>)</p>
 	<tabs>
 		<tab title="JSON-LD">
 				<pre><code class="json">
@@ -136,6 +145,7 @@ version: v1.0.x
 	</tabs>
 
 	<p>Let's also create a "john-doe" employee that will take part of the Project X with the following body:</p>
+	<p>(<strong>This document will work as our member document in this example.</strong>)</p>
 	<tabs>
 		<tab title="JSON-LD">
 				<pre><code class="json">
@@ -172,7 +182,7 @@ version: v1.0.x
 	<p>Issue a POST request through HTTP in order to create our first basic access point.</p>
 	<section class="mainContent-subSection">
 		<h3 class="ui header">Create the POST request</h3>
-		<p>Create the following HTTP request to create a test document.</p>
+		<p>Create the following HTTP request to create a basic access point.</p>
 		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/project-x/</code></p>
 		<table class="ui celled table">
 			<thead>
@@ -318,11 +328,17 @@ version: v1.0.x
 			<div class="active content">
 				<p>The body of the request is a graph of triples written in the RDF syntax matching the Content-Type header.</p>
 				<p>
-					In this case we are defining the <code>ldp:hasMemberRelation</code> property as <code>ex:participant</code> so that the people that participate in the Project X are added in the project-x document using that property. Please note that the platform automatically
-					configures the property <code>ldp:membershipResource</code>, therefore when you add member documents to the recently created access point they will be added in the document you targeted in your request.
+					In this case we are defining the <code>ldp:hasMemberRelation</code> property (as <code>ex:participant</code>) so that the member documents are added to the container document using that property. This is the basic way in which we recommend you
+					configure your access point.
 				</p>
-				<!-- FIXME: Minimum recommended request body, add that if isMemberOfRelation is configured, a bilateral relation will be achieved -->
-				<p>Also, this case exemplifies the simplest request body required to create an access point. Since access points are just a special type of document bear in mind that they can contain as many properties as you desire.</p>
+				<p>
+					Nevertheless this will only create a one way relation between the container document and the members added to it. If you look at the member document you will not find any reference to the container document. To
+					achieve a bilateral relation you must also configure in your access point the <code>ldp:isMemberOfRelation</code> property with the property where the container document will be referenced in the member document.
+				</p>
+				<p>
+					Please note that the platform automatically configures the property <code>ldp:membershipResource</code>, therefore when you add member documents to the recently created access point they will be added in the document you targeted in your request.
+				</p>
+				<p>Also, since this case exemplifies the simplest request body required to create an access point only the properties that manage relationships are mentioned. Since access points are just a special type of document bear in mind that they can contain as many properties as you desire.</p>
 				<p>If there is anything from the request body you don't understand you can check the <a href="https://www.w3.org/TR/json-ld/">JSON-LD</a> or <a href="https://www.w3.org/TR/trig/">TriG</a> W3C specifications, which Carbon LDP complies to.</p>
 			</div>
 		</div>
@@ -361,8 +377,8 @@ version: v1.0.x
 <section class="mainContent-section">
 	<h2 class="ui header">Member management</h2>
 	<p>
-		Once you have created an access point, Carbon LDP let's you add and remove members to it. It is important that you remember that these changes will be reflected in the document to which the access point belongs to (<code>ldp:membershipResource</code>). Within this section we will review examples
-		on how to either add or remove members from your access point documents. To achieve this, Carbon LDP implements two methods that execute via REST requests in the platform:
+		Once you have created an access point, Carbon LDP let's you add and remove members to it. It is important that you remember that these changes will be reflected in the container document (<code>ldp:membershipResource</code> in the access point). Within this section we will review examples
+		on how to either add or remove members from your container documents using access points. To achieve this, Carbon LDP implements two methods that execute via REST requests in the platform:
 	</p>
 	<ul>
 		<li><code>https://carbonldp.com/ns/v1/platform#AddMemberAction</code></li>
@@ -474,7 +490,7 @@ version: v1.0.x
 						By specifying its interaction model, we're defining how we want this resource to behave.
 					</p>
 					<p>
-						In Carbon LDP resources can behave as either Documents (<code>RDFSource</code>) or Containers. When you're modifying an access point, you want the target resource to interact as a <code>Container</code>.
+						In Carbon LDP resources can behave as either Documents (<code>RDFSource</code>) or Containers. When you're managing a container's members through an access point, you want the target resource to interact as a <code>Container</code>.
 						Because we're adding a member resource to the container, we need it to behave like a container as opposed to an <code>RDFSource</code>.
 						Carbon supports the following interaction model values for the <code>Prefer</code> header:
 					</p>
@@ -549,7 +565,7 @@ version: v1.0.x
 		<p>When removing a member you are modifying the access point in a particular way. Therefore, this is done through a DELETE request. Issue a DELETE request through HTTP in order to remove a member from our access point.</p>
 		<section>
 			<h4 class="ui header">Create the DELETE request</h4>
-			<p>Create the following HTTP request to remove a member from the project-x/participants/ access point.</p>
+			<p>Create the following HTTP request to remove a member that has been added through the project-x/participants/ access point.</p>
 			<p><span class="ui blue horizontal label">DELETE</span> <code>http://localhost:8083/project-x/participants/</code></p>
 			<table class="ui celled table">
 				<thead>
@@ -643,7 +659,7 @@ version: v1.0.x
 						By specifying its interaction model, we're defining how we want this resource to behave.
 					</p>
 					<p>
-						In Carbon LDP resources can behave as either Documents (<code>RDFSource</code>) or Containers. When you're modifying an access point, you want the target resource to interact as a <code>Container</code>.
+						In Carbon LDP resources can behave as either Documents (<code>RDFSource</code>) or Containers. When you're managing a container's members through an access point, you want the target resource to interact as a <code>Container</code>.
 						Because we're removing a member resource from the container, we need it to behave like a container as opposed to an <code>RDFSource</code>.
 						Carbon supports the following interaction model values for the <code>Prefer</code> header:
 					</p>
@@ -688,7 +704,7 @@ version: v1.0.x
 			</div>
 		</section>
 		<section>
-			<h4 class="ui header">Issue the PUT request</h4>
+			<h4 class="ui header">Issue the DELETE request</h4>
 			<p>A successful request will result in HTTP status code <strong>204 No Content</strong>.</p>
 			<table class="ui celled table">
 				<thead>
@@ -710,25 +726,159 @@ version: v1.0.x
 			</ul>
 		</section>
 	</section>
+	<section class="mainContent-subSection">
+		<h3 class="ui header">Remove all members</h3>
+		<p>The case can present itself where you have added multiple members through an access point and you might need to remove them all. While you could list them all in your request body as target members of the <code>c:RemoveMemberAction</code> method, this is not a scalable approach. Let's see how you could achieve this in a simpler manner.</p>
+		<p>When removing a member you are modifying the access point in a particular way. Therefore, this is done through a DELETE request. Issue a DELETE request through HTTP in order to remove a member from our access point.</p>
+		<section>
+			<h4 class="ui header">Create the DELETE request</h4>
+			<p>Create the following HTTP request to remove all the members that have been added through the project-x/participants/ access point.</p>
+			<p><span class="ui blue horizontal label">DELETE</span> <code>http://localhost:8083/project-x/participants/</code></p>
+			<table class="ui celled table">
+				<thead>
+					<tr>
+						<th><span>HTTP Header</span></th>
+						<th>Value</th>
+						<th>Required/Optional</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Prefer</td>
+						<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+						<td>Required</td>
+					</tr>
+					<tr>
+						<td>If-Match</td>
+						<td>"1159301253" (latest ETag obtained from the resource)</td>
+						<td>Optional</td>
+					</tr>
+					<tr>
+						<td>Accept</td>
+						<td>
+							application/ld+json<br>
+							or<br>
+							application/trig<br>
+						</td>
+						<td>Optional (default is <code>text/turtle</code>)</td>
+					</tr>
+				</tbody>
+			</table>
+			<br>
+		</section>
+		<section>
+			<h4 class="ui header">Review the DELETE request</h4>
+			<p>It is important that before issuing this request, you understand all its parts. Next, you'll get more information about each part in the request.</p>
+			<div class="ui styled fluid accordion">
+				<div class="title">
+					<i class="dropdown icon"></i> Prefer
+				</div>
+				<div class="content">
+					<p>
+						The <code>Prefer</code> header uses a link relation to specify the <em>interaction model</em> of the target resource. When you issue a request, you are targeting a specific resource where your request will be applied; in this case the <code>participants/</code> resource.
+						By specifying its interaction model, we're defining how we want this resource to behave.
+					</p>
+					<p>
+						In Carbon LDP resources can behave as either Documents (<code>RDFSource</code>) or Containers. When you're managing a container's members through an access point, you want the target resource to interact as a <code>Container</code>.
+						Because we're removing a member resource from the container, we need it to behave like a container as opposed to an <code>RDFSource</code>.
+						Carbon supports the following interaction model values for the <code>Prefer</code> header:
+					</p>
+					<ul>
+						<li><code>http://www.w3.org/ns/ldp#Container; rel=interaction-model</code></li>
+						<li><code>http://www.w3.org/ns/ldp#RDFSource; rel=interaction-model</code></li>
+					</ul>
+				</div>
+				<div class="title">
+					<i class="dropdown icon"></i> If-Match
+				</div>
+				<div class="content">
+					<p>
+						The <code>If-Match</code> header allows you to ensure that the data you are modifying is accurate before changing anything within your document; this is necessary to maintain data consistency. Your application might not be the
+						only one modifying the resource, so the platform needs a way to assure that no data is overridden when executing a request that modifies the resource.
+					</p>
+					<p>
+						To achieve this Carbon uses ETags, therefore it only allows changes that won't override each other.
+						In case the ETags do not match, you should first execute a GET request, update your request with the new ETag, and retry it.
+					</p>
+				</div>
+				<div class="title">
+					<i class="dropdown icon"></i> Accept
+				</div>
+				<div class="content">
+					<p>
+						Once your request gets executed by the platform, you might get a response body from the Carbon LDP server. In this case we recommend you define the <code>Accept</code> header to receive this body in a known format; it's simpler to be consistent and use the same format
+						used to send the request body. If this header is not defined Carbon LDP will send a response in Turtle (<code>text/turtle</code>) by default. Note that Carbon can send response bodies in other formats, such as:
+					</p>
+					<ul>
+						<li>JSON-LD: <code>application/ld+json</code></li>
+						<li>TriG: <code>application/trig</code></li>
+						<li>RDF XML: <code>application/rdf+xml</code></li>
+						<li>Binary: <code>application/x-binary-rdf</code></li>
+						<li>N-Triples: <code>application/n-triples</code></li>
+						<li>N3: <code>text/n3</code>, <code>text/rdf+n3</code></li>
+						<li>Trix: <code>application/trix</code></li>
+						<li>N-Quads: <code>application/n-quads</code>, <code>text/x-nquads</code>, <code>text/nquads</code></li>
+						<li>JSON-RDF: <code>application/rdf+json</code></li>
+
+					</ul>
+				</div>
+			</div>
+		</section>
+		<section>
+			<h4 class="ui header">Issue the DELETE request</h4>
+			<p>A successful request will result in HTTP status code <strong>204 No Content</strong>.</p>
+			<table class="ui celled table">
+				<thead>
+					<tr>
+						<th>HTTP Header</th>
+						<th>Value</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Date</td>
+						<td><span>Thu, 21 Dec 2017 23:47:00 GMT</span></td>
+					</tr>
+				</tbody>
+			</table>
+			<p>As part of the response headers:
+			<ul>
+				<li>The Date header will confirm the date and time when the members got removed from the container document the access point belongs to.</li>
+			</ul>
+
+			<p>Please note that when issuing this request you will not delete the access point, and you can still manage members through it.</p>
+		</section>
+	</section>
 </section>
 <!-- END: Member management -->
 
-<!-- START: Read an Access Point -->
+<!-- START: Retrieve an Access Point -->
 <section class="mainContent-section">
-	<h2 class="ui header">Read an Access Point</h2>
+	<h2 class="ui header">Retrieve an Access Point</h2>
 	<p>
-		<!-- FIXME: Add link to Document documentation -->
+		Retrieving an access point can be useful when you need to review the properties that manage relationships between documents. Nevertheless, remember that the members the access point manages are contained within the container document that the property <code>ldp:membershipResource</code> indicates.
+		Therefore, when reading an access point do not expect to find the members the access point has added to a document.
+	</p>
+	<p>Retrieving an access point is the same process as retrieving a regular document. If you can't recall how to retrieve a Carbon document, see <a href="../documents/#retrieve-a-document">Retrieve a Document</a>.</p>
+</section>
+<!-- END: Retrieve an Access Point -->
+
+<!-- START: Delete an Access Point -->
+<section class="mainContent-section">
+	<h2 class="ui header">Delete an Access Point</h2>
+	<p>
+		Deleting an access point will not cause any effects to the members added or removed through the access point in a document. Therefore, deleting an access point is an action we do not recommend executing since it can cause issues in you container or member documents. In order to remove members from a document through an access point see <a href="./#remove-a-member">Remove a member</a> or <a href="./#remove-all-members">Remove all members</a>.
+		Also, remember that access points maintain a strong link with the document that contains them. Therefore, if a document is deleted from the platform then the access points it contains will be deleted as well.
 	</p>
 </section>
-<!-- END: Read an Access Point -->
+<!-- END: Delete an Access Point -->
 
-<!-- START: Modify an Access Point -->
+<!-- START: Conclusion -->
 <section class="mainContent-section">
-	<h2 class="ui header">Modify an Access Point</h2>
+	<h2 class="ui header">Conclusion</h2>
 	<p>
-		<!-- FIXME: Add link to Document documentation -->
+		This guide described the need for Carbon LDP access points and how to interact with them via the REST API. Normally, developers will prefer use of the Carbon LDP Workbench (GUI) and an SDK, which together simplify the process of building and working with the platform. Still, all functions of the platform can be
+		accessed through the REST API and those developers who understand the REST API may find it advantageous to use in some cases.
 	</p>
 </section>
-<!-- END: Modify an Access Point -->
-
-
+<!-- END: Conclusion -->

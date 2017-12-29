@@ -105,16 +105,16 @@ versions:
         documents:
           - title: Getting started
             link: getting-started
-            description: Guide which describes the previous knowledge and tools we recommend before you begin learning about Carbon LDP's REST API.
-          - title: Object model
-            link: interaction-models
-            description: Not yet documented
+            description: Description of the previous knowledge and tools we recommend before you begin learning about Carbon LDP's REST API.
+          - title: Object and interaction models
+            link: object-and-interaction-models
+            description: Your introduction to the different object models contained in Carbon LDP, as well as the behaviors these resources can have.
           - title: Documents
             link: documents
             description: Guide to get you working with Carbon documents over HTTP.
-          - title: Access Points
+          - title: Access points
             link: access-points
-            description: Not yet documented
+            description: An explanation on Carbon LDP Access Points and how to use them to manage relations between documents.
           - title: Querying
             link: querying
             description: Not yet documented
