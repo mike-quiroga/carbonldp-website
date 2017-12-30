@@ -34,6 +34,8 @@ version: v1.0.x
 	</div>
 </div>
 
+
+<!-- START: Introduction -->
 <section class="mainContent-section">
 	<h2 class="hidden">Introduction</h2>
 
@@ -95,7 +97,10 @@ version: v1.0.x
 		though we intend to broaden that scope in a subsequent release.
 	</p>
 </section>
+<!-- END: Introduction -->
 
+
+<!-- START: SPARQL Query Builder -->
 <section class="mainContent-section">
 	<h2>SPARQL Query Builder</h2>
 
@@ -805,7 +810,10 @@ version: v1.0.x
 		</tabs>
 	</section>
 </section>
+<!-- END: SPARQL Query Builder -->
 
+
+<!-- START: SPARQL Services -->
 <section class="mainContent-section">
 
 	<h2 class="hidden">SPARQL Services</h2>
@@ -1299,12 +1307,16 @@ version: v1.0.x
 	</section>
 
 </section>
+<!-- END: SPARQL Services -->
 
+
+<!-- START: Using the documents service -->
 <section class="mainContent-section">
 	<h2>Using the documents service</h2>
 
 	<p>
 		Another powerful way of creating queries is by using the <code>documents</code> service, particularly the <code>documents.get</code> method of such service.
+		Up until now, we have been using this method to retrieve the content of a desired document, see below:
 	</p>
 
 	<h4>Example</h4>
@@ -1318,7 +1330,7 @@ version: v1.0.x
 						"@types":[ "http://localhost:8083/vocabulary/#Client" ]
 
 						// Properties
-						name: "Real Psychology Association",
+						name: "Royal Psychology Association",
 						countryOfOrigin: "France",
 						foundationYear: 1990,
 						numberOfEmployees: 150,
@@ -1351,11 +1363,13 @@ version: v1.0.x
 	</code></pre>
 	<p>With this in mind, let's use the <code>documents.get</code> to normally retrieve a document.</p>
 
+
+	<!-- START: Getting a document -->
 	<section class="mainContent-section">
 		<h3>Getting a document</h3>
 
 		<p>
-			To retrieve a <i>document containing all of its properties</i>, we have to use the <code>documents.get</code> method.<br>
+			To retrieve a <i>document containing all of its properties</i>, we use the <code>documents.get</code> method.<br>
 			For example purposes, let's retrieve the <code>http://localhost:8083/clients/rivi/</code> document, like this:
 		</p>
 
@@ -1371,7 +1385,8 @@ version: v1.0.x
 
 				// ... authenticate if needed
 
-				carbon.documents.get( "clients/rivi/" ).then( ( [ client, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
+				carbon.documents.get &lt;Client>( "clients/rivi/" )
+				.then( ( [ client, response ]:[ Client & PersistedDocument.Class, HTTP.Response.Class ] ) => {
 
 					console.log( client );
 					// countryOfOrigin:"United States"
@@ -1396,14 +1411,21 @@ version: v1.0.x
 
 				// ... authenticate if needed
 
-				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", `
-					BASE     &lt;http://localhost:8083/>
-					DESCRIBE &lt;projects/project-01/>
-				` )
-					.then( ( [ result, response ] ) => {
-						// ... process the result JSON-LD string
-					} )
-					;
+				carbon.documents.get( "clients/rivi/" ).then( ( [ client, response ] ) => {
+
+						console.log( client );
+						// countryOfOrigin:"United States"
+						// created: Wed Nov 15 2017 19:05:21 GMT-0600 (CST) {}
+						// foundationYear: 2001
+						// hasMemberRelation: {_id: "http://www.w3.org/ns/ldp#member", _resolved: false, isResolved: ƒ, resolve: ƒ}
+						// insertedContentRelation: {_id: "http://www.w3.org/ns/ldp#MemberSubject", _resolved: false, isResolved: ƒ, resolve: ƒ}
+						// membershipResource: {name: "Remote Island Vehicular Institute", countryOfOrigin: "United States", foundationYear: 2001, numberOfEmployees: 100, hasMemberRelation: {…}, …}
+						// modified: Wed Nov 15 2017 19:05:21 GMT-0600 (CST) {}
+						// name: "Remote Island Vehicular Institute"
+						// numberOfEmployees: 100
+						// Other inherited properties ...
+
+					} );
 				</code></pre>
 			</tab>
 			<tab title="JavaScript ES5">
@@ -1414,14 +1436,24 @@ version: v1.0.x
 
 				// ... authenticate if needed
 
-				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", "" +
-					"BASE     &lt;http://localhost:8083/>" +
-					"DESCRIBE &lt;projects/project-01/>"
-				)
-					.then( function( [ result, response ] ) {
-						// ... process the result JSON-LD string
-					} )
-					;
+				carbon.documents.get( "clients/rivi/" ).then( function ( result ) { {
+
+						var client = result[ 0 ];
+						var response = result[ 1 ];
+
+						console.log( client );
+						// countryOfOrigin:"United States"
+						// created: Wed Nov 15 2017 19:05:21 GMT-0600 (CST) {}
+						// foundationYear: 2001
+						// hasMemberRelation: {_id: "http://www.w3.org/ns/ldp#member", _resolved: false, isResolved: ƒ, resolve: ƒ}
+						// insertedContentRelation: {_id: "http://www.w3.org/ns/ldp#MemberSubject", _resolved: false, isResolved: ƒ, resolve: ƒ}
+						// membershipResource: {name: "Remote Island Vehicular Institute", countryOfOrigin: "United States", foundationYear: 2001, numberOfEmployees: 100, hasMemberRelation: {…}, …}
+						// modified: Wed Nov 15 2017 19:05:21 GMT-0600 (CST) {}
+						// name: "Remote Island Vehicular Institute"
+						// numberOfEmployees: 100
+						// Other inherited properties ...
+
+					} );
 			</code></pre>
 			</tab>
 		</tabs>
@@ -1434,8 +1466,10 @@ version: v1.0.x
 		<p>Well this is where querying comes into play.</p>
 
 	</section>
+	<!-- END: Getting a document -->
 
 
+	<!-- START: Querying properties of a document -->
 	<section class="mainContent-section">
 		<h3>Querying properties of a document</h3>
 
@@ -1456,12 +1490,12 @@ version: v1.0.x
 
 				// ... authenticate if needed
 
-				carbon.documents.get( "clients/rivi/", _ => {   // Function defining the desired properties
+				carbon.documents.get &lt;Client>( "clients/rivi/", _ => {   // Function defining the desired properties
 					return _.properties( {
 						"name": _.inherit,
 						"numberOfEmployees": _.inherit
 					} );
-				} ).then( ( [ client, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
+				} ).then( ( [ client, response ]:[ Client & PersistedDocument.Class, HTTP.Response.Class ] ) => {
 
 					console.log( client );
 					// name: "Remote Island Vehicular Institute"
@@ -1479,14 +1513,19 @@ version: v1.0.x
 
 				// ... authenticate if needed
 
-				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", `
-					BASE     &lt;http://localhost:8083/>
-					DESCRIBE &lt;projects/project-01/>
-				` )
-					.then( ( [ result, response ] ) => {
-						// ... process the result JSON-LD string
-					} )
-					;
+				carbon.documents.get( "clients/rivi/", _ => {   // Function defining the desired properties
+					return _.properties( {
+						"name": _.inherit,
+						"numberOfEmployees": _.inherit
+					} );
+				} ).then( ( [ client, response ] ) => {
+
+					console.log( client );
+					// name: "Remote Island Vehicular Institute"
+					// numberOfEmployees: 100
+					// Other inherited properties ...
+
+				} );
 				</code></pre>
 			</tab>
 			<tab title="JavaScript ES5">
@@ -1497,27 +1536,37 @@ version: v1.0.x
 
 				// ... authenticate if needed
 
-				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", "" +
-					"BASE     &lt;http://localhost:8083/>" +
-					"DESCRIBE &lt;projects/project-01/>"
-				)
-					.then( function( [ result, response ] ) {
-						// ... process the result JSON-LD string
-					} )
-					;
+				carbon.documents.get( "clients/rivi/", function ( _ ) {   // Function defining the desired properties
+					return _.properties( {
+						"name": _.inherit,
+						"numberOfEmployees": _.inherit
+					} );
+				} ).then( function ( result  ) => {
+
+					var client = result[ 0 ];
+					var response = result[ 1 ];
+
+					console.log( client );
+					// name: "Remote Island Vehicular Institute"
+					// numberOfEmployees: 100
+					// Other inherited properties ...
+
+				} );
 			</code></pre>
 			</tab>
 		</tabs>
 
 		<p>
-			What we did was to use a function that returns a <code>QueryDocumentBuilder</code> object, which lets us construct a query with the desired properties
+			What we did was to use a function that returns a <code>QueryDocumentBuilder</code> type of object that lets us construct a query with the desired properties
 			by using the <code>properties</code> function.
 			<!--But this helper function can also let us retrieve -->
 		</p>
 
 	</section>
+	<!-- END: Querying properties of a document -->
 
 
+	<!-- START: The query function -->
 	<section class="mainContent-subSection">
 		<h3>The query function</h3>
 
@@ -1525,7 +1574,7 @@ version: v1.0.x
 
 		<pre><code class="typescript">
 				...
-				carbon.documents.get( "clients/rivi/", _ => {   // Function defining the desired properties
+				carbon.documents.get &lt;Client>( "clients/rivi/", _ => {   // Function defining the desired properties
 					return _.properties( {
 						"name": _.inherit,
 						"numberOfEmployees": _.inherit
@@ -1562,12 +1611,12 @@ version: v1.0.x
 					<div class="header">The <code>_.inherit</code> property</div>
 					<div class="description">
 						<p>
-							To build a query in order to get the desired properties of a document, we have to list them through the <code>_.properties</code> function.
-							Because what we are passing is an object with the desired properties, we must assign a value to each property, and since
-							we do not know/nor care for the values of the properties because we just want them, the <code>_.inherit</code> instruction let's us
-							do exactly that.<br>
-							In other words, the <code>_.inherit</code> property it's another way of saying "I want property 'X' but I don't
-							care/know which value or type that property has, just retrieve it".
+							To build a query to get the desired properties of a document, we have to list them through the <code>_.properties</code> function.
+							Because what we are passing to this functions is a <strong>JavaScript object</strong> with the desired <strong>properties</strong>,
+							<i>we must assign a value to each property</i>, and since we do not know/nor care for the values of the properties because we just want them,
+							the <code>_.inherit</code> instruction let's us do exactly that.<br>
+							In a nutshell, the <code>_.inherit</code> property it's another way of saying <i>"I want property 'X' but I don't
+								care/know which value or type that property has, just retrieve it"</i>.
 						</p>
 					</div>
 				</div>
@@ -1575,8 +1624,10 @@ version: v1.0.x
 		</div>
 
 	</section>
+	<!-- END: The query function -->
 
 
+	<!-- START: Getting a document with a type -->
 	<section class="mainContent-subSection">
 		<h3>Getting a document with a type</h3>
 
@@ -1586,15 +1637,14 @@ version: v1.0.x
 				<p>
 					If you have not worked with object schemas before or have no idea of what they are, please refer to the
 					<a href="../object-schema#what-is-an-object-schema-" target="_blank">What is an object schema?</a>
-					section to better understand the use of types while querying.
+					section, particularly the <a href="../object-schema#data-types-type-">Data Types (@type) section</a>, to better understand the use of types while querying.
 				</p>
 			</div>
 		</div>
 
 		<p>
 			Carbon stores all of its documents with a property called <span class="highlight">@types</span>.
-			This property allows the platform to identify the way to interact with the documents (as a document or as a container) while also allowing us to
-			better organize our information to avoid name collisions by using the SDK's <a href="../object-schema#object-types" target="_blank">object schema's types </a>.
+			This property allows us to better organize our information/documents to avoid name collisions by using the SDK's <a href="../object-schema#object-types" target="_blank">object schema's types </a>.
 		</p>
 
 		<p>
@@ -1614,13 +1664,30 @@ version: v1.0.x
 
 				// ... authenticate if needed
 
-				carbon.documents.get( "clients/rivi/", _ => {   // Function defining the desired properties
-					return _.withType( "Client" )
-						.properties( {
+				// ... extending object schema with a new Client type
+				carbon.extendObjectSchema( "Client", {
+					"name": {
+						"@type": "string"
+					},
+					"countryOfOrigin": {
+						"@type": "string"
+					},
+					"foundationYear": {
+						"@type": "integer"
+					},
+					"numberOfEmployees": {
+						"@type": "integer"
+				    }
+				} );
+
+				// ... creating a query to fetch a Client type document using withType
+				carbon.documents.get &lt;Client>( "clients/rivi/", _ => {
+					return _.withType( "Client" )   // Setting the type in a query
+						.properties( {   // Function defining the desired properties
 							"name": _.inherit,
 							"numberOfEmployees": _.inherit
 						} );
-				} ).then( ( [ client, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
+				} ).then( ( [ client, response ]:[ Client & PersistedDocument.Class, HTTP.Response.Class ] ) => {
 
 					console.log( client );
 					// name: "Remote Island Vehicular Institute"
@@ -1632,20 +1699,43 @@ version: v1.0.x
 			</tab>
 			<tab title="JavaScript ES2015">
 			<pre><code class="javascript">
-				let carbon;
+				let carbon:Carbon;
 
 				// ... initialize your Carbon object
 
 				// ... authenticate if needed
 
-				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", `
-					BASE     &lt;http://localhost:8083/>
-					DESCRIBE &lt;projects/project-01/>
-				` )
-					.then( ( [ result, response ] ) => {
-						// ... process the result JSON-LD string
-					} )
-					;
+				// ... extending object schema with a new Client type
+				carbon.extendObjectSchema( "Client", {
+					"name": {
+						"@type": "string"
+					},
+					"countryOfOrigin": {
+						"@type": "string"
+					},
+					"foundationYear": {
+						"@type": "integer"
+					},
+					"numberOfEmployees": {
+						"@type": "integer"
+				    }
+				} );
+
+				// ... creating a query to fetch a Client type document using withType
+				carbon.documents.get( "clients/rivi/", _ => {
+					return _.withType( "Client" )   // Setting the type in a query
+						.properties( {   // Function defining the desired properties
+							"name": _.inherit,
+							"numberOfEmployees": _.inherit
+						} );
+				} ).then( ( [ client, response ] ) => {
+
+					console.log( client );
+					// name: "Remote Island Vehicular Institute"
+					// numberOfEmployees: 100
+					// Other inherited properties ...
+
+				} );
 				</code></pre>
 			</tab>
 			<tab title="JavaScript ES5">
@@ -1656,36 +1746,64 @@ version: v1.0.x
 
 				// ... authenticate if needed
 
-				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", "" +
-					"BASE     &lt;http://localhost:8083/>" +
-					"DESCRIBE &lt;projects/project-01/>"
-				)
-					.then( function( [ result, response ] ) {
-						// ... process the result JSON-LD string
-					} )
-					;
+				// ... extending object schema with a new Client type
+				carbon.extendObjectSchema( "Client", {
+					"name": {
+						"@type": "string"
+					},
+					"countryOfOrigin": {
+						"@type": "string"
+					},
+					"foundationYear": {
+						"@type": "integer"
+					},
+					"numberOfEmployees": {
+						"@type": "integer"
+				    }
+				} );
+
+				// ... creating a query to fetch a Client type document using withType
+				carbon.documents.get( "clients/rivi/", function ( _ ) {
+					return _.withType( "Client" )   // Setting the type in a query
+						.properties( {   // Function defining the desired properties
+							"name": _.inherit,
+							"numberOfEmployees": _.inherit
+						} );
+				} ).then( function ( result ) => {
+
+					var client = result[ 0 ];
+					var response = result[ 1 ];
+
+					console.log( client );
+					// name: "Remote Island Vehicular Institute"
+					// numberOfEmployees: 100
+					// Other inherited properties ...
+
+				} );
 			</code></pre>
 			</tab>
 		</tabs>
 
 		<p>
-			By doing this, we facilitate the SDK's objects types inferring by saving time checking all the existing object schemas to find the
+			By doing this, we facilitate the SDK's type inference by saving time checking all the existing object schemas to find the
 			type of value that each property will have. All of this while also building efficient queries by calling just the desired properties,
 			which allows us to save time and data consumed by each call.
 		</p>
 
 	</section>
+	<!-- END: Getting a document with a type -->
 
 
+	<!-- START: Getting the members of a container -->
 	<section class="mainContent-subSection">
-		<h3>Getting the children of a container</h3>
+		<h3>Getting the members of a container</h3>
 
 		<p>
 			Until here, we've just talked about two things: retrieving a <span class="highlight">document</span> with all of its properties and retrieving a document with some properties.<br>
 		</p>
 		<p>
-			The SDK also allows us to get all the existing children from a single call by using the <code>getChildren</code> function.<br>
-			When using this function, an array of all the existing direct children with all of their properties will be returned.
+			The SDK also allows us to get all the existing members and children from a single call by using the <code>getMembers</code> function.
+			When using this function, an array of all the existing members with all of their properties will be returned.
 		</p>
 		<p>You can see this in the following code:</p>
 
@@ -1701,7 +1819,9 @@ version: v1.0.x
 
 				// ... authenticate if needed
 
-				carbon.documents.getChildren( "clients/" ).then( ( [ clients, response ]:[ PersistedDocument.Class[], HTTP.Response.Class ] ) => {
+				// ... extending object schema with a new Client type
+
+				carbon.documents.getMembers &lt;Client>( "clients/" ).then( ( [ clients, response ]:[ Array&lt;Client & PersistedDocument.Class>, HTTP.Response.Class ] ) => {
 
 					console.log( clients );
 					// (3) [{…}, {…}, {…}]
@@ -1720,14 +1840,17 @@ version: v1.0.x
 
 				// ... authenticate if needed
 
-				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", `
-					BASE     &lt;http://localhost:8083/>
-					DESCRIBE &lt;projects/project-01/>
-				` )
-					.then( ( [ result, response ] ) => {
-						// ... process the result JSON-LD string
-					} )
-					;
+				// ... extending object schema with a new Client type
+
+				carbon.documents.getMembers( "clients/" ).then( ( [ clients, response ]) => {
+
+					console.log( clients );
+					// (3) [{…}, {…}, {…}]
+					//	0:{_id: "http://localhost:8083/clients/peopletrucks/", _resolved: true, isResolved: ƒ, resolve: ƒ, …}
+					//	1:{_id: "http://localhost:8083/clients/rivi/", _resolved: true, isResolved: ƒ, resolve: ƒ, …}
+					//	2:{_id: "http://localhost:8083/clients/rpa/", _resolved: true, isResolved: ƒ, resolve: ƒ, …}
+
+				} );
 				</code></pre>
 			</tab>
 			<tab title="JavaScript ES5">
@@ -1738,25 +1861,32 @@ version: v1.0.x
 
 				// ... authenticate if needed
 
-				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", "" +
-					"BASE     &lt;http://localhost:8083/>" +
-					"DESCRIBE &lt;projects/project-01/>"
-				)
-					.then( function( [ result, response ] ) {
-						// ... process the result JSON-LD string
-					} )
-					;
+				// ... extending object schema with a new Client type
+
+				carbon.documents.getMembers( "clients/" ).then( function ( result ) => {
+
+					var clients = result[ 0 ];
+					var response = result[ 1 ];
+
+					console.log( clients );
+					// (3) [{…}, {…}, {…}]
+					//	0:{_id: "http://localhost:8083/clients/peopletrucks/", _resolved: true, isResolved: ƒ, resolve: ƒ, …}
+					//	1:{_id: "http://localhost:8083/clients/rivi/", _resolved: true, isResolved: ƒ, resolve: ƒ, …}
+					//	2:{_id: "http://localhost:8083/clients/rpa/", _resolved: true, isResolved: ƒ, resolve: ƒ, …}
+
+				} );
 			</code></pre>
 			</tab>
 		</tabs>
 
 		<p>
-			Until here, nothing new has happened. We just retrieved all the children of the <span class="highlight">clients/</span> container and printed them.
-			But <code>getChildren</code> also allows us to pass a query to be applied when retrieving the children, allowing us to fetch only some properties of each one of them
-			or even applying complex queries, like getting documents matching a filtering criteria, e.g. All the clients with number of employees greater than X, etc...
+			Up until now, nothing new has happened. We just retrieved all the members of the <span class="highlight">clients/</span> container and printed them out.
+			Like the <code>get</code> method of the <code>documents</code> service, <code>getMembers</code> also allows us to pass a query to be applied when retrieving the members,
+			allowing us to fetch some desired properties on each one of them or even applying complex queries, like getting documents matching a filtering criteria, for example,
+			getting all the clients with a number of employees greater than X, etc...
 		</p>
 		<p>
-			Let's use the <code>getChildren</code> querying functionality to fetch the <u>name of the company</u> and the <u>amount of employees</u> of those companies with
+			In fact, let's use the <code>getMembers</code> querying functionality to fetch the <u>name of the company</u> and the <u>amount of employees</u> of those companies with
 			<u>more than 100 employees</u>. In code, this requirement will be portrayed like this:
 		</p>
 
@@ -1772,13 +1902,16 @@ version: v1.0.x
 
 				// ... authenticate if needed
 
-				carbon.documents.getChildren( "clients/", _ => {
-					return _.withType( "Client" )
+				// ... extending object schema with a new Client type
+
+				carbon.documents.getChildren &lt;Client> ( "clients/", _ => {
+					return _.withType( "Client" )   // Setting the type
 						.properties( {
 							"name": _.inherit,
 							"numberOfEmployees": _.inherit
-						} ).filter( `${ _.property( "numberOfEmployees" ) } > ${ _.value( 100 ) }` )
-				} ).then( ( [ clients, response ]:[ PersistedDocument.Class[], HTTP.Response.Class ] ) => {
+						} )
+						.filter( `${ _.property( "numberOfEmployees" ) } > ${ _.value( 100 ) }` )    // Setting the filter of employees
+				} ).then( ( [ clients, response ]:[ Array&lt;Client & PersistedDocument.Class>, HTTP.Response.Class ] ) => {
 
 					console.log( clients );
 					//	(2) [{…}, {…}]
@@ -1800,14 +1933,27 @@ version: v1.0.x
 
 				// ... authenticate if needed
 
-				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", `
-					BASE     &lt;http://localhost:8083/>
-					DESCRIBE &lt;projects/project-01/>
-				` )
-					.then( ( [ result, response ] ) => {
-						// ... process the result JSON-LD string
-					} )
-					;
+				// ... extending object schema with a new Client type
+
+				carbon.documents.getChildren( "clients/", _ => {
+					return _.withType( "Client" )   // Setting the type
+						.properties( {
+							"name": _.inherit,
+							"numberOfEmployees": _.inherit
+						} )
+						.filter( `${ _.property( "numberOfEmployees" ) } > ${ _.value( 100 ) }` )    // Setting the filter of employees
+				} ).then( ( [ clients, response ] ) => {
+
+					console.log( clients );
+					//	(2) [{…}, {…}]
+					//  0: {numberOfEmployees: 25000, _id: "http://localhost:8083/clients/peopletrucks/", _resolved: true, isResolved: ƒ, …}
+					//  1: {numberOfEmployees: 150, _id: "http://localhost:8083/clients/rpa/", _resolved: true, isResolved: ƒ, …}
+
+					console.log( clients.length ); // 2
+
+				} ).catch( ( error ) => {
+					console.error( error );
+				} );
 				</code></pre>
 			</tab>
 			<tab title="JavaScript ES5">
@@ -1818,14 +1964,30 @@ version: v1.0.x
 
 				// ... authenticate if needed
 
-				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", "" +
-					"BASE     &lt;http://localhost:8083/>" +
-					"DESCRIBE &lt;projects/project-01/>"
-				)
-					.then( function( [ result, response ] ) {
-						// ... process the result JSON-LD string
-					} )
-					;
+				// ... extending object schema with a new Client type
+
+				carbon.documents.getChildren( "clients/", function ( _ ) {
+					return _.withType( "Client" )   // Setting the type
+						.properties( {
+							"name": _.inherit,
+							"numberOfEmployees": _.inherit
+						} )
+						.filter( _.property( "numberOfEmployees" ) + " > " + _.value( 100 ) )    // Setting the filter of employees
+				} ).then( function ( result ) {
+
+					var clients = result[ 0 ];
+					var response = result[ 1 ];
+
+					console.log( clients );
+					//	(2) [{…}, {…}]
+					//  0: {numberOfEmployees: 25000, _id: "http://localhost:8083/clients/peopletrucks/", _resolved: true, isResolved: ƒ, …}
+					//  1: {numberOfEmployees: 150, _id: "http://localhost:8083/clients/rpa/", _resolved: true, isResolved: ƒ, …}
+
+					console.log( clients.length ); // 2
+
+				} ).catch( ( error ) => {
+					console.error( error );
+				} );
 			</code></pre>
 			</tab>
 		</tabs>
@@ -1836,18 +1998,17 @@ version: v1.0.x
 
 		<pre><code class="typescript">
 				...
-				carbon.documents.getChildren( "clients/", _ => {
-					return _.withType( "Client" )
+				carbon.documents.getChildren &lt;Client>( "clients/", _ => {
+					return _.withType( "Client" )   // Setting the type
 						.properties( {
 							"name": _.inherit,
 							"numberOfEmployees": _.inherit
-						} ).filter( `${ _.property( "numberOfEmployees" ) } > ${ _.value( 100 ) }` )
+						} ).filter( `${ _.property( "numberOfEmployees" ) } > ${ _.value( 100 ) }` )    // Setting the filter of employees
 				} )
 				...
 		</code></pre>
 
-		It's pretty similar to the query function we used before but, with the difference that in this case, we did three
-		things:
+		<p>It's pretty similar to the query function we used before, but in this case, we did the following two things:</p>
 		<ol>
 			<li>
 				<strong>Set the type</strong>: we used the <code>.withType</code> function to easily match the properties when the SDK builds the JavaScript object.
@@ -1869,8 +2030,562 @@ version: v1.0.x
 		</p>
 
 	</section>
-</section>
+	<!-- END: Getting the members of a container -->
 
+
+	<!-- START: Querying through linked data -->
+	<section class="mainContent-subSection">
+		<h3>Querying through linked data</h3>
+		<p>
+			We just saw how to create querying functions using the <code>get</code>, <code>getMembers</code> and <code>getChildren</code>
+			methods of the <code>documents</code> service. All of these examples were done by querying data living inside the same contents of a <code>Client</code> document.
+			However, Carbon LDP stands for Linked Data Platform, and what it does is that Carbon allows you to easily link data, hence, these querying functionality
+			can also be portrayed to <i>query through the links in your data!</i>
+		</p>
+
+		<h4>Example</h4>
+		<p>
+			Let's extend our example to now include a people container with three persons that will act as CEO's of each Client.
+			Each CEO will be stored as a Person type of object inside <code>http://localhost:8083/people/</code>:
+		</p>
+
+		<pre><code class="typescript">
+				[
+					{
+						// Document URI
+						"@id": "http://localhost:8083/people/tim-pond/",
+						// Types of the document
+						"@types":[ "http://localhost:8083/vocabulary/#Person" ]
+
+						// Properties
+						name: "Tim Pond",
+						age: 52,
+					},
+					{
+						// Document URI
+						"@id": "http://localhost:8083/people/steven-brown/",
+						// Types of the document
+						"@types":[ "http://localhost:8083/vocabulary/#Person" ]
+
+						// Properties
+						name: "Steven Brown",
+						age: 56,
+					},
+					{
+						// Document URI
+						"@id": "http://localhost:8083/people/elena-tonks/",
+						// Types of the document
+						"@types":[ "http://localhost:8083/vocabulary/#Person" ]
+
+						// Properties
+						name: "Elena Tonks",
+						age: 45,
+					}
+				];
+		</code></pre>
+
+		<p>
+			The above is the representation of the three people living inside the <code>http://localhost:8083/people/</code> container, but now we need to link them
+			back to each one of the Clients document. To do that, let's modify the body of each one of the Client document, like this:
+		</p>
+
+
+		<tabs>
+			<tab title="TypeScript">
+			<pre><code class="typescript">
+				import * as HTTP from "carbonldp/HTTP";
+				import * as PersistedDocument from "carbonldp/PersistedDocument";
+
+				let carbon:Carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				// ... extending object schema with a Client type
+
+				// ... extending object schema with a new Person type
+				this.carbon.extendObjectSchema( "Person", {
+					"name": {
+						"@type": "string"
+					},
+					"age": {
+						"@type": "integer"
+					}
+				} );
+
+				let rpa:Client, peoplesTruck:Client, rivi:Client,
+					tim:Person, steven:Person, elena:Person;
+
+				// Fetch all the Clients
+				carbon.documents.getChildren( "clients/" ).then( ( [ clients, response ]:[ Array&lt;Client & PersistedDocument.Class>, HTTP.Response.Class ] ) => {
+
+					console.log( clients );
+
+					rpa = clients.find( client => client.name === "Royal Psychology Association" );
+					peoplesTruck = clients.find( client => client.name === "People's Truck" );
+					rivi = clients.find( client => client.name === "Remote Island Vehicular Institute" );
+
+					return this.carbon.documents.getChildren( "people/" );
+				} )
+
+				// Fetch all the people and assign them to a client
+				.then( ( [ people, response ]:[ Array&lt;Person & PersistedDocument.Class>, HTTP.Response.Class ] ) => {
+
+					tim = people.find( person => person.name === "Tim Pond" );
+					steven = people.find( person => person.name === "Steven Brown" );
+					elena = people.find( person => person.name === "Elena Tonks" );
+
+					// Assigning a CEO to each client
+					rpa.ceo = tim;
+					peoplesTruck.ceo = steven;
+					rivi.ceo = elena;
+
+					// Persisting the clients
+					return Promise.all( [ rpa.save(), peoplesTruck.save(), rivi.save() ] );
+				} )
+				.then( ( promises:any ) => {
+
+					// Printing the results
+					console.log( promises );
+				} )
+				.catch( ( error ) => {
+					console.error( error );
+				} );
+			</code></pre>
+			</tab>
+			<tab title="JavaScript ES2015">
+			<pre><code class="javascript">
+				let carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				// ... extending object schema with a Client type
+
+				// ... extending object schema with a new Person type
+				this.carbon.extendObjectSchema( "Person", {
+					"name": {
+						"@type": "string"
+					},
+					"age": {
+						"@type": "integer"
+					}
+				} );
+
+				let rpa, peoplesTruck, rivi,
+					tim, steven, elena;
+
+				// Fetch all the Clients
+				carbon.documents.getChildren( "clients/" ).then( ( [ clients, response ] ) => {
+
+					console.log( clients );
+
+					rpa = clients.find( client => client.name === "Royal Psychology Association" );
+					peoplesTruck = clients.find( client => client.name === "People's Truck" );
+					rivi = clients.find( client => client.name === "Remote Island Vehicular Institute" );
+
+					return this.carbon.documents.getChildren( "people/" );
+				} )
+
+				// Fetch all the people and assign them to a client
+				.then( ( [ people, response ] ) => {
+
+					tim = people.find( person => person.name === "Tim Pond" );
+					steven = people.find( person => person.name === "Steven Brown" );
+					elena = people.find( person => person.name === "Elena Tonks" );
+
+					// Assigning a CEO to each client
+					rpa.ceo = tim;
+					peoplesTruck.ceo = steven;
+					rivi.ceo = elena;
+
+					// Persisting the clients
+					return Promise.all( [ rpa.save(), peoplesTruck.save(), rivi.save() ] );
+				} )
+				.then( ( promises ) => {
+
+					// Printing the results
+					console.log( promises );
+				} )
+				.catch( ( error ) => {
+					console.error( error );
+				} );
+				</code></pre>
+			</tab>
+			<tab title="JavaScript ES5">
+			<pre><code class="javascript">
+				var carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				// ... extending object schema with a Client type
+
+				// ... extending object schema with a new Person type
+				this.carbon.extendObjectSchema( "Person", {
+					"name": {
+						"@type": "string"
+					},
+					"age": {
+						"@type": "integer"
+					}
+				} );
+
+				let rpa, peoplesTruck, rivi,
+					tim, steven, elena;
+
+				// Fetch all the Clients
+				carbon.documents.getChildren( "clients/" ).then( function ( result ) {
+
+					var clients = result[ 0 ];
+					var response = result[ 1 ];
+
+					console.log( clients );
+
+					rpa = clients.find( client => client.name === "Royal Psychology Association" );
+					peoplesTruck = clients.find( client => client.name === "People's Truck" );
+					rivi = clients.find( client => client.name === "Remote Island Vehicular Institute" );
+
+					return this.carbon.documents.getChildren( "people/" );
+				} )
+
+				// Fetch all the people and assign them to a client
+				.then( function ( result ) {
+
+					var people = result[ 0 ];
+					var response = result[ 1 ];
+
+					tim = people.find( person => person.name === "Tim Pond" );
+					steven = people.find( person => person.name === "Steven Brown" );
+					elena = people.find( person => person.name === "Elena Tonks" );
+
+					// Assigning a CEO to each client
+					rpa.ceo = tim;
+					peoplesTruck.ceo = steven;
+					rivi.ceo = elena;
+
+					// Persisting the clients
+					return Promise.all( [ rpa.save(), peoplesTruck.save(), rivi.save() ] );
+				} )
+				.then( ( result ) => {
+
+					var promises = result[ 0 ];
+
+					// Printing the results
+					console.log( promises );
+				} )
+				.catch( ( error ) => {
+					console.error( error );
+				} );
+			</code></pre>
+			</tab>
+		</tabs>
+
+		<p>
+			With the previous snippet, we just assigned a CEO to each client, now we can start to create linked queries!
+			Without further ado, let's create a query that returns the <u>clients with CEO's</u> that are <u>older than 50 years old</u>.
+		</p>
+
+		<h4>Example</h4>
+
+		<tabs>
+			<tab title="TypeScript">
+			<pre><code class="typescript">
+				import * as HTTP from "carbonldp/HTTP";
+				import * as PersistedDocument from "carbonldp/PersistedDocument";
+
+				let carbon:Carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				// ... extending object schema with a Client type
+
+				// ... extending object schema with a new Person type
+
+				carbon.documents.getChildren&lt;Client>( "clients/", _ => {
+					return _.withType( "Client" )   // Setting the type
+						.properties( {
+							"name": _.inherit,
+							"numberOfEmployees": _.inherit,
+							"ceo": {
+								"@type": "@id",
+								"query": _ => _
+									.properties( {
+										"name": _.inherit,
+										"age": _.inherit,
+									} )
+								// .filter( `${ _.property( "age" ) } > ${ _.value( 50 ) }` )
+							}
+						} )
+						.filter( `${ _.property( "ceo.age" ) } > ${ _.value( 50 ) }` )
+				} ).then( ( [ clients, response ]:[ Array&lt;Client & PersistedDocument.Class>, HTTP.Response.Class ] ) => {
+
+					console.log( clients );
+					// (2) [{…}, {…}]
+					// 	0: {ceo: {…}, name: "People's Truck", numberOfEmployees: 25000, _id: "http://localhost:8083/clients/peoplestruck/", …}
+					// 	1: {ceo: {…}, name: "Royal Psychology Association", numberOfEmployees: 150, _id: "http://localhost:8083/clients/rpa/", …}length: 2__proto__: Array(0)
+
+					console.log( clients.length ); // 2
+					console.log( "Company: %o, Ceo: %o, Age: %o", clients[ 0 ].name, clients[ 0 ].ceo.name, clients[ 0 ].ceo.age );
+					// Company: "People's Truck", Ceo: "Steven Brown", Age: 56
+					console.log( "Company: %o, Ceo: %o, Age: %o", clients[ 1 ].name, clients[ 1 ].ceo.name, clients[ 1 ].ceo.age );
+					// Company: "Royal Psychology Association", Ceo: "Tim Pond", Age: 52
+
+				} ).catch( ( error ) => {
+					console.error( error );
+				} );
+			</code></pre>
+			</tab>
+			<tab title="JavaScript ES2015">
+			<pre><code class="javascript">
+				let carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				// ... extending object schema with a Client type
+
+				// ... extending object schema with a new Person type
+
+				carbon.documents.getChildren( "clients/", _ => {
+					return _.withType( "Client" )   // Setting the type
+						.properties( {
+							"name": _.inherit,
+							"numberOfEmployees": _.inherit,
+							"ceo": {
+								"@type": "@id",
+								"query": _ => _
+									.properties( {
+										"name": _.inherit,
+										"age": _.inherit,
+									} )
+								// .filter( `${ _.property( "age" ) } > ${ _.value( 50 ) }` )
+							}
+						} )
+						.filter( `${ _.property( "ceo.age" ) } > ${ _.value( 50 ) }` )
+				} ).then( ( [ clients, response ] ) => {
+
+					console.log( clients );
+					// (2) [{…}, {…}]
+					// 	0: {ceo: {…}, name: "People's Truck", numberOfEmployees: 25000, _id: "http://localhost:8083/clients/peoplestruck/", …}
+					// 	1: {ceo: {…}, name: "Royal Psychology Association", numberOfEmployees: 150, _id: "http://localhost:8083/clients/rpa/", …}length: 2__proto__: Array(0)
+
+					console.log( clients.length ); // 2
+					console.log( "Company: %o, Ceo: %o, Age: %o", clients[ 0 ].name, clients[ 0 ].ceo.name, clients[ 0 ].ceo.age );
+					// Company: "People's Truck", Ceo: "Steven Brown", Age: 56
+					console.log( "Company: %o, Ceo: %o, Age: %o", clients[ 1 ].name, clients[ 1 ].ceo.name, clients[ 1 ].ceo.age );
+					// Company: "Royal Psychology Association", Ceo: "Tim Pond", Age: 52
+
+				} ).catch( ( error ) => {
+					console.error( error );
+				} );
+				</code></pre>
+			</tab>
+			<tab title="JavaScript ES5">
+			<pre><code class="javascript">
+				var carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				// ... extending object schema with a Client type
+
+				// ... extending object schema with a new Person type
+
+				carbon.documents.getChildren( "clients/", function ( _ ) {
+					return _.withType( "Client" )   // Setting the type
+						.properties( {
+							"name": _.inherit,
+							"numberOfEmployees": _.inherit,
+							"ceo": {
+								"@type": "@id",
+								"query": _ => _
+									.properties( {
+										"name": _.inherit,
+										"age": _.inherit,
+									} )
+								// .filter( _.property( "age" ) + " > " + _.value( 50 ) )
+							}
+						} )
+						.filter( _.property( "ceo.age" ) + " > " + _.value( 50 ) )
+				} ).then( ( result ) => {
+
+					var clients = result[ 0 ];
+					var response = result[ 1 ];
+
+					console.log( clients );
+					// (2) [{…}, {…}]
+					// 	0: {ceo: {…}, name: "People's Truck", numberOfEmployees: 25000, _id: "http://localhost:8083/clients/peoplestruck/", …}
+					// 	1: {ceo: {…}, name: "Royal Psychology Association", numberOfEmployees: 150, _id: "http://localhost:8083/clients/rpa/", …}length: 2__proto__: Array(0)
+
+					console.log( clients.length ); // 2
+					console.log( "Company: %o, Ceo: %o, Age: %o", clients[ 0 ].name, clients[ 0 ].ceo.name, clients[ 0 ].ceo.age );
+					// Company: "People's Truck", Ceo: "Steven Brown", Age: 56
+					console.log( "Company: %o, Ceo: %o, Age: %o", clients[ 1 ].name, clients[ 1 ].ceo.name, clients[ 1 ].ceo.age );
+					// Company: "Royal Psychology Association", Ceo: "Tim Pond", Age: 52
+
+				} ).catch( ( error ) => {
+					console.error( error );
+				} );
+			</code></pre>
+			</tab>
+		</tabs>
+
+
+		<br>
+		<p>
+			Again, let's take a closer look to the query function that we passed to the <code>getChildren</code> method.
+		</p>
+
+		<pre><code class="typescript">
+				...
+				carbon.documents.getChildren&lt;Client>( "clients/", _ => {
+					return _.withType( "Client" )   // 1. Setting the type
+						.properties( {  // 2. Setting the properties
+							"name": _.inherit,
+							"numberOfEmployees": _.inherit,
+							"ceo": {    // 3. Setting the connecting property
+								"@type": "@id",
+								"query": _ => _
+									.properties( {
+										"name": _.inherit,
+										"age": _.inherit,
+									} )
+								// .filter( `${ _.property( "age" ) } > ${ _.value( 50 ) }` )   // 4. Sub-query filter
+							}
+						} )
+						.filter( `${ _.property( "ceo.age" ) } > ${ _.value( 50 ) }` )  // 4. Sub-query filter
+				} )
+				...
+		</code></pre>
+
+		<p>
+			This time, the querying function is different than before. What we must stand out when building queries against linked data is that we use inner querying
+			functions defining the properties to retrieve and values to filter out from the linked endpoint. Let's debunk this function, piece by piece:
+		</p>
+		<ol>
+			<li>
+				<strong>Set the type</strong>: we used the <code>.withType</code> function to easily match the properties when the SDK builds the JavaScript object.
+			</li>
+			<li>
+				<strong>Define desired properties</strong>: we used the <code>.properties</code> function to state the properties we want,
+				<span class="highlight">name</span>, <span class="highlight">numberOfEmployees</span> and the ceo <span class="highlight">ceo</span> object.
+			</li>
+			<li>
+				<strong>Set the connection property</strong>: we used the <code>@type</code> property to tell the SDK that the property <code>ceo</code> will be a pointer/link
+				to another object, that's why we use the <code>@id</code> value. We are also saying that for this property, we will use a query selecting the properties we want
+				from the linked object. In this case we wan the <span class="highlight">name</span> and the <span class="highlight">age</span> of the CEO.
+			</li>
+			<li>
+				<strong>Set a filter</strong>: we used the <code>.filter</code> function with a string containing the filter criteria.
+				Notice how we can use the filter within the <u>inner querying function</u> or in the <u>general querying function</u>. You can use place the filter
+				wherever you want, but if you place it in the general function, be aware to use dot notation to state the properties to apply the filter, which in this case
+				was <code>ceo.age</code>.
+			</li>
+		</ol>
+
+	</section>
+	<!-- END: Getting the members of a container -->
+
+
+	<!-- START: Querying through linked data -->
+	<section class="mainContent-subSection">
+		<h3>Ordering and limiting results</h3>
+
+		<p>
+			Other potential features we can make use of while creating queries, are the ability to <u>sort</u> the results of the queries and <u>limiting</u> the results to
+			easily implement pagination in your UI. To accomplish this, let's use the last example but this time, we will sort the clients by number of employees in ascending
+			order but limiting the results by one.<br>
+			The code would be:
+		</p>
+
+
+		<pre><code class="typescript">
+				...
+				carbon.documents.getChildren&lt;Client>( "clients/", _ => {
+					return _.withType( "Client" )
+						.properties( {
+							"name": _.inherit,
+							"numberOfEmployees": _.inherit,
+							"ceo": {
+								"@type": "@id",
+								"query": _ => _
+									.properties( {
+										"name": _.inherit,
+										"age": _.inherit,
+									} )
+								// .filter( `${ _.property( "age" ) } > ${ _.value( 50 ) }` )
+							}
+						} )
+						// .filter( `${ _.property( "ceo.age" ) } > ${ _.value( 50 ) }` )
+						.orderAscendantBy( _.property( "numberOfEmployees" ) )
+						.limit( 1 )
+						.offset( 0 )
+				} )
+				...
+		</code></pre>
+
+		<p>
+			We just commented out the filter parts because our data set is too small, we only have 3 clients. In this example, we just created a query that sorts the clients by the
+			number of employees in ascending way. By limiting the results one by one (<code>.limit( 1 )</code>) and using the offset of 0 (<code>.offset(0)</code>) we are
+			fetching the client with the lowest number of employees. If we would like the second, we could use <code>.offset(1)</code> to get the next client with the lowest
+			value. If you take a look at this pattern, we are emulating pagination, but limited by 1 element per page (<code>.limit(&nbsp;1&nbsp;)</code>) and selecting the
+			first page of the data set (<code>.offset( 0 )</code>).
+		</p>
+
+		<p>
+			Alternatively we could just simply get all the clients and sort them out without having to limit the results. To accomplish that, we just have to remove the
+			<code>limit</code> and the <code>offset</code> from the query, like this:
+		</p>
+
+
+		<pre><code class="typescript">
+				...
+				carbon.documents.getChildren&lt;Client>( "clients/", _ => {
+					return _.withType( "Client" )
+						.properties( {
+							"name": _.inherit,
+							"numberOfEmployees": _.inherit,
+							"ceo": {
+								"@type": "@id",
+								"query": _ => _
+									.properties( {
+										"name": _.inherit,
+										"age": _.inherit,
+									} )
+								// .filter( `${ _.property( "age" ) } > ${ _.value( 50 ) }` )
+							}
+						} )
+						// .filter( `${ _.property( "ceo.age" ) } > ${ _.value( 50 ) }` )
+						.orderAscendantBy( _.property( "numberOfEmployees" ) )
+				} )
+				...
+		</code></pre>
+
+		<p>The results are the following:</p>
+
+		<pre><code class="typescript">
+				(3) [{…}, {…}, {…}]
+					0:{ceo: {…}, name: "Remote Island Vehicular Institute", numberOfEmployees: 100, _id: "http://localhost:8083/clients/rivi/", …}
+					1:{ceo: {…}, name: "Royal Psychology Association", numberOfEmployees: 150, _id: "http://localhost:8083/clients/rpa/", …}
+					2:{ceo: {…}, name: "People's Truck", numberOfEmployees: 25000, _id: "http://localhost:8083/clients/peoplestruck/", …}
+		</code></pre>
+
+	</section>
+	<!-- END: Querying through linked data -->
+
+</section>
+<!-- END: Using the documents service -->
+
+
+<!-- START: Conclusion -->
 <section class="mainContent-section">
 	<h2>Conclusion</h2>
 
@@ -1884,6 +2599,7 @@ version: v1.0.x
 	<p>We also provided an overview, with code examples, for the different query forms <code>SELECT</code>, <code>ASK</code>, <code>CONSTRUCT</code>, <code>DESCRIBE</code>, and <code>UPDATE</code>.</p>
 
 </section>
+<!-- END: Conclusion -->
 
 <div class="ui section divider"></div>
 
