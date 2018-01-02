@@ -43,8 +43,8 @@ There are a lot of advantages when working with RDF. For starters, data becomes 
 </code></pre><figcaption>RDF statements.
 </figcaption></figure>
 
-<figure class="left-align quarter-width"><a href="/assets/images/blog/posts/the-advantages-of-resource-description-framework-rdf/the-advantages-of-rdf-3.png"
-                                            class="ui fluid rounded bordered image" target="_blank"><img src="/assets/images/blog/posts/the-advantages-of-resource-description-framework-rdf/the-advantages-of-rdf-3.png"></a><figcaption>
+<figure class="left-align quarter-width"><a href="/assets/images/blog/posts/the-advantages-of-resource-description-framework-rdf/advantages-rdf.png"
+                                            class="ui fluid rounded bordered image" target="_blank"><img src="/assets/images/blog/posts/the-advantages-of-resource-description-framework-rdf/advantages-rdf.png"></a><figcaption>
     Graph of linked resources.
 </figcaption></figure>
 
