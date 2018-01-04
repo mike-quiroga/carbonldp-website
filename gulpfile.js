@@ -61,10 +61,15 @@ gulp.task( "default", [ "build" ] );
 gulp.task( "build", ( done ) => {
 	runSequence(
 		[ "compile:styles", "compile:semantic" ],
+		"clean:site",
 		"compile:site",
 		"minify",
 		done
 	);
+} );
+
+gulp.task( "clean:site", () => {
+	return del( config.dist.dir );
 } );
 
 gulp.task( "compile:semantic", () => {
@@ -116,6 +121,6 @@ gulp.task( "minify:scripts", () => {
 		.pipe( gulp.dest( config.dist.scripts.dir ) );
 } );
 
-gulp.task("clean:styles",()=>{
-	return del([config.dist.styles.pattern]);
-});
+gulp.task( "clean:styles", () => {
+	return del( [ config.dist.styles.pattern ] );
+} );

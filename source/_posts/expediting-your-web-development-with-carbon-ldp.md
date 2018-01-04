@@ -1,7 +1,7 @@
 ---
 title: Expediting your web development with Carbon LDP
 date: 2017-12-05 2:44:39
-avatar: alvaro-contreras-avatar-blog.jpg
+avatar: team/alvaro-contreras-avatar-blog.jpg
 author: Alvaro Contreras
 tags:
 ---
