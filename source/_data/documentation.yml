@@ -117,7 +117,7 @@ versions:
             description: An explanation on Carbon LDP Access Points and how to use them to manage relations between documents.
           - title: Querying
             link: querying
-            description: Not yet documented
+            description: A guide on how to execute SPARQL queries in Carbon LDP via the REST API.
           - title: Real-time capabilities
             link: real-time
             description: Not yet documented

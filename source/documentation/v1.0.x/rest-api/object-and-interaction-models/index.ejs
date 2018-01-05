@@ -1,0 +1,322 @@
+---
+layout: documentation/document
+title: Object and interaction models
+description: Your introduction to the different object models contained in Carbon LDP, as well as the behaviors these resources can have.
+date: 2017-02-08 11:17:49
+notDocumented: false
+version: v1.0.x
+---
+
+<!-- START: Document model -->
+<section class="mainContent-section">
+	<h2 class="ui header">Document model</h2>
+	<p>
+		Carbon LDP stores its data in documents, these represent the basic structure to store any resource in your platform. Typically, a document represents a data <em>entity</em> of a given type (e.g. Person, Project, Product, Invoice). It can have any number of literal
+		datatype <strong>properties</strong> (e.g. string, date, number) and links to other resources. Finally, within Carbon, documents are uniquely identified by <strong>Uniform Resource Identifiers</strong> (URIs).
+	</p>
+	<div class="ui info icon message">
+		<i class="info circle icon"></i>
+		<div class="content">
+			<div class="header">The more you know...</div>
+			<p>
+				In Carbon LDP a Document is a group of quads that share a common context.
+			</p>
+		</div>
+	</div>
+
+	<p>
+		Also, while document properties can refer to simple values, they can also refer to nested objects by using <strong>fragments</strong>. It is important that you understand all the parts that conform a document so that you get a good idea of how they can be useful
+		during development.
+	</p>
+
+	<section class="mainContent-subSection">
+		<h3 class="ui header">Properties</h3>
+		<p>As we mentioned before, Carbon documents store data in properties. Properties can be named and contain whatever data values your application needs.</p>
+		<p>Furthermore, Carbon manages certain reserved properties that you should be aware of:</p>
+		<ul>
+			<li><code>id</code>: The document's URI.</li>
+			<li><code>slug</code>: Holds the last part of the URI the document is identified with. For example, in the URI <code>https://example.com/resource-1/</code> the slug is <code>resource-1</code>.</li>
+			<li><code>types</code>: An array holding one or more named classes that describe the type of the document (e.g. Person, Project Product, Invoice).</li>
+			<li><code>created</code>: Date when the document was created.</li>
+			<li><code>modified</code>: Date when the document was last modified.</li>
+			<li><code>membershipResource</code>: Configures the document where the member documents will be added. On a document it is the document itself, on an access point it is the document the access point belongs to. See <a href="../access-points/#what-is-an-access-point-">Access Points</a>.</li>
+			<li><code>hasMemberRelation</code>: Configures the property that holds an array containing the members of that document. By default is <code>ldp:Member</code>. See <a href="../access-points/#membership-relation">Membership relation</a>.</li>
+			<li><code>isMemberOfRelation</code>: Configures the property that a member document will acquire when declared as a member of the container document. This property will not exist if the document has no members. See <a href="../access-points/#membership-relation">Membership relation</a>.</li>
+		</ul>
+
+		<p>Bear in mind that some of these, for example created or modified, are <em>System Reserved Properties</em>, which means you can read them but only the platform is allowed to modify them.</p>
+	</section>
+
+	<section class="mainContent-subSection">
+		<h3 class="ui header">URIs</h3>
+		<p>
+			URIs are strings that identify resources in a network. Any URL you can think of is also considered a URI, but not all URIs are URLs. The main difference is that a URL can change the resource it is pointing at, while URIs can also belong to a
+			resource forever (in which case they would be URNs (Unique Resource Names).
+		</p>
+		<p>Basically, <code>URI = URL + URN</code></p>
+		<p>Carbon LDP uses URIs as identifiers because it allows for its documents to be <strong>unique</strong>, <strong>resolvable</strong> and <strong>relative to the network</strong>.</p>
+		<p>URIs follow a <a href="https://es.wikipedia.org/wiki/URI_scheme">scheme</a>. Carbon document URIs, follow the http or https scheme (depending on the platform's configuration).</p>
+
+	</section>
+
+	<section class="mainContent-subSection">
+		<h3 class="ui header">Fragments</h3>
+		<p>
+			Fragments are groups of properties that only make sense within the document's context, useful to represent nested objects. What is more, there are two type of fragments, named fragments or blank nodes (bNodes). The difference between the two of them
+			is that named fragments can be referenced from outside of the document that contains them, whereas bNodes can't. For this reason the way they are identified also differs.
+		</p>
+		<p>Named fragments are identified by a URI, relative to the document they belong to. Their URIs has the form of <code>DOCUMENT-URI#NAMED-FRAGMENT-SLUG</code>, but there are times where they can be written relative to the document like <code>#NAMED-FRAGMENT-SLUG</code>.</p>
+		<p>On the other hand, bNodes are identified by an ID of the form <code>_:RANDOM-STRING</code>. These IDs are local to the document, making it impossible to link to bNodes from outside of the document.</p>
+	</section>
+
+	<section class="mainContent-subSection">
+		<h3 class="ui header">Sample document</h3>
+		<p>In the following tabs you will get an example of how a sample document looks in both JSON-LD or TriG. After reading about the different structures a document can contain you should be able to identify them in the following graph of triples.</p>
+		<tabs>
+			<tab title="JSON-LD">
+				<pre><code class="json">
+				[
+				    {
+						"@graph": [
+						// START: bNode
+				            {
+				                "@id": "_:node1c0oqvsupx132",
+				                "http://example.org/ns#person": [
+				                    {
+				                        "@value": "http://localhost:8083/sam-smith/"
+				                    }
+				                ],
+				                "http://example.org/ns#since": [
+				                    {
+				                        "@type": "http://www.w3.org/2001/XMLSchema#dateTime",
+				                        "@value": "2001-10-26T21:32:52.12679"
+				                    }
+				                ]
+				            },
+						// END: bNode
+						// START: john-doe document
+				            {
+				                "@id": "http://localhost:8083/john-doe/",
+				                "@type": [
+				                    "http://www.w3.org/ns/ldp#BasicContainer",
+				                    "https://carbonldp.com/ns/v1/platform#Document",
+				                    "http://www.w3.org/ns/ldp#RDFSource",
+				                    "http://example.org/ns#Person"
+				                ],
+				                "http://example.org/ns#contact": [      // Property referencing named fragment
+				                    {
+				                        "@id": "http://localhost:8083/john-doe/#phones"
+				                    }
+				                ],
+				                "http://example.org/ns#friends": [      // Property referencing bNode
+				                    {
+				                        "@id": "_:node1c0oqvsupx132"
+				                    }
+				                ],
+				                "http://example.org/ns#name": [         // Simple property
+				                    {
+				                        "@value": "John Doe"
+				                    }
+				                ],
+				                "http://www.w3.org/ns/ldp#hasMemberRelation": [
+				                    {
+				                        "@id": "http://www.w3.org/ns/ldp#member"
+				                    }
+				                ],
+				                "http://www.w3.org/ns/ldp#insertedContentRelation": [
+				                    {
+				                        "@id": "http://www.w3.org/ns/ldp#MemberSubject"
+				                    }
+				                ],
+				                "http://www.w3.org/ns/ldp#membershipResource": [
+				                    {
+				                        "@id": "http://localhost:8083/john-doe/"
+				                    }
+				                ],
+				                "https://carbonldp.com/ns/v1/platform#created": [
+				                    {
+				                        "@type": "http://www.w3.org/2001/XMLSchema#dateTime",
+				                        "@value": "2017-12-07T16:57:58.999-06:00"
+				                    }
+				                ],
+				                "https://carbonldp.com/ns/v1/platform#modified": [
+				                    {
+				                        "@type": "http://www.w3.org/2001/XMLSchema#dateTime",
+				                        "@value": "2017-12-07T16:57:58.999-06:00"
+				                    }
+				                ]
+				            },
+						// END: john-doe document
+						// START: named fragment
+				            {
+				                "@id": "http://localhost:8083/john-doe/#phones",
+				                "http://example.org/ns#home": [
+				                    {
+				                        "@value": "555-4242"
+				                    }
+				                ],
+				                "http://example.org/ns#mobile": [
+				                    {
+				                        "@value": "8118-9374"
+				                    }
+				                ]
+				            }
+						// END: named fragment
+				        ],
+				        "@id": "http://localhost:8083/john-doe/"
+				    }
+				]
+					</code></pre>
+			</tab>
+			<tab title="TriG">
+				<pre><code class="html">
+				&lt;http://localhost:8083/john-doe/> {
+
+				&lt;!-- START: bNode -->
+					_:node1c0oqvsupx132 &lt;http://example.org/ns#person> "http://localhost:8083/sam-smith/" ;
+						&lt;http://example.org/ns#since> "2001-10-26T21:32:52.12679"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime> .
+				&lt;!-- END: bNode -->
+
+				&lt;!-- START: john-doe document -->
+					&lt;http://localhost:8083/john-doe/>
+						a &lt;http://www.w3.org/ns/ldp#BasicContainer> , &lt;https://carbonldp.com/ns/v1/platform#Document> , &lt;http://www.w3.org/ns/ldp#RDFSource> , &lt;http://example.org/ns#Person> ;
+						&lt;https://carbonldp.com/ns/v1/platform#created> "2017-12-07T16:57:58.999-06:00"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime> ;
+						&lt;https://carbonldp.com/ns/v1/platform#modified> "2017-12-07T16:57:58.999-06:00"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime> ;
+						&lt;http://www.w3.org/ns/ldp#membershipResource> &lt;http://localhost:8083/john-doe/> ;
+						&lt;http://www.w3.org/ns/ldp#hasMemberRelation> &lt;http://www.w3.org/ns/ldp#member> ;
+						&lt;http://www.w3.org/ns/ldp#insertedContentRelation> &lt;http://www.w3.org/ns/ldp#MemberSubject> ;
+						&lt;!-- Simple property -->
+						&lt;http://example.org/ns#name> "John Doe" ;
+						&lt;!-- Property referencing named fragment -->
+						&lt;http://example.org/ns#contact> &lt;http://localhost:8083/john-doe/#phones> ;
+						&lt;!-- property referencing bNode -->
+						&lt;http://example.org/ns#friends> _:node1c0oqvsupx132 .
+				&lt;!-- END: john-doe document -->
+
+				&lt;!-- START: named fragment -->
+					&lt;http://localhost:8083/john-doe/#phones>
+						&lt;http://example.org/ns#home> "555-4242" ;
+						&lt;http://example.org/ns#mobile> "8118-9374" .
+				&lt;!-- END: named fragment -->
+
+				}
+					</code></pre>
+			</tab>
+		</tabs>
+
+		<p>
+			If there is anything from the syntax you don't understand you can check the <a href="https://www.w3.org/TR/json-ld/">JSON-LD</a> or <a href="https://www.w3.org/TR/trig/">TriG</a> W3C specifications, which Carbon LDP complies to.
+		</p>
+	</section>
+</section>
+<!-- END: Document model -->
+
+<!-- START: Access point model -->
+<!-- FIXME: Pending work -->
+<!--
+<section class="mainContent-section">
+	<h3 class="ui header">Access point model</h3>
+</section>
+-->
+<!-- END: Access point model -->
+
+<!-- START: Interaction models -->
+<section class="mainContent-section">
+	<h3 class="ui header">Interaction models</h3>
+	<p>When you interact with a given resource on the Carbon server, you can specify a model that governs how the server behaves with respect to it. A document in Carbon can be treated as a Container or as an RDF Source.</p>
+	<p>
+		To get a better grasp on this idea, imagine your regular folder and documents system. Folders contain documents, and are therefore considered different entities; they serve a different purpose to that of documents. However, in Carbon LDP everything is always the same entity,
+		a document. In this case, what changes is its behavior given certain situations, between containing other documents or representing something specific, basically being a document.
+		<!--, and in some cases as a Non-RDF Source, for example a file.-->
+	</p>
+
+	<p>
+		When you want the server to treat a given document as one type or another, you can specify which model you prefer with an HTTP header in the client request.
+		The preferred interaction model is specified by the HTTP <code>Prefer</code> header, which must have one of the following values:
+	</p>
+
+	<ul>
+		<li><code>http://www.w3.org/ns/ldp#Container; rel=interaction-model</code></li>
+		<li><code>http://www.w3.org/ns/ldp#RDFSource; rel=interaction-model</code></li>
+		<!--<li><code>http://www.w3.org/ns/ldp#NonRDFSource; rel=interaction-model</code></li>-->
+	</ul>
+
+	<section class="mainContent-subSection">
+		<h3 class="ui header">Container Behavior</h3>
+
+		<p>When you want the server to treat a document as a Container, use the following interaction model in your request:</p>
+
+		<p>
+			<span class="ui blue horizontal label">Prefer</span>
+			<code>http://www.w3.org/ns/ldp#Container; rel=interaction-model</code>
+		</p>
+
+		<p>
+			As the name implies, Containers contain things. Well, they don't literally contain things in the same way that folders might, but the concept is similar. A container is itself a document (RDF Source) with triples that link to a set of one or more member documents.
+			So, when you want the server to behave in a way that helps you manage members in a collection, you'll want to make requests that specify the Container interaction model.
+		</p>
+
+		<div class="ui info icon message">
+			<i class="info circle icon"></i>
+			<div class="content">
+				<p>When a document is behaving with the Container interaction model, it can respond to client requests for creation, modification, and/or enumeration of its members.</p>
+			</div>
+		</div>
+
+		<p>
+			A Container is also a document (RDF Source), so while it has a special function as a membership controller, it may also represent additional data. In other words, in addition to having membership and/or containment triples, it can still have a variety of properties
+			or triples that are specific to the resource it represents.
+		</p>
+	</section>
+	<section class="mainContent-subSection">
+		<h3 class="ui header">RDF Source Behavior</h3>
+
+		<p>When you want the server to treat a document as an RDF Source, use the following interaction model in your request:</p>
+
+		<p>
+			<span class="ui blue horizontal label">Prefer</span>
+			<code>http://www.w3.org/ns/ldp#RDFSource; rel=interaction-model</code>
+		</p>
+
+		<p>
+			An RDF Source is an RDF graph or the <em>source</em> of one or more arbitrary triples that share the same subject URI. When we use the RDF Source model for a document, we're generally referring to the document as the resource it represents - some real world entity.
+			You typically prefer this model when you're working only with the document itself, or properties of the document. When a document is behaving with the RDF Source interaction model, it applies no special features for managing members.
+		</p>
+
+		<div class="ui info icon message">
+			<i class="info circle icon"></i>
+			<div class="content">
+				<p>
+					Use the RDF Source interaction model when you're interested only in the document itself - reading the triples or properties it contains,
+					updating or deleting them, and adding new ones.
+				</p>
+				<p>You can also use the model to create a document with a given URI that will not be contained by any given Container (i.e. to create an <em>access point</em>).</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- TODO: Remove comment when the feature is supported by the platform. -->
+	<!--
+	<section class="mainContent-subSection">
+		<h3>Non-RDF Source Behavior</h3>
+
+		<p>An LDP Non-RDF Source is a resource whose state is not represented in RDF. For example, these can be binary or text documents that do not have useful RDF representations
+			(i.e.
+			&quot;files&quot;). When dealing with a Non-RDF Source, Carbon may still manage metadata about the resource using server-managed properties. You might also want to manage
+			your
+			own metadata about the resource, which you could do using the RDF Source interaction model on the same URI. But the context of the non-RDF interaction model is the non-RDF
+			resource itself.
+		</p>
+
+		<p>
+			<span class="ui blue horizontal label">Prefer</span>
+			<code>http://www.w3.org/ns/ldp#NonRDFSource; rel=interaction-model</code>
+		</p>
+
+		<div class="ui message">
+			<p>When a server is behaving with the Non-RDF Source interaction model, it treats the given resource as a non-RDF &quot;file&quot;.</p>
+		</div>
+	</section>
+	-->
+</section>
+<!-- END: Interaction model -->

@@ -1,8 +1,239 @@
 ---
 layout: documentation/document
 title: Querying
-description: Not yet documented
+description: A guide on how to execute SPARQL queries in Carbon LDP via the REST API.
 date: 2017-02-08 11:01:03
-notDocumented: true
+notDocumented: false
 version: v1.0.x
 ---
+
+<div class="ui message">
+	<div class="content">
+		<p>In this guide, we'll use different scenarios to go through the REST API methods (detailing the different headers and basic request bodies) you can use to perform SPARQL queries in your Carbon LDP platform.</p>
+		<p>We have created a <a href="https://www.getpostman.com/collections/307f7898c630698ce5a8">Postman Collection</a> with all the examples featured in this documentation. The examples for this section are contained in the <strong>querying</strong> folder.</p>
+	</div>
+</div>
+
+<div class="ui mobile only grid">
+	<div class="row">
+		<sidebar-component [mobile]="true" [parentElement]="element" [contentReady]="contentReady" class="sixteen wide mobile only column"></sidebar-component>
+	</div>
+</div>
+
+<!-- START: Introduction -->
+<section class="mainContent-section">
+	<h2 class="ui header">Introduction</h2>
+	<p>Carbon resources can be queried using <a href="https://www.w3.org/TR/sparql11-query/">SPARQL</a>, a W3C standard query language.</p>
+	<p>
+		SPARQL has <em>some</em> similarities to SQL, the Structured Query Language for relational databases, but there are also fundamental differences. The main difference with SPARQL is that, instead of filtering results to get a desired outcome (like in SQL), you apply
+		<strong>patterns</strong> that are tested over the data to retrieve results. These patterns are given along with <strong>query form</strong> to define the shape of the results.
+	</p>
+	<p>There are four different query forms:</p>
+	<ul>
+		<li><strong>SELECT</strong></li>
+		<ul>Returns the matched data in a table-like structure</ul>
+		<li><strong>ASK</strong></li>
+		<ul>Returns <code>true</code> or <code>false</code> indicating whether any data matched the pattern(s)</ul>
+		<li><strong>CONSTRUCT</strong></li>
+		<ul>Restructures the matched data into a graph described by a specified template</ul>
+		<li><strong>DESCRIBE</strong></li>
+		<ul>Returns a description of how the data is internally stored</ul>
+	</ul>
+	<p>A <strong>pattern</strong> is defined by using three elements:</p>
+	<ol>
+		<li><strong>Subject</strong>: any document, fragment or named fragment referenced by a URI</li>
+		<li><strong>Predicate</strong>: the name or URI of a property of the resource</li>
+		<li><strong>Object</strong>: the value of the property</li>
+	</ol>
+	<p>For example, if we wanted to match a document that represented a project which has the property <code>ex:name</code> with the value <code>"Project X"</code>, we could use the pattern:</p>
+	<ol>
+		<li><strong>Subject</strong>: <code>project-x/</code>(the project's ID/URI)</li>
+		<li><strong>Predicate</strong>: <code>ex:name</code></li>
+		<li><strong>Object</strong>: <code>"Project X"</code></li>
+	</ol>
+
+	<p>This example pattern fully defines all of its elements. Each pattern element has the exact value we're trying to match. But querying involves retrieving more data than we already have, so each pattern element can also be a variable.</p>
+	<p>A variable acts like a wildcard, matching any values the pattern element can have. But unlike wildcards, a variable stores any value it matches (you can think of them kind of like the columns requested on SQL queries).</p>
+
+</section>
+<!-- END: Introduction -->
+
+<!-- START: Executing a SPARQL query -->
+<section class="mainContent-section">
+	<h2 class="ui header">Executing a SPARQL query</h2>
+	<section class="mainContent-subSection">
+		<h3 class="ui header">Create the POST request</h3>
+		<p>Create the following HTTP request to execute a SPARQL query on the platform.</p>
+		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/</code></p>
+		<table class="ui celled table">
+			<thead>
+				<tr>
+					<th><span>HTTP Header</span></th>
+					<th>Value</th>
+					<th>Required/Optional</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Content-Type</td>
+					<td>application/sparql-query</td>
+					<td>Required</td>
+				</tr>
+				<tr>
+					<td>Accept</td>
+					<td>
+						application/json<br>
+						or<br>
+						application/xml
+					</td>
+					<td>Optional (defaults to <code>application/sparql-results+xml</code>)</td>
+				</tr>
+			</tbody>
+		</table>
+		<pre><code class="json">
+				PREFIX ex: &lt;http://example.org/ns#>
+
+				ASK {
+					s? ex:name "Project X"
+				}
+				</code></pre>
+	</section>
+
+	<section class="mainContent-subSection">
+		<h3 class="ui header">Review the POST request</h3>
+		<p>It is important that before issuing this request, you understand all its parts. Next, you'll get more information about each part in the request.</p>
+		<div class="ui styled fluid accordion">
+			<div class="active title">
+				<i class="dropdown icon"></i> Content-Type
+			</div>
+			<div class="active content">
+				<p>Since the request method is POST it requires a body. Therefore, the Content-Type HTTP header tells the platform what kind of content to expect in the body of the request. In the examples we use <code>application/sparql-query</code> (<a href="https://www.w3.org/TR/sparql11-query/">SPARQL</a>) because we are describing a SPARQL query that we need the platform to execute.</p>
+				<p>Note that <strong>it is essential that you include this header with the appropriate value</strong>. Otherwise, if you include the header with a valid value other than <code>application/sparql-query</code> your request might be accepted by the platform and a new document will be created, instead of running a SPARQL query.</p>
+			</div>
+			<div class="active title">
+				<i class="dropdown icon"></i> Accept
+			</div>
+			<div class="active content">
+				<p>In this case we know an <code>ASK</code> query will return a <code>boolean</code> value. Therefore we know we can expect the result to be returned from the platform in either JSON (<code>application/json</code>) or XML (<code>application/xml</code>) formats. However, this will vary depending on the query form that you are executing.</p>
+				<p>The expected response bodies will have the following formats based on the query forms:</p>
+				<ul>
+					<li><strong>SELECT</strong>: JSON (<code>application/json</code>) or XML (<code>application/xml</code>)</li>
+					<li><strong>DESCRIBE</strong>: RDF Dataset Languages like:</li>
+					<ul>
+						<li>JSON-LD: <code>application/ld+json</code></li>
+						<li>TriG: <code>application/trig</code></li>
+						<li>Turtle: <code>application/turtle</code></li>
+						<li>RDF XML: <code>application/rdf+xml</code></li>
+					</ul>
+					<li><strong>CONSTRUCT</strong>: RDF Dataset Languages like:</li>
+					<ul>
+						<li>JSON-LD: <code>application/ld+json</code></li>
+						<li>TriG: <code>application/trig</code></li>
+						<li>Turtle: <code>application/turtle</code></li>
+						<li>RDF XML: <code>application/rdf+xml</code></li>
+					</ul>
+				</ul>
+			</div>
+			<div class="active title">
+				<i class="dropdown icon"></i> Body
+			</div>
+			<div class="active content">
+				<p>The body of the request is a SPARQL query. For this example we are executing an <code>ASK</code> query to check if any document in our platform contains the property <code>ex:name</code>with the value <code>"Project X"</code>.</p>
+				<p>Carbon LDP can also execute <code>SELECT</code>, <code>DESCRIBE</code>, and <code>CONSTRUCT</code> queries using this method.</p>
+				<p>If there is anything from the request body you don't understand you can check the <a href="https://www.w3.org/TR/sparql11-query/">SPARQL</a> W3C specifications, which Carbon LDP complies to.</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="mainContent-subSection">
+		<h3 class="ui header">Issue the POST request</h3>
+		<p>A successful request will result in HTTP status code <strong>200 OK</strong>.</p>
+		<table class="ui celled table">
+			<thead>
+				<tr>
+					<th>HTTP Header</th>
+					<th>Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Content-Type</td>
+					<td>
+						<code>application/json</code><br>
+						or<br>
+						<code>application/xml</code>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>As part of the response headers:
+		<ul>
+			<li>The Content-Type will describe the format in which the result of the query is returned. If you set an Accept header for your request it will conform to this format.</li>
+		</ul>
+	</section>
+	<p>Furthermore, the response body will contain the result obtained from your query. Naturally, this result may vary depending on the documents that you have in your platform when running the query. For this example you should get something like this:</p>
+	<tabs>
+		<tab title="JSON">
+			<pre><code class="json">
+				{
+				    "head": {},
+				    "boolean": true
+				}
+			</code></pre>
+		</tab>
+		<tab title="XML">
+		<pre><code class="xml">
+			&lt;?xml version='1.0' encoding='UTF-8'?>
+			&lt;sparql xmlns='http://www.w3.org/2005/sparql-results#'>
+			    &lt;head>&lt;/head>
+				&lt;boolean>true&lt;/boolean>
+			&lt;/sparql>
+		</code></pre>
+		</tab>
+	</tabs>
+</section>
+<!-- END: Executing a SPARQL query -->
+
+<!-- START: Conclusion -->
+<section class="mainContent-section">
+	<h2 class="ui title">Conclusion</h2>
+	<p>
+		In this guide we have described the proper way of executing SPARQL queries on the platform via the REST API. Normally, developers will prefer use of the Carbon LDP Workbench (GUI) and an SDK, which together simplify the process of building and working with the platform. Still, all functions of the platform can be
+		accessed through the REST API and those developers who understand the REST API may find it advantageous to use in some cases.
+	</p>
+</section>
+<!-- END: Conclusion -->
+
+<div class="ui section divider"></div>
+
+<h3>Want to know more?</h3>
+
+<p>While in this guide we only presented the example of how to execute an <code>ASK</code> query, we have included examples of other query forms supported by Carbon LDP in our <a href="https://www.getpostman.com/collections/307f7898c630698ce5a8">Postman Collection</a> in the <strong>querying</strong> folder. Feel free to experiment with them.</p>
+<p>Also, now that you understand how to query with SPARQL using the REST API, you may want to learn more about the SPARQL language. We recommend the following references:</p>
+
+<div class="ui list">
+	<div class="item">
+		<img class="ui avatar image" src="/assets/images/ld_icons_rdf_83x83.png" alt="RDF Icon"/>
+		<div class="content">
+			<a class="header" href="https://www.w3.org/TR/sparql11-overview/"><strong>SPARQL 1.1 Overview</strong></a>
+			<div class="description">Introduction from the W3C.</div>
+		</div>
+	</div>
+	<div class="item">
+		<img class="ui avatar image" src="/assets/images/ld_icons_rdf_83x83.png" alt="RDF Icon"/>
+		<div class="content">
+			<a class="header" href="https://www.w3.org/TR/sparql11-query/"><strong>SPARQL 1.1 Query Language</strong></a>
+			<div class="description">Specification from the W3C.</div>
+		</div>
+	</div>
+	<div class="item">
+		<img class="ui avatar image" src="/assets/images/ld_icons_rdf_83x83.png" alt="RDF Icon"/>
+		<div class="content">
+			<a class="header" href="https://www.amazon.com/Learning-SPARQL-Querying-Updating-1-1/dp/1449371434"><strong>Learning SPARQL</strong></a>
+			<div class="description">Book about <em>Querying and Updating with SPARQL 1.1</em>, by Bob DuCharme, O'REILLY<sup>&reg;</sup>.</div>
+		</div>
+	</div>
+	<br>
+	<!-- FIXME: Add link to advanced reading documentation. -->
+	<!--<p>Finally, you might be interested in knowing how you can make the most of using SPARQL within Carbon LDP. We have documented some recipes for advanced document reading that you might find useful when working with the platform, check them out <a href="">here</a>.</p>-->
+</div>
