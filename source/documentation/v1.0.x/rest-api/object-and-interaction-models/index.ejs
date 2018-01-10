@@ -47,6 +47,7 @@ version: v1.0.x
 		<p>Bear in mind that some of these, for example created or modified, are <em>System Reserved Properties</em>, which means you can read them but only the platform is allowed to modify them.</p>
 	</section>
 
+
 	<section class="mainContent-subSection">
 		<h3 class="ui header">URIs</h3>
 		<p>
@@ -67,6 +68,16 @@ version: v1.0.x
 		</p>
 		<p>Named fragments are identified by a URI, relative to the document they belong to. Their URIs has the form of <code>DOCUMENT-URI#NAMED-FRAGMENT-SLUG</code>, but there are times where they can be written relative to the document like <code>#NAMED-FRAGMENT-SLUG</code>.</p>
 		<p>On the other hand, bNodes are identified by an ID of the form <code>_:RANDOM-STRING</code>. These IDs are local to the document, making it impossible to link to bNodes from outside of the document.</p>
+	</section>
+
+	<section class="mainContent-subSection">
+		<h3 class="ui header">Types</h3>
+		<p>In linked data, all resources can be described with specific types. By default, all Carbon Documents will always contain the following types to function properly within the platform:</p>
+		<ul>
+			<li><code>https://carbonldp.com/ns/v1/platform#Document</code></li>
+			<li><code>http://www.w3.org/ns/ldp#RDFSource</code></li>
+			<li><code>http://www.w3.org/ns/ldp#BasicContainer</code></li>
+		</ul>
 	</section>
 
 	<section class="mainContent-subSection">
@@ -204,25 +215,222 @@ version: v1.0.x
 			</tab>
 		</tabs>
 
-		<p>
-			If there is anything from the syntax you don't understand you can check the <a href="https://www.w3.org/TR/json-ld/">JSON-LD</a> or <a href="https://www.w3.org/TR/trig/">TriG</a> W3C specifications, which Carbon LDP complies to.
-		</p>
+		<p>If there is anything from the syntax you don't understand you can check the <a href="https://www.w3.org/TR/json-ld/">JSON-LD</a> or <a href="https://www.w3.org/TR/trig/">TriG</a> W3C specifications, which Carbon LDP complies to.</p>
 	</section>
+
+	<div class="ui positive icon message">
+		<i class="lab icon"></i>
+		<div class="content">
+			<div class="header">Try it out...</div>
+			<p>To see how you can interact with documents in Carbon through REST methods go to <a href="../documents/">Documents</a>.</p>
+		</div>
+	</div>
 </section>
 <!-- END: Document model -->
 
-<!-- START: Access point model -->
-<!-- FIXME: Pending work -->
-<!--
-<section class="mainContent-section">
-	<h3 class="ui header">Access point model</h3>
+<!-- START:Relationships in Carbon LDP -->
+<section class="mainContent-subSection">
+	<h2 class="ui header">Relationships in Carbon LDP</h2>
+	<p>Of course, the power of link data relies on the linking of resources. Therefore, a Linked Data Platform must be capable of handling these links or relations between resources in an ordered manner. To achieve this, Carbon LDP divides the relationships into two kinds:</p>
+
+	<ul>
+		<li>Parent-child relation (<strong>hard link</strong>)</li>
+		<li>Membership relation (<strong>soft link</strong>)</li>
+	</ul>
+
+	<div class="ui info icon message">
+		<i class="info circle icon"></i>
+		<div class="content">
+			<div class="header">The more you know...</div>
+			<p>
+				Links in Carbon LDP are not limited to your application's domain, therefore you can use readily existing models and public data that form the Semantic Web to enrich your application's content.
+			</p>
+		</div>
+	</div>
+	<p>Let's review both of these links Carbon uses to understand the need for Access Points.</p>
+
+	<section class="mainContent-subSection">
+		<h3 class="ui header">Parent-child relation</h3>
+		<p>In Carbon, documents can have children documents. Whenever you create a document, you need a container; this is because Carbon LDP relates the new document to the container by defining it as its direct child. Therefore, everything in Carbon has a parent, even if that is your application's root resource.</p>
+		<p>Furthermore, the importance of the hard links comes into play when deleting the documents. Whenever a parent document is deleted, all of its children, and the children of the children (and so on...) will be deleted. On the other hand, this situation does not occur when you are working with soft links.</p>
+		<div class="ui info icon message">
+			<i class="info circle icon"></i>
+			<div class="content">
+				<div class="header">The more you know...</div>
+				<p>
+					Carbon LDP Documents work as Basic Containers, therefore listing containment triples and providing a way for creating a containment hierarchy of arbitrary resources.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="mainContent-section">
+		<h3 class="ui header">Membership relation</h3>
+		<p>
+			Unlike a hard link, a soft link is valuable when you want to demonstrate a relationship between two resources that in essence can still be independent; in other words, when you want a document to be a member of another. In this case, when deleting a document, its members won't
+			be deleted from the platform. Simply, every relationship with the deleted document will disappear from all other documents.
+		</p>
+		<p>All Carbon LDP documents can maintain a list of members. To achieve this, Carbon uses certain properties in the documents:</p>
+		<ul>
+			<li><code>ldp:membershipResource</code>: Configures the document where the member documents will be added. On a regular document it is the document itself.</li>
+			<li><code>ldp:hasMemberRelation</code>: Configures the property that holds an array containing the members of that document (by default <code>ldp:members</code>).</li>
+			<li><code>ldp:isMemberOfRelation</code>: Configures the property that a member document will acquire when declared as a member of the container document (none by default).</li>
+		</ul>
+		<p>
+			By using these properties, Carbon documents can maintain a single list of member documents on their own. However, <em>a document can only maintain one member list through one property, by default <code>ldp:members</code></em>. Therefore, if you wanted to have members of different types they would get mixed
+			within the same list.
+		</p>
+		<p>To prevent this from happening, while allowing you to maintain multiple lists of members per document, Carbon LDP uses Access Points.</p>
+	</section>
 </section>
--->
+
+<!-- START: Access point model -->
+<section class="mainContent-section">
+	<h2 class="ui header">Access Point model</h2>
+	<p>
+		Access points are <strong>special documents, whose purpose is to maintain a list of members for another document</strong>. Documents can have an unlimited number of access points, removing the limitation of lists of members they can maintain. Always remember that access points work as member managers for documents.
+		Therefore, they do not contain member documents themselves.
+	</p>
+	<p>
+		Furthermore, just as regular documents, access points can maintain unlimited properties in the form of values, links or fragments. However, bear in mind that the most important properties to maintain in an access point are the ones that manage membership relations: <code>ldp:membershipResource</code>,
+		<code>ldp:hasMemberRelation</code>, and <code>ldp:isMemberOfRelation</code>.
+	</p>
+	<div class="ui info icon message">
+		<i class="info circle icon"></i>
+		<div class="content">
+			<div class="header">The more you know...</div>
+			<p>
+				A Carbon LDP Access Point can be regarded as equivalent to an LDP Direct Container.
+			</p>
+		</div>
+	</div>
+	<section class="mainContent-subSection">
+		<h3 class="ui header">Membership management properties</h3>
+		<p>Carbon complies to the <a href="https://www.w3.org/TR/ldp/">LDP</a> specification when managing relations between resources. While some ldp properties that help manage relations will also be a part of a regular Carbon document, there are certain differences in the way they are defined within access points.</p>
+		<p>Let's review the special considerations you should have when working with certain ldp properties within an Carbon LDP access point.</p>
+		<section class="mainContent-subSection">
+			<h4 class="ui header">ldp:membershipResource</h4>
+			<p>This property configures the document whose members the access point is managing. In an access point it will always be an external document, which is also where the member documents will be added.</p>
+			<p>On the other hand, whenever you see this property in a regular Document it should be pointing to itself, since a document is also capable of managing a list of member documents.</p>
+		</section>
+		<section class="mainContent-subSection">
+			<h4 class="ui header">ldp:hasMemberRelation</h4>
+			<p>Carbon documents, and therefore access points, can hold a list of member documents in a single property. By default this property is <code>ldp:members</code>. However, this can be configured to personalized properties.</p>
+			<p>
+				When defining an access point it is essential that you configure this property to a custom one, so that you can manage seperate lists for separate access points. After you add members through your access point, your <code>ldp:membershipResource</code> document will contain those members in the property
+				defined in the access point's <code>ldp:hasMemberRelation</code>.
+			</p>
+		</section>
+		<section class="mainContent-subSection">
+			<h4 class="ui header">ldp:isMemberOfRelation</h4>
+			<p>
+				Links in Carbon can be unidirectional or bidirectional. In an unidirectional relation a document knows the members it contains, but the members are not aware of being related to that document. In contrast, in a bidirectional link a document knows the member it contains, and the members also know they are
+				related to that document.
+			</p>
+			<p>
+				To achieve a bidirectional relation between resources, you can configure the <code>ldp:isMemberOfRelation</code> property in an access point. The value that you it will become a property in any member document that is added through your access point. Furthermore, the platform will automatically use that
+				property in the member document to relate it back to your <code>ldp:membershipResource</code> document.
+			</p>
+		</section>
+
+	</section>
+	<section class="mainContent-subSection">
+		<h3 class="ui header">Types</h3>
+		<p>In linked data, all resources can be described with specific types. By default, all Carbon Access Points will always contain the following types to function properly within the platform:</p>
+		<ul>
+			<li><code>https://carbonldp.com/ns/v1/platform#Document</code></li>
+			<li><code>https://carbonldp.com/ns/v1/platform#AccessPoint</code></li>
+			<li><code>http://www.w3.org/ns/ldp#RDFSource</code></li>
+			<li><code>http://www.w3.org/ns/ldp#DirectContainer</code></li>
+		</ul>
+	</section>
+
+	<section class="mainContent-subSection">
+		<h3 class="ui header">Sample access point</h3>
+		<p>In the following tabs you will get an example of how a sample access point looks in both JSON-LD or TriG.</p>
+		<tabs>
+			<tab title="JSON-LD">
+				<pre><code class="json">
+						[
+						    {
+						        "@graph": [
+						            {
+						                "@id": "http://localhost:8083/project-x/participants/",
+						                "@type": [
+						                    "https://carbonldp.com/ns/v1/platform#AccessPoint",
+						                    "http://www.w3.org/ns/ldp#DirectContainer",
+						                    "https://carbonldp.com/ns/v1/platform#Document",
+						                    "http://www.w3.org/ns/ldp#RDFSource"
+						                ],
+						                "http://www.w3.org/ns/ldp#hasMemberRelation": [
+						                    {
+						                        "@id": "http://example.org/ns#participant"
+						                    }
+						                ],
+										"http://www.w3.org/ns/ldp#isMemberOfRelation": [
+						                    {
+						                        "@id": "http://example.org/ns#participatesIn"
+						                    }
+						                ],
+						                "http://www.w3.org/ns/ldp#insertedContentRelation": [
+						                    {
+						                        "@id": "http://www.w3.org/ns/ldp#MemberSubject"
+						                    }
+						                ],
+						                "http://www.w3.org/ns/ldp#membershipResource": [
+						                    {
+						                        "@id": "http://localhost:8083/project-x/"
+						                    }
+						                ],
+						                "https://carbonldp.com/ns/v1/platform#created": [
+						                    {
+						                        "@type": "http://www.w3.org/2001/XMLSchema#dateTime",
+						                        "@value": "2017-12-29T13:19:50.402-06:00"
+						                    }
+						                ],
+						                "https://carbonldp.com/ns/v1/platform#modified": [
+						                    {
+						                        "@type": "http://www.w3.org/2001/XMLSchema#dateTime",
+						                        "@value": "2017-12-29T13:19:50.402-06:00"
+						                    }
+						                ]
+						            }
+						        ],
+						        "@id": "http://localhost:8083/project-x/participants/"
+						    }
+						]
+					</code></pre>
+			</tab>
+			<tab title="TriG">
+				<pre><code class="html">
+						&lt;http://localhost:8083/project-x/participants/> {
+							&lt;http://localhost:8083/project-x/participants/>
+								a &lt;https://carbonldp.com/ns/v1/platform#AccessPoint> , &lt;http://www.w3.org/ns/ldp#DirectContainer> , &lt;https://carbonldp.com/ns/v1/platform#Document> , &lt;http://www.w3.org/ns/ldp#RDFSource> ;
+								&lt;https://carbonldp.com/ns/v1/platform#created> "2017-12-29T13:19:50.402-06:00"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime> ;
+								&lt;https://carbonldp.com/ns/v1/platform#modified> "2017-12-29T13:19:50.402-06:00"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime> ;
+								&lt;http://www.w3.org/ns/ldp#membershipResource> &lt;http://localhost:8083/project-x/> ;
+								&lt;http://www.w3.org/ns/ldp#hasMemberRelation> &lt;http://example.org/ns#participant> ;
+								&lt;http://www.w3.org/ns/ldp#isMemberOfRelation> &lt;http://example.org/ns#participatesIn> ;
+								&lt;http://www.w3.org/ns/ldp#insertedContentRelation> &lt;http://www.w3.org/ns/ldp#MemberSubject> .
+						}
+					</code></pre>
+			</tab>
+		</tabs>
+		<p>If there is anything from the syntax you don't understand you can check the <a href="https://www.w3.org/TR/json-ld/">JSON-LD</a> or <a href="https://www.w3.org/TR/trig/">TriG</a> W3C specifications, which Carbon LDP complies to.</p>
+	</section>
+	<div class="ui positive icon message">
+		<i class="lab icon"></i>
+		<div class="content">
+			<div class="header">Try it out...</div>
+			<p>To see how you can interact with documents in Carbon through REST methods go to <a href="../access-points/">Access Points</a>.</p>
+		</div>
+	</div>
+</section>
 <!-- END: Access point model -->
 
 <!-- START: Interaction models -->
 <section class="mainContent-section">
-	<h3 class="ui header">Interaction models</h3>
+	<h2 class="ui header">Interaction models</h2>
 	<p>When you interact with a given resource on the Carbon server, you can specify a model that governs how the server behaves with respect to it. A document in Carbon can be treated as a Container or as an RDF Source.</p>
 	<p>
 		To get a better grasp on this idea, imagine your regular folder and documents system. Folders contain documents, and are therefore considered different entities; they serve a different purpose to that of documents. However, in Carbon LDP everything is always the same entity,

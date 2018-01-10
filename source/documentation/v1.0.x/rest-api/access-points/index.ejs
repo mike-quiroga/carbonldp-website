@@ -23,55 +23,23 @@ version: v1.0.x
 		<li>Membership relation (<strong>soft link</strong>)</li>
 	</ul>
 
-	<p>Let's review both of these links Carbon uses to understand the need for Access Points.</p>
-
 	<div class="ui info icon message">
 		<i class="info circle icon"></i>
 		<div class="content">
 			<div class="header">The more you know...</div>
 			<p>
-				Links in Carbon LDP are not limited to your application's domain, therefore you can use readily existing models and public data that form the Semantic Web.
+				Links in Carbon LDP are not limited to your application's domain, therefore you can use readily existing models and public data that form the Semantic Web to enrich your application's content.
 			</p>
 		</div>
 	</div>
 
-	<section class="mainContent-subSection">
-		<h3 class="ui header">Parent-child relation</h3>
-		<p>In Carbon, documents can have children documents. Whenever you create a document, you need a container; this is because Carbon LDP relates the new document to the container by defining it as its direct child. Therefore, everything in Carbon has a parent, even if that is your application's root resource.</p>
-		<p>Furthermore, the importance of the hard links comes into play when deleting the documents. Whenever a parent document is deleted, all of its children, and the children of the children (and so on...) will be deleted. On the other hand, this situation does not occur when you are working with soft links.</p>
-		<div class="ui info icon message">
-			<i class="info circle icon"></i>
-			<div class="content">
-				<div class="header">The more you know...</div>
-				<p>
-					Carbon LDP Documents work as Basic Containers, therefore listing containment triples and providing a way for creating a containment hierarchy of arbitrary resources.
-				</p>
-			</div>
-		</div>
-	</section>
+	<p>To get a better insight into the specifics of relationships in Carbon LDP, see <a href="../object-and-interaction-models/#relationships-in-carbon-ldp">Relationships in Carbon LDP</a>.</p>
+	<p>For any Carbon document, if you don't modify the <code>ldp:hasMemberRelation</code> property, a set of member documents will be maintained in the property <code>ldp:members</code>.</p>
 
-	<!-- START: Membership relation -->
-	<section class="mainContent-section">
-		<h3 class="ui header">Membership relation</h3>
-		<p>
-			Unlike a hard link, a soft link is valuable when you want to demonstrate a relationship between two resources that in essence can still be independent; in other words, when you want a document to be a member of another. In this case, when deleting a document, its members won't
-			be deleted from the platform. Simply, every relationship with the deleted document will disappear from all other documents.
-		</p>
-		<p>All Carbon LDP documents can maintain a list of members. To achieve this, Carbon uses certain properties in the documents:</p>
-		<ul>
-			<li><code>ldp:membershipResource</code>: Configures the document where the member documents will be added. On a regular document it is the document itself.</li>
-			<li><code>ldp:hasMemberRelation</code>: Configures the property that holds an array containing the members of that document (by default <code>ldp:members</code>).</li>
-			<li><code>ldp:isMemberOfRelation</code>: Configures the property that a member document will acquire when declared as a member of the container document (none by default).</li>
-		</ul>
-		<p>
-			For any Carbon document, if you don't modify the <code>ldp:hasMemberRelation</code> property, an array of member documents will be maintained in the property <code>ldp:members</code>. This list can be either retrieved or modified through different requests from the REST API, however there's a limitation to it.
-			<em>A document can only maintain one member list through one property</em> (by default <code>ldp:members</code>). Therefore, if you wanted to have members of different types, they will get mixed within the same array. Let's clarify this with an example.
-		</p>
-		<p>
-			Imagine you created a document that represents a project your company is developing called "Project X". Now, you want to know which employees will be a part of that project, so you add them as members in your "Project X" document. Then, when the project begins you
-			want to link it to different tasks that are standardized in your company. If you add the tasks in the same <code>ldp:members</code> property, you would have an array of documents some of which represent a person and others a task.
-		</p>
-	</section>
+	<p>
+		Imagine you created a document that represents a project your company is developing called "Project X". Now, you want to know which employees will be a part of that project, so you use a soft link to relate them and add them as <code>ldp:members</code> in your "Project X" document. As the project begins you
+		want to link it to different tasks that are standardized in your company. If you add the tasks in the same <code>ldp:members</code> property, you would have an array of documents some of which represent a person and others a task.
+	</p>
 	<p>To prevent this from happening, while allowing you to maintain multiple lists of members per document, Carbon LDP uses Access Points.</p>
 </section>
 
@@ -79,8 +47,12 @@ version: v1.0.x
 <section class="mainContent-section">
 	<h2 class="ui header">What is an Access Point?</h2>
 	<p>
-		Access points are special documents, whose purpose is to maintain a list of members for another document. Documents can have an unlimited number of access points, removing the limitation of membership relations. Like with normal documents, you can customize the properties that manage membership relations:
-		<code>ldp:membershipResource</code>, <code>ldp:hasMemberRelation</code>, and <code>ldp:isMemberOfRelation</code>.
+		Access points are <strong>special documents, whose purpose is to maintain a list of members for another document</strong>. Documents can have an unlimited number of access points, removing the limitation of lists of members they can maintain. Always remember that access points work as member managers for documents.
+		Therefore, they do not contain member documents themselves.
+	</p>
+	<p>
+		Furthermore, just as regular documents, access points can maintain unlimited properties in the form of values, links or fragments. However, bear in mind that the most important properties to maintain in an access point are the ones that manage membership relations: <code>ldp:membershipResource</code>,
+		<code>ldp:hasMemberRelation</code>, and <code>ldp:isMemberOfRelation</code>.
 	</p>
 	<div class="ui info icon message">
 		<i class="info circle icon"></i>
@@ -91,8 +63,8 @@ version: v1.0.x
 			</p>
 		</div>
 	</div>
-	<p>Note that the <code>ldp:membershipResource</code> property configures the document where the member documents will be added. In this case, the property will be pointing to the document the access point belongs to.</p>
-	<p>It is important that you always remember access points work as member managers for documents. However, they do not contain member documents themselves.</p>
+	<p>To get a better insight into the basic parts that conform a Carbon LDP Access Point, see <a href="../object-and-interaction-models/#access-point-model">Access Point model</a>.</p>
+	<p>Now let's see how you can interact with access points in Carbon through REST methods.</p>
 </section>
 <!-- END: What is an Access Point? -->
 
@@ -327,16 +299,11 @@ version: v1.0.x
 			</div>
 			<div class="active content">
 				<p>The body of the request is a graph of triples written in the RDF syntax matching the Content-Type header.</p>
+				<p>Please note that the platform automatically configures the property <code>ldp:membershipResource</code>, therefore when you add member documents to the recently created access point they will be added in the document you targeted in your request.</p>
+				<p>In this case we are defining the <code>ldp:hasMemberRelation</code> property (as <code>ex:participant</code>) so that the member documents are added to the container document using that property. This is the basic way in which we recommend you configure your access point.</p>
 				<p>
-					In this case we are defining the <code>ldp:hasMemberRelation</code> property (as <code>ex:participant</code>) so that the member documents are added to the container document using that property. This is the basic way in which we recommend you
-					configure your access point.
-				</p>
-				<p>
-					Nevertheless this will only create a one way relation between the container document and the members added to it. If you look at the member document you will not find any reference to the container document. To
-					achieve a bilateral relation you must also configure in your access point the <code>ldp:isMemberOfRelation</code> property with the property where the container document will be referenced in the member document.
-				</p>
-				<p>
-					Please note that the platform automatically configures the property <code>ldp:membershipResource</code>, therefore when you add member documents to the recently created access point they will be added in the document you targeted in your request.
+					Nevertheless this will only create a one way relation between the container document and the members added to it. If you look at the member document you will not find any reference to the container document. To achieve a bilateral relation you must also configure in your access point the
+					<code>ldp:isMemberOfRelation</code> property with the property where the container document will be referenced in the member document.
 				</p>
 				<p>Also, since this case exemplifies the simplest request body required to create an access point only the properties that manage relationships are mentioned. Since access points are just a special type of document bear in mind that they can contain as many properties as you desire.</p>
 				<p>If there is anything from the request body you don't understand you can check the <a href="https://www.w3.org/TR/json-ld/">JSON-LD</a> or <a href="https://www.w3.org/TR/trig/">TriG</a> W3C specifications, which Carbon LDP complies to.</p>
