@@ -1,0 +1,553 @@
+---
+layout: documentation/document
+title: Reading documents
+description: Retrieving only certain properties of documents and retrieving multiple documents at once
+date: 2019-10-01 17:32:00
+version: v1.0.x
+---
+<div class="documentation-steps ui fluid steps">
+	<a class="step" href="../object-schema">
+		<i class="arrow left icon"></i>
+		<div class="content">
+			<div class="title">Previous</div>
+			<div class="description">Object schema</div>
+		</div>
+	</a>
+	<div class="active step">
+		<div class="content">
+			<div class="title">Reading documents</div>
+		</div>
+	</div>
+	<a class="step" href="../querying">
+		<i class="arrow right icon"></i>
+		<div class="content">
+			<div class="title">Next</div>
+			<div class="description">Querying</div>
+		</div>
+	</a>
+</div>
+
+<div class="ui mobile only grid">
+	<div class="row">
+		<staticContentMenu content="mainContent"></staticContentMenu>
+	</div>
+</div>
+
+<!-- START: Introduction -->
+<section class="mainContent-section">
+	<h2 class="hidden">Introduction</h2>
+	<p>
+		So far we have covered how to retrieve single documents using the <code>get()</code> method, and how to retrieve (or list) multiple documents taking advantage
+		either of the parent-child relationship or the membership relationship (with <code>listChildren()</code>, <code>getMembers()</code>, etc). Still, applications
+		normally need more than just retrieving a single document or a list of documents.
+	</p>
+	<p>
+		In this document we'll cover common use cases and how to accomplish them with the SDK.
+	</p>
+</section>
+<!-- END: Introduction -->
+
+<!-- START: The query function -->
+<section class="mainContent-section">
+	<h2>The query function</h2>
+	<p>
+		We've been using the methods <code>get()</code>, <code>getChildren()</code> and <code>getMembers()</code> with minimal configuration.
+		But these methods also accept an additional parameter that allows us to specify constraints for the retrieval: the <code>query</code> parameter.
+	</p>
+	<p>
+		The query parameter must be a function that returns a very particular object. To help with the creation of said object, the function will receive as its only
+		parameter a <strong>Builder</strong> object. It has the methods required to specify the desired constraints and return the object the function is expected
+		to return.
+	</p>
+	<p>We'll call this function the <strong>query function</strong>.</p>
+	<p>
+		To make things easier, here's the general pattern to follow when using this function:
+	</p>
+	<tabs>
+		<tab title="TypeScript">
+			<pre><code class="typescript">
+				// ...
+				carbon.documents.get&lt;Something&gt;( "parent/", _ => _
+					.someConstraint()
+					.someOtherConstraint()
+				);
+				// ...
+			</code></pre>
+			<p>
+				<strong>Note:</strong> The <code>_</code> argument received in the lambda function is the <strong>Builder</strong> object. We named it <code>_</code> in
+				this pattern to make it easier to use but like any function parameter, its name can be anything.
+			</p>
+			<p></p>
+		</tab>
+		<tab title="JavaScript ES2015">
+			<pre><code class="javascript">
+				// ...
+				carbon.documents.get( "parent/", _ => _
+					.someConstraint()
+					.someOtherConstraint()
+				);
+				// ...
+			</code></pre>
+			<p>
+				<strong>Note:</strong> The <code>_</code> argument received in the lambda function is the <strong>Builder</strong> object. We named it <code>_</code> in
+				this pattern to make it easier to use but like any function parameter, its name can be anything.
+			</p>
+			<p></p>
+		</tab>
+		<tab title="JavaScript ES5">
+			<pre><code class="javascript">
+				// ...
+				carbon.documents.get( "parent/", function( _ ) {
+					return _
+						.someConstraint()
+						.someOtherConstraint()
+					;
+				} );
+				// ...
+			</code></pre>
+			<p>
+				<strong>Note:</strong> The <code>_</code> argument received in the lambda function is the <strong>Builder</strong> object. We named it <code>_</code> in
+				this pattern to make it easier to use but like any function parameter, its name can be anything.
+			</p>
+			<p></p>
+		</tab>
+	</tabs>
+</section>
+<!-- END: The query function -->
+
+<!-- START: Retrieving only specific properties -->
+<section class="mainContent-section">
+	<h2>Retrieving only specific properties</h2>
+	<p>
+		It is fairly common for applications to require only certain properties of a document. This can happen, for example,
+		when rendering a list of objects and just displaying their name.
+	</p>
+	<p>
+		To retrieve only specific properties of a document, the <strong>Builder</strong> object provides the method <code>properties()</code>.
+	</p>
+	<h3>Example</h3>
+	<p>
+		Let's imagine that an application needs to render a list of employees using only their <code>name</code> and their <code>profilePicture</code>.
+		This can be achieved doing the following:
+	</p>
+	<tabs>
+		<tab title="TypeScript">
+			<pre><code class="typescript">
+				// ...
+				carbon.documents.getMembers&lt;Employee&gt;( "employees/", _ => _
+					.properties( {
+						"name": {
+							"@type": "string"
+						},
+						"profilePicture": {
+							"@type": "string"
+						}
+					} )
+				);
+				// ...
+			</code></pre>
+		</tab>
+		<tab title="JavaScript ES2015">
+			<pre><code class="javascript">
+				// ...
+				carbon.documents.getMembers( "employees/", _ => _
+					.properties( {
+						"name": {
+							"@type": "string"
+						},
+						"profilePicture": {
+							"@type": "string"
+						}
+					} )
+				);
+				// ...
+			</code></pre>
+		</tab>
+		<tab title="JavaScript ES5">
+			<pre><code class="javascript">
+				// ...
+				carbon.documents.getMembers( "employees/", function( _ ) {
+					return _
+						.properties( {
+							"name": {
+								"@type": "string"
+							},
+							"profilePicture": {
+								"@type": "string"
+							}
+						} )
+					;
+				} );
+				// ...
+			</code></pre>
+		</tab>
+	</tabs>
+	<p>
+		As you can see, the <code>properties()</code> method receives an object that looks very similar to the one used by the <a href="../object-schema">Object schema</a>.
+		The properties of this object define the property names to retrieve. Each property can specify the same things as in the <a href="../object-schema">Object schema</a>,
+		<code>@id</code>, <code>@type</code>, etc..
+	</p>
+	<p>
+		Now you may be wondering:
+	</p>
+	<p>
+		"Well, I already specified how I expect certain properties to be interpreted in my <a href="../object-schema">Object schema</a>. Do I really
+		need to declare them again?"
+	</p>
+	<p>
+		Of course not. If the properties were specified in the <strong>general</strong> <a href="../object-schema">Object schema</a>, then you can point them to
+		<code>_.inherit</code>:
+	</p>
+	<pre><code class="javascript">
+		.properties( {
+			"name": _.inherit,
+			"profilePicture": _.inherit
+		} )
+	</code></pre>
+	<p>
+		<code>_.inherit</code> specifies that the property's details should be pulled from the <a href="../object-schema">Object schema</a>.
+	</p>
+	<p>
+		"But what if I don't want to declare my properties on the <strong>general</strong> object schema?"
+	</p>
+	<p>
+		Like we said in the <a href="../object-schema">Object schema</a> document, instead of declaring them in the <strong>general</strong> object schema
+		it is a good practice to declare properties in the object schema of a specific <strong>type</strong>. But if you do that, the <strong>Builder</strong> object
+		won't have information to use for the properties specified.
+	</p>
+	<p>
+		This problem can be addressed when using the next constraint:
+	</p>
+</section>
+<!-- END: Retrieving only specific properties -->
+
+<!-- START: Retrieving only documents of a specific type -->
+<section class="mainContent-section">
+	<h2>Retrieving only documents of a specific type</h2>
+	<div class="ui info icon message">
+		<i class="info circle icon"></i>
+		<div class="content">
+			<p>
+				If you have not worked with object schemas before or have no idea of what they are, please refer to the
+				<a href="../object-schema#what-is-an-object-schema-" target="_blank">What is an object schema?</a>
+				section, particularly the <a href="../object-schema#data-types-type-">Data Types (@type) section</a>, to better understand the use of types while querying.
+			</p>
+		</div>
+	</div>
+	<p>
+		A document can store any type of documents as its children/members, but most of the time, applications only care about documents that follow a particular
+		shape. Or said in other words, have a specific <code>@type</code>.
+	</p>
+	<p>
+		The <strong>Builder</strong> object provides the method <code>withType()</code> to specify only documents that have a desired <code>@type</code> should be retrieved.
+	</p>
+	<tabs>
+		<tab title="TypeScript">
+			<pre><code class="typescript">
+				// ...
+				carbon.documents.getMembers&lt;Employee&gt;( "employees/", _ => _
+					.withType( "Employee" )
+				);
+				// ...
+			</code></pre>
+		</tab>
+		<tab title="JavaScript ES2015">
+			<pre><code class="javascript">
+				// ...
+				carbon.documents.getMembers( "employees/", _ => _
+					.withType( "Employee" )
+				);
+				// ...
+			</code></pre>
+		</tab>
+		<tab title="JavaScript ES5">
+			<pre><code class="javascript">
+				// ...
+				carbon.documents.getMembers( "employees/", function( _ ) {
+					return _
+						.withType( "Employee" )
+					;
+				} );
+				// ...
+			</code></pre>
+		</tab>
+	</tabs>
+	<p>
+		Filtering documents based on their type has an additional advantage, it provides additional information about the desired documents to the <strong>Builder</strong>
+		object and because of this, the <code>_.inherit</code> object can now be used with properties that are located in that <code>@type</code>'s schema:
+	</p>
+	<tabs>
+		<tab title="TypeScript">
+			<pre><code class="typescript">
+				// ...
+				carbon.extendObjectSchema( "Employee", {
+					"name": {
+						"@type": "string"
+					},
+					"profilePicture": {
+						"@type": "string"
+					}
+				} );
+
+				carbon.documents.getMembers&lt;Employee&gt;( "employees/", _ => _
+					.withType( "Employee" )
+					.properties( {
+						"name": _.inherit,
+						"profilePicture": _.inherit
+					} )
+				).then( ( [ employees, response ]:[ Employee[] & PersistedDocument.Class, HTTP.Response.Class ] ) => {
+					console.log( employees );
+				} );
+				// ...
+			</code></pre>
+		</tab>
+		<tab title="JavaScript ES2015">
+			<pre><code class="javascript">
+				// ...
+				carbon.extendObjectSchema( "Employee", {
+					"name": {
+						"@type": "string"
+					},
+					"profilePicture": {
+						"@type": "string"
+					}
+				} );
+
+				carbon.documents.getMembers( "employees/", _ => _
+					.withType( "Employee" )
+					.properties( {
+						"name": _.inherit,
+						"profilePicture": _.inherit
+					} )
+				).then( ( [ employees, response ] ) => {
+					console.log( employees );
+				} );
+				// ...
+			</code></pre>
+		</tab>
+		<tab title="JavaScript ES5">
+			<pre><code class="javascript">
+				// ...
+				carbon.extendObjectSchema( "Employee", {
+					"name": {
+						"@type": "string"
+					},
+					"profilePicture": {
+						"@type": "string"
+					}
+				} );
+
+				carbon.documents.getMembers( "employees/", function( _ ) {
+					return _
+						.withType( "Employee" )
+						.properties( {
+							"name": _.inherit,
+							"profilePicture": _.inherit
+						} )
+					;
+				} ).then( function( result ) {
+					var employees = result[ 0 ];
+					console.log( employees );
+				} );
+				// ...
+			</code></pre>
+		</tab>
+	</tabs>
+</section>
+<!-- END: Retrieving only documents of a specific type -->
+
+<!-- START: Retrieving nested objects -->
+<section class="mainContent-section">
+	<h2>Retrieving nested objects</h2>
+	<p>
+		So far we have covered only simple object structures. But sometimes an application needs to retrieve a more complex one, like for example the following
+		objects tree:
+	</p>
+	<pre><code class="json">
+		{
+			"id": "employees/john-snow/",
+			"types": [ "Employee" ],
+			"name": "John Snow",
+			"profilePicture": "http://.../profile.png",
+			"projects": [
+				{
+					"id": "projects/website-redesign/",
+					"types": [ "Project" ],
+					"title": "Website redesign"
+				},
+				{
+					"id": "projects/acme-intranet/",
+					"types": [ "Project" ],
+					"title": "ACME's Intranet"
+				}
+			]
+		}
+	</code></pre>
+	<p>
+		Retrieving connected objects can be accomplished by specifying that the value of a property (of <code>@id</code> type) should be included in the response.
+		To do it, a <code>query</code> property needs to be declared in a property description object.
+	</p>
+	<p>
+		This <code>query</code> property accepts another <a href="#the-query-function">query function</a> that will be used to apply constraints to the values of that
+		property.
+	</p>
+	<p>
+		In this <a href="#the-query-function">query function</a> the desired properties of the nested object can be specified too (along with everything we have
+		included covered so far).
+	</p>
+	<p>
+		To retrieve the previous objects tree the following code could be used:
+	</p>
+	<tabs>
+		<tab title="TypeScript">
+			<pre><code class="typescript">
+				// ...
+				carbon.extendObjectSchema( "Employee", {
+					"name": {
+						"@type": "string"
+					},
+					"profilePicture": {
+						"@type": "string"
+					},
+					"projects": {
+						"@type": "@id"
+					}
+				} );
+				carbon.extendObjectSchema( "Project", {
+					"title": {
+						"@type": "string"
+					}
+				} );
+
+				carbon.documents.get&lt;Employee&gt;( "employees/john-snow/", _ => _
+					.withType( "Employee" )
+					.properties( {
+						"name": _.inherit,
+						"profilePicture": _.inherit,
+						"projects": {
+							"query": _ => _
+								.withType( "Project" )
+								.properties( {
+									"title": _.inherit
+								} )
+						}
+					} )
+				).then( ( [ employee, response ]:[ Employee & PersistedDocument.Class, HTTP.Response.Class ] ) => {
+					console.log( employee.projects.length ); // 2
+					console.log( employee.projects[ 0 ].title ); // Website redesign
+				} );
+				// ...
+			</code></pre>
+		</tab>
+		<tab title="JavaScript ES2015">
+			<pre><code class="javascript">
+				// ...
+				carbon.extendObjectSchema( "Employee", {
+					"name": {
+						"@type": "string"
+					},
+					"profilePicture": {
+						"@type": "string"
+					},
+					"projects": {
+						"@type": "@id"
+					}
+				} );
+				carbon.extendObjectSchema( "Project", {
+					"title": {
+						"@type": "string"
+					}
+				} );
+
+				carbon.documents.get( "employees/john-snow/", _ => _
+					.withType( "Employee" )
+					.properties( {
+						"name": _.inherit,
+						"profilePicture": _.inherit,
+						"projects": {
+							"query": _ => _
+								.withType( "Project" )
+								.properties( {
+									"title": _.inherit
+								} )
+						}
+					} )
+				).then( ( [ employee, response ] ) => {
+					console.log( employee.projects.length ); // 2
+					console.log( employee.projects[ 0 ].title ); // Website redesign
+				} );
+				// ...
+			</code></pre>
+		</tab>
+		<tab title="JavaScript ES5">
+			<pre><code class="javascript">
+				// ...
+				carbon.extendObjectSchema( "Employee", {
+					"name": {
+						"@type": "string"
+					},
+					"profilePicture": {
+						"@type": "string"
+					}
+				} );
+
+				carbon.documents.get( "employees/john-snow/", function( _ ) {
+					return _
+						.withType( "Employee" )
+						.properties( {
+							"name": _.inherit,
+							"profilePicture": _.inherit,
+							"projects": {
+								"query": function( _ ) {
+									_
+										.withType( "Project" )
+										.properties( {
+											"title": _.inherit
+										} )
+									;
+								}
+							}
+						} )
+					;
+				} ).then( function( result ) {
+					var employee = result[ 0 ];
+
+					console.log( employee.projects.length ); // 2
+					console.log( employee.projects[ 0 ].title ); // Website redesign
+				} );
+				// ...
+			</code></pre>
+		</tab>
+	</tabs>
+	<p>
+		Even though the <code>projects</code> property isn't pointing to <code>_.inherit</code>, it will still inherit whatever wasn't specified on the description object
+		from the object schema. In this case, the <code>@type</code> gets inherited since it wasn't explicitly defined.
+	</p>
+	<p>
+		Note that <strong>nested queries can be as deep as you need them to be</strong> but the requests may become slow.
+	</p>
+</section>
+<!-- END: Retrieving nested objects -->
+
+<div class="documentation-steps ui fluid steps">
+	<a class="step" href="../object-schema">
+		<i class="arrow left icon"></i>
+		<div class="content">
+			<div class="title">Previous</div>
+			<div class="description">Object schema</div>
+		</div>
+	</a>
+	<div class="active completed step">
+		<!--<i class="payment icon"></i>-->
+		<div class="content">
+			<div class="title">Reading documents</div>
+		</div>
+	</div>
+	<a class="step" href="../querying">
+		<i class="arrow right icon"></i>
+		<div class="content">
+			<div class="title">Next</div>
+			<div class="description">Querying</div>
+		</div>
+	</a>
+</div>
