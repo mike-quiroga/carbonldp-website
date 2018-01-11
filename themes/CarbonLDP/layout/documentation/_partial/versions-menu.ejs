@@ -87,7 +87,7 @@ function getClosestDocumentationPageForEachVersion( currentDocumentationPage ) {
 %>
 
 <div class="ui dropdown versionsMenu-dropdown <%= containerDarkBackground ? "" : "versionsMenu-dropdown--blackText" %>">
-	<button class="default text ui button versionsMenu-button <%= containerDarkBackground ? "" : "versionsMenu-button--grayHover" %>"><%= currentVersion.name + ( currentVersion.label ? ` (${currentVersion.label})` : "" ) %></button>
+	<button class="default text ui right labeled icon button versionsMenu-button <%= containerDarkBackground ? "" : "versionsMenu-button--grayHover" %>"><%= currentVersion.name + ( currentVersion.label ? ` (${currentVersion.label})` : "" ) %><i class="dropdown icon"></i></button>
 	<div class="ui menu versionsMenu">
 		<% for( let version of versions ){ %>
 		<% let closestDocumentationPage = documentationPageVersionsMap.get( version.name ); %>
