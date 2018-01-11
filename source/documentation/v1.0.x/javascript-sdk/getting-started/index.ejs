@@ -684,7 +684,6 @@ pathPartialURL: javascript-sdk/getting-started
 </section>
 <!-- END: Retrieving a document -->
 
-
 <!-- START: Modifying and saving a document -->
 <section class="mainContent-section">
 	<h2>Modifying and saving a document</h2>
@@ -1039,10 +1038,10 @@ pathPartialURL: javascript-sdk/getting-started
 		</p>
 		<ul>
 			<li>
-				<code>documents.listChildren</code>: Returns a list of unresolved <code>PersistedDocument.Class</code> objects for each of the document children
+				<code>documents.listChildren</code>: Returns a list of shallow <code>PersistedDocument.Class</code> objects for each of the document children
 			</li>
 			<li>
-				<code>documents.getChildren</code>: Returns a list of RESOLVED <code>PersistedDocument.Class</code> objects for each of the document children
+				<code>documents.getChildren</code>: Returns a list of <code>PersistedDocument.Class</code> objects for each of the document children
 			</li>
 		</ul>
 		<tabs>
@@ -1056,14 +1055,14 @@ pathPartialURL: javascript-sdk/getting-started
 					// ... initialize your Carbon object
 
 					carbon.documents.listChildren&lt;Project&gt;( "projects/" ).then(
-						( [ unresolvedProjects, response ] : [ ( Project & PersistedDocument.Class )[], HTTP.Response.Class]) => &#123;
-					        console.log( unresolvedProjects ); // array of unresolved pointers
+						( [ shallowProjects, response ] : [ ( Project & PersistedDocument.Class )[], HTTP.Response.Class]) => &#123;
+					        console.log( shallowProjects ); // array of shallow documents
 						&#125;
 					);
 
 					carbon.documents.getChildren&lt;Project&gt;( "projects/" ).then(
-						( [ resolvedProjects, response ] : [ ( Project & PersistedDocument.Class )[], HTTP.Response.Class] ) => &#123;
-					        console.log( resolvedProjects ); // array of resolved pointers
+						( [ projects, response ] : [ ( Project & PersistedDocument.Class )[], HTTP.Response.Class] ) => &#123;
+					        console.log( projects ); // array of documents
 						&#125;
 					);
 				</code></pre>
@@ -1079,14 +1078,14 @@ pathPartialURL: javascript-sdk/getting-started
 					// ... initialize your Carbon object
 
 					carbon.documents.listChildren( "projects/" ).then(
-						( [ unresolvedProjects, response ] ) => &#123;
-					        console.log( projectPointers ); // array of unresolved pointers
+						( [ shallowProjects, response ] ) => &#123;
+					        console.log( projectPointers ); // array of shallow documents
 						&#125;
 					);
 
 					carbon.documents.getChildren( "projects/" ).then(
-						( [ resolvedProjects, response ] ) => &#123;
-					        console.log( projects ); // array of resolved pointers
+						( [ projects, response ] ) => &#123;
+					        console.log( projects ); // array of documents
 						&#125;
 					);
 				</code></pre>
@@ -1100,20 +1099,20 @@ pathPartialURL: javascript-sdk/getting-started
 					// ... initialize your Carbon object
 
 					carbon.documents.listChildren( "projects/" ).then(
-						function( [ unresolvedProjects, response ] ) &#123;
-							var unresolvedProjects = result[ 0 ];
+						function( [ shallowProjects, response ] ) &#123;
+							var shallowProjects = result[ 0 ];
 							var response = result[ 1 ];
 
-					        console.log( projectPointers ); // array of unresolved pointers
+					        console.log( projectPointers ); // array of shallow documents
 						&#125;
 					);
 
 					carbon.documents.getChildren( "projects/" ).then(
-						function( [ resolvedProjects, response ] ) &#123;
-							var resolvedProjects = result[ 0 ];
+						function( [ projects, response ] ) &#123;
+							var projects = result[ 0 ];
 							var response = result[ 1 ];
 
-					        console.log( projects ); // array of resolved pointers
+					        console.log( projects ); // array of documents
 						&#125;
 					);
 				</code></pre>
@@ -1146,7 +1145,7 @@ pathPartialURL: javascript-sdk/getting-started
 		<p>
 			Because parent-child relations are <span class="highlight">hard links</span>, it is not recommended
 			to use them in your app logic. Instead, Carbon helps you manage another type of relation, considered as
-			a <span class="highlight">soft link</span>, membership relations.
+			a <span class="highlight">soft link</span>: membership relations.
 		</p>
 		<p>
 			The meaning of a membership relation is up to your application logic to define it. It can mean things like,
@@ -1180,10 +1179,10 @@ pathPartialURL: javascript-sdk/getting-started
 				<code>addMember/addMembers</code>: Adds the provided pointers as members of the document
 			</li>
 			<li>
-				<code>listMembers</code>: Like <code>listChildren</code>, returns an array of unresolved <code>PersistedDocument.Class</code> objects for each member
+				<code>listMembers</code>: Like <code>listChildren</code>, returns an array of shallow <code>PersistedDocument.Class</code> objects for each member
 			</li>
 			<li>
-				<code>getMembers</code>: Like <code>getChildren</code>, returns an array of RESOLVED <code>PersistedDocument.Class</code> objects for each member
+				<code>getMembers</code>: Like <code>getChildren</code>, returns an array of complete <code>PersistedDocument.Class</code> objects for each member
 			</li>
 			<li>
 				<code>removeMember/removeMembers/removeAllMembers</code>: Removes the specified members (without deleting them)
@@ -1228,8 +1227,8 @@ pathPartialURL: javascript-sdk/getting-started
 							return project.listMembers&lt;Task&gt;();
 						&#125;
 					).then(
-						( [ unresolvedTasks, response ]:[ Task & PersistedDocument.Class, Response.Class ] ) => &#123;
-							console.log( unresolvedTasks ); // Pointers for task1, task2 and task3
+						( [ shallowTasks, response ]:[ Task & PersistedDocument.Class, Response.Class ] ) => &#123;
+							console.log( shallowTasks ); // Pointers for task1, task2 and task3
 
 							return project.removeMember( task2 );
 						&#125;
@@ -1284,8 +1283,8 @@ pathPartialURL: javascript-sdk/getting-started
 							return project.listMembers();
 						&#125;
 					).then(
-						( [ unresolvedTasks, response ] ) => &#123;
-							console.log( unresolvedTasks ); // Pointers for task1, task2 and task3
+						( [ shallowTasks, response ] ) => &#123;
+							console.log( shallowTasks ); // Pointers for task1, task2 and task3
 
 							return project.removeMember( task2 );
 						&#125;
@@ -1342,10 +1341,10 @@ pathPartialURL: javascript-sdk/getting-started
 						&#125;
 					).then(
 						function( result ) &#123;
-							var unresolvedTasks = result[ 0 ];
+							var shallowTasks = result[ 0 ];
 							var response = result[ 1 ];
 
-							console.log( unresolvedTasks ); // Pointers for task1, task2 and task3
+							console.log( shallowTasks ); // Pointers for task1, task2 and task3
 
 							return project.removeMember( task2 );
 						&#125;
@@ -1369,6 +1368,18 @@ pathPartialURL: javascript-sdk/getting-started
 			</tab>
 		</tabs>
 	</section>
+
+	<div class="ui info icon message">
+		<i class="info circle icon"></i>
+		<div class="content">
+			<p>
+				More on <code>listMembers()</code>, <code>getMembers()</code>, <code>listChildren()</code> and <code>getChildren()</code> can be found here:
+			</p>
+			<p>
+				<a href="../reading-documents">Reading documents</a>
+			</p>
+		</div>
+	</div>
 </section>
 <!-- END: Linking documents -->
 

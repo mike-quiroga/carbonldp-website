@@ -132,18 +132,18 @@ versions:
           - title: Object schema
             link: object-schema
             description: What is the object schema, how to define and use it
+          - title: Reading documents
+            link: reading-documents
+            description: Retrieving only certain properties of documents and retrieving multiple documents at once
           - title: Querying
             link: querying
-            description: How to make queries with SPARQLer
+            description: How to query data using SPARQLer
           - title: Access points
             link: access-points
             description: What is an Access Point and how to use them
           - title: Real-Time capabilities
             link: real-time-capabilities
             description: Discover the capabilities of a real-time linked data platform
-          - title: Files
-            link: files
-            description: Not yet documented
           - title: Authentication
             link: authentication
             description: Not yet documented
