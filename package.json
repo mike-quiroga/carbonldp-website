@@ -49,7 +49,7 @@
     "hexo-widgets": "1.0.0-alpha.4",
     "jsdom": "9.9.1",
     "jsdom-global": "2.1.1",
-    "semantic-ui": "^2.2.7"
+    "semantic-ui": "2.2.7"
   },
   "devDependencies": {
     "deasync": "0.1.9",
