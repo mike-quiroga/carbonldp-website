@@ -615,37 +615,127 @@ version: v1.0.x
 		Sometimes collections can get very big and retrieving them all together on a single request can take a long time (or even crash).
 	</p>
 	<p>
-		To avoid this, the <strong>Builder</strong> object provides three methods that let you page through the documents of a collection.
+		To avoid this, the <strong>Builder</strong> object provides three methods that let you page through the documents of a collection:
 	</p>
-	<!-- START: Sorting documents -->
-	<section class="mainContent-section">
-		<h3>Ordering documents</h3>
-		<p>
-			The method <code>orderBy</code>
-		</p>
-	</section>
-	<!-- END: Sorting documents -->
-	<!-- START: Limiting documents -->
-	<section class="mainContent-section">
-		<h3>Limiting results</h3>
-		<p>
-			The method <code>limit</code>
-		</p>
-	</section>
-	<!-- END: Limiting documents -->
-	<!-- START: Offsetting results -->
-	<section class="mainContent-section">
-		<h3>Offsetting results</h3>
-		<p>
-			The method <code>offset</code>
-		</p>
-	</section>
-	<!-- END: Offsetting results -->
-	<!-- START: Putting it all together -->
-	<section class="mainContent-section">
-		<h3>Putting it all together</h3>
-	</section>
-	<!-- END: Putting it all together -->
+	<table class="ui celled table">
+		<tbody>
+			<tr>
+				<td><code>orderBy()</code></td>
+				<td>
+					Orders the documents to be retrieved based on one of their properties. This method accepts two parameters:
+					<ul>
+						<li>The property name</li>
+						<li>Either <code>"ascending"</code>/<code>"ASC"</code> or <code>"descending"</code>/<code>"DESC"</code> to specify the order</li>
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<td><code>limit()</code></td>
+				<td>Number of documents to retrieve</td>
+			</tr>
+			<tr>
+				<td><code>offset()</code></td>
+				<td>Indicates the number of documents to ignore when retrieving results. An offset of <strong>0</strong> has no effect</td>
+			</tr>
+		</tbody>
+	</table>
+	<p>
+		<strong>Note:</strong> Using <code>limit()</code> and <code>offset()</code> without <code>orderBy()</code> can have unpredictable results as the order will be decided
+		by the platform (or there may be no order at all!).
+	</p>
+	<h3>Example</h3>
+	<p>
+		Continuing with the Blog example, let's imagine that we needed to retrieve the 10 most recent posts for the post feed. This could be achieved with the following code:
+	</p>
+	<tabs>
+		<tab title="TypeScript">
+			<pre><code class="typescript">
+				// ...
+				carbon.documents.getMembers&lt;BlogPost&gt;( "posts/", _ => _
+					.properties( {
+						"title": {
+							"@type": "string"
+						},
+						"content": {
+							"@type": "string"
+						},
+						"publishedOn": {
+							"@type": "dateTime"
+						},
+						"deleted": {
+							"@type": "boolean"
+						}
+					} )
+					.filter( `( ${_.property( "publishedOn" )} < ${_.value( new Date() )} ) && ( ${_.property( "deleted" )} != ${_.value( true )} )` )
+					.orderBy( "publishedOn", "descending" )
+					.limit( 10 )
+				);
+				// ...
+			</code></pre>
+		</tab>
+		<tab title="JavaScript ES2015">
+			<pre><code class="javascript">
+				// ...
+				carbon.documents.getMembers( "posts/", _ => _
+					.properties( {
+						"title": {
+							"@type": "string"
+						},
+						"content": {
+							"@type": "string"
+						},
+						"publishedOn": {
+							"@type": "dateTime"
+						},
+						"deleted": {
+							"@type": "boolean"
+						}
+					} )
+					.filter( `( ${_.property( "publishedOn" )} < ${_.value( new Date() )} ) && ( ${_.property( "deleted" )} != ${_.value( true )} )` )
+					.orderBy( "publishedOn", "descending" )
+					.limit( 10 )
+				);
+				// ...
+			</code></pre>
+		</tab>
+		<tab title="JavaScript ES5">
+			<pre><code class="javascript">
+				// ...
+				carbon.documents.getMembers( "posts/", function( _ ) {
+					return _
+						.properties( {
+							"title": {
+								"@type": "string"
+							},
+							"content": {
+								"@type": "string"
+							},
+							"publishedOn": {
+								"@type": "dateTime"
+							},
+							"deleted": {
+								"@type": "boolean"
+							}
+						} )
+						.filter( "( " + _.property( "publishedOn" ) + " < " + _.value( new Date() ) + " ) && ( " + _.property( "deleted" ) + " != " + _.value( true ) + " )"  )
+						.orderBy( "publishedOn", "descending" )
+						.limit( 10 )
+					;
+				} );
+				// ...
+			</code></pre>
+		</tab>
+	</tabs>
+	<p>
+		After that, if the application needed to retrieve the next 10 posts the only change needed would be to add the <code>offset()</code> method:
+	</p>
+	<pre><code class="typescript">
+		// ...
+		.orderBy( "publishedOn", "descending" )
+		.limit( 10 )
+		.offset( 10 )
+		// ...
+	</code></pre>
 </section>
 <!-- END: Paging through documents -->
 
