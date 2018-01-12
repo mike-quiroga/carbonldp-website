@@ -356,6 +356,299 @@ version: v1.0.x
 </section>
 <!-- END: Retrieving only documents of a specific type -->
 
+<!-- START: Filtering documents -->
+<section class="mainContent-section">
+	<h2>Filtering documents</h2>
+	<p>
+
+		The method <code>withType()</code> can filter documents based on their types, but it is fairly common for applications to need to filter them based on their properties instead
+		(or more complex conditions).
+	</p>
+	<p>
+		The <strong>Builder</strong> object provides the method <code>filter()</code> which can be used to filter the documents to be retrieved based on a custom condition.
+	</p>
+	<p>
+		This method accepts a SPARQL <code>FILTER</code> expression (you can find more about them <a href="https://www.w3.org/TR/rdf-sparql-query/#tests" rel="noopener">here</a>). If you don't
+		know SPARQL, don't worry. The <strong>Builder</strong> object also provides methods to create those expressions without SPARQL knowledge.
+	</p>
+	<!-- START: Comparing values -->
+	<section class="mainContent-section">
+		<h3>Comparison operators</h3>
+		<p>
+			Filter expressions accept the following comparison operators:
+		</p>
+		<table class="ui celled table">
+			<tbody>
+				<tr>
+					<td><code>=</code></td>
+					<td>Equal to</td>
+				</tr>
+				<tr>
+					<td><code>!=</code></td>
+					<td>Not equal to</td>
+				</tr>
+				<tr>
+					<td><code>&gt;</code></td>
+					<td>More than</td>
+				</tr>
+				<tr>
+					<td><code>&lt;</code></td>
+					<td>Less than</td>
+				</tr>
+				<tr>
+					<td><code>&gt;=</code></td>
+					<td>More than or equal to</td>
+				</tr>
+				<tr>
+					<td><code>&lt;=</code></td>
+					<td>Less than or equal to</td>
+				</tr>
+			</tbody>
+		</table>
+	</section>
+	<!-- END: Comparing values -->
+	<!-- START: Using values -->
+	<section class="mainContent-section">
+		<h3>Using JavaScript values</h3>
+		<p>
+			Values in filter expressions need to be wrapped using the <code>_.value()</code> method. This makes the <strong>Builder</strong> object convert the native JavaScript value
+			to a SPARQL value. Example:
+		</p>
+		<pre><code class="javascript">
+			_.value( "Hello!" )
+			_.value( 1289.9 )
+			_.value( someVariable )
+			_.value( new Date() )
+			// etc
+		</code></pre>
+	</section>
+	<!-- END: Using values -->
+	<!-- START: Referring to properties -->
+	<section class="mainContent-section">
+		<h3>Referring to properties</h3>
+		<p>
+			To reference a property of the document in the <em>filter expression</em>, the Builder object provides the method: <code>_.property()</code>. It accepts the name of the property
+			to reference:
+		</p>
+		<pre><code>
+			_.property( "name" )
+		</code></pre>
+	</section>
+	<!-- END: Referring to properties -->
+	<!-- START: Comparing values -->
+	<section class="mainContent-section">
+		<h3>Comparing values</h3>
+		<p>
+			Using these three tools comparison expressions can be used in the <em>filter expression</em>. For example, if we wanted to get only blog posts that had a <code>publishedOn</code>
+			value previous to the current date (meaning they are already published), we could accomplish it using the following code:
+		</p>
+
+		<tabs>
+			<tab title="TypeScript">
+				<pre><code class="typescript">
+					// ...
+					carbon.documents.getMembers&lt;BlogPost&gt;( "posts/", _ => _
+						.properties( {
+							"title": {
+								"@type": "string"
+							},
+							"content": {
+								"@type": "string"
+							},
+							"publishedOn": {
+								"@type": "dateTime"
+							}
+						} )
+						.filter( `${_.property( "publishedOn" )} < ${_.value( new Date() )}` )
+					);
+					// ...
+				</code></pre>
+			</tab>
+			<tab title="JavaScript ES2015">
+				<pre><code class="javascript">
+					// ...
+					carbon.documents.getMembers( "posts/", _ => _
+						.properties( {
+							"title": {
+								"@type": "string"
+							},
+							"content": {
+								"@type": "string"
+							},
+							"publishedOn": {
+								"@type": "dateTime"
+							}
+						} )
+						.filter( `${_.property( "publishedOn" )} < ${_.value( new Date() )}` )
+					);
+					// ...
+				</code></pre>
+			</tab>
+			<tab title="JavaScript ES5">
+				<pre><code class="javascript">
+					// ...
+					carbon.documents.getMembers( "posts/", function( _ ) {
+						return _
+							.properties( {
+								"title": {
+									"@type": "string"
+								},
+								"content": {
+									"@type": "string"
+								},
+								"publishedOn": {
+									"@type": "dateTime"
+								}
+							} )
+							.filter( _.property( "publishedOn" ) + " < " + _.value( new Date() ) )
+						;
+					} );
+					// ...
+				</code></pre>
+			</tab>
+		</tabs>
+	</section>
+	<!-- END: Comparing values -->
+	<!-- START: Parenthesis and boolean expressions -->
+	<section class="mainContent-section">
+		<h3>Parenthesis and logical operators</h3>
+		<p>
+			Filter expressions accept parenthesis to wrap comparisons or arithmetic expressions. They can be used together with the following supported logical operators:
+		</p>
+		<table class="ui celled table">
+			<tbody>
+				<tr>
+					<td><code>&&</code></td>
+					<td>And</td>
+				</tr>
+				<tr>
+					<td><code>||</code></td>
+					<td>Or</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>
+			For example, to retrieve <strong>published</strong> blog posts that don't have the property <code>deleted</code> set to true, the following code could be used:
+		</p>
+		<tabs>
+			<tab title="TypeScript">
+				<pre><code class="typescript">
+					// ...
+					carbon.documents.getMembers&lt;BlogPost&gt;( "posts/", _ => _
+						.properties( {
+							"title": {
+								"@type": "string"
+							},
+							"content": {
+								"@type": "string"
+							},
+							"publishedOn": {
+								"@type": "dateTime"
+							},
+							"deleted": {
+								"@type": "boolean"
+							}
+						} )
+						.filter( `( ${_.property( "publishedOn" )} < ${_.value( new Date() )} ) && ( ${_.property( "deleted" )} != ${_.value( true )} )` )
+					);
+					// ...
+				</code></pre>
+			</tab>
+			<tab title="JavaScript ES2015">
+				<pre><code class="javascript">
+					// ...
+					carbon.documents.getMembers( "posts/", _ => _
+						.properties( {
+							"title": {
+								"@type": "string"
+							},
+							"content": {
+								"@type": "string"
+							},
+							"publishedOn": {
+								"@type": "dateTime"
+							},
+							"deleted": {
+								"@type": "boolean"
+							}
+						} )
+						.filter( `( ${_.property( "publishedOn" )} < ${_.value( new Date() )} ) && ( ${_.property( "deleted" )} != ${_.value( true )} )` )
+					);
+					// ...
+				</code></pre>
+			</tab>
+			<tab title="JavaScript ES5">
+				<pre><code class="javascript">
+					// ...
+					carbon.documents.getMembers( "posts/", function( _ ) {
+						return _
+							.properties( {
+								"title": {
+									"@type": "string"
+								},
+								"content": {
+									"@type": "string"
+								},
+								"publishedOn": {
+									"@type": "dateTime"
+								},
+								"deleted": {
+									"@type": "boolean"
+								}
+							} )
+							.filter( "( " + _.property( "publishedOn" ) + " < " + _.value( new Date() ) + " ) && ( " + _.property( "deleted" ) + " != " + _.value( true ) + " )"  )
+						;
+					} );
+					// ...
+				</code></pre>
+			</tab>
+		</tabs>
+	</section>
+	<!-- END: Parenthesis and boolean expressions -->
+</section>
+<!-- END: Filtering documents -->
+
+<!-- START: Paging through documents -->
+<section class="mainContent-section">
+	<h2>Paging through documents</h2>
+	<p>
+		Sometimes collections can get very big and retrieving them all together on a single request can take a long time (or even crash).
+	</p>
+	<p>
+		To avoid this, the <strong>Builder</strong> object provides three methods that let you page through the documents of a collection.
+	</p>
+	<!-- START: Sorting documents -->
+	<section class="mainContent-section">
+		<h3>Ordering documents</h3>
+		<p>
+			The method <code>orderBy</code>
+		</p>
+	</section>
+	<!-- END: Sorting documents -->
+	<!-- START: Limiting documents -->
+	<section class="mainContent-section">
+		<h3>Limiting results</h3>
+		<p>
+			The method <code>limit</code>
+		</p>
+	</section>
+	<!-- END: Limiting documents -->
+	<!-- START: Offsetting results -->
+	<section class="mainContent-section">
+		<h3>Offsetting results</h3>
+		<p>
+			The method <code>offset</code>
+		</p>
+	</section>
+	<!-- END: Offsetting results -->
+	<!-- START: Putting it all together -->
+	<section class="mainContent-section">
+		<h3>Putting it all together</h3>
+	</section>
+	<!-- END: Putting it all together -->
+</section>
+<!-- END: Paging through documents -->
+
 <!-- START: Retrieving nested objects -->
 <section class="mainContent-section">
 	<h2>Retrieving nested objects</h2>
