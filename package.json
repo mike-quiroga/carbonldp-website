@@ -32,7 +32,7 @@
     "version": "3.4.4"
   },
   "scripts": {
-    "postinstall": "node build/force-semantic-ui-to-install-correctly.js && npm explore semantic-ui -- npm run-script install"
+    "postinstall": "gulp"
   },
   "dependencies": {
     "hexo": "^3.4.4",
@@ -59,15 +59,11 @@
     "glob": "7.1.1",
     "gulp": "3.9.1",
     "gulp-autoprefixer": "3.1.1",
-    "gulp-chug": "0.5.1",
     "gulp-clean-css": "3.0.2",
     "gulp-htmlmin": "3.0.0",
-    "gulp-minify-css": "1.2.4",
-    "gulp-rename": "1.2.2",
+    "gulp-replace": "^0.6.1",
     "gulp-sass": "3.1.0",
-    "gulp-sourcemaps": "2.3.0",
     "gulp-uglify": "2.0.0",
-    "gulp-util": "3.0.8",
     "jsdom": "9.10.0",
     "path": "0.12.7",
     "run-sequence": "1.2.2"
