@@ -2,13 +2,12 @@ const del = require( "del" );
 
 const gulp = require( "gulp" );
 const runSequence = require( "run-sequence" );
-const util = require( "gulp-util" );
-const chug = require( "gulp-chug" );
 
 const Hexo = require( "hexo" );
 
 const sass = require( "gulp-sass" );
 const autoprefixer = require( "gulp-autoprefixer" );
+const replace = require( 'gulp-replace' );
 
 const htmlMinifier = require( "gulp-htmlmin" );
 const stylesMinifier = require( "gulp-clean-css" );
@@ -16,7 +15,11 @@ const scriptsMinifier = require( "gulp-uglify" );
 
 const config = {
 	source: {
-		assets: {},
+		assets: {
+			semantic: {
+				components: {}
+			},
+		},
 		styles: {
 			sass: {},
 			css: {}
@@ -32,6 +35,8 @@ const config = {
 
 config.source.dir = "themes/CarbonLDP/source/";
 config.source.assets.dir = config.source.dir + "assets/";
+config.source.assets.semantic.dir = config.source.assets.dir + "semantic/";
+config.source.assets.semantic.components.dir = config.source.assets.semantic.dir + "components/";
 config.source.styles.dir = config.source.assets.dir + "styles/";
 config.source.styles.css.dir = config.source.styles.dir + "css/";
 config.source.styles.sass.dir = config.source.styles.dir + "_scss/";
@@ -60,18 +65,11 @@ gulp.task( "default", [ "build" ] );
 
 gulp.task( "build", ( done ) => {
 	runSequence(
-		[ "compile:styles", "build:semantic" ],
+		[ "compile:styles", "include:semantic" ],
+		"replace:import-font",
 		"clean:site",
 		"compile:site",
 		"minify",
-		done
-	);
-} );
-
-gulp.task( "build:semantic", ( done ) => {
-	runSequence(
-		"compile:semantic",
-		"package:semantic|css",
 		done
 	);
 } );
@@ -82,14 +80,6 @@ gulp.task( "clean:site", () => {
 
 gulp.task( "clean:styles", () => {
 	return del( [ config.dist.styles.pattern ] );
-} );
-
-gulp.task( "compile:semantic", () => {
-	return gulp.src( config.source.semantic.gulpfile, { read: false } )
-		.pipe( chug( {
-			tasks: [ "build" ]
-		} ) )
-		;
 } );
 
 gulp.task( "compile:site", ( done ) => {
@@ -110,6 +100,20 @@ gulp.task( "compile:styles", function() {
 	return gulp.src( config.source.styles.sass.pattern )
 		.pipe( sass( { style: "expanded" } ) )
 		.pipe( gulp.dest( config.source.styles.css.dir ) )
+} );
+
+gulp.task( "copy:semantic", () => {
+	return gulp.src( [ "./node_modules/semantic-ui/dist/**/*" ] )
+		.pipe( gulp.dest( config.source.assets.dir + "semantic/" ) );
+} );
+
+gulp.task( "include:semantic", ( done ) => {
+	runSequence(
+		"copy:semantic",
+		"replace:import-font",
+		"replace:font-family",
+		done
+	);
 } );
 
 gulp.task( "minify", [ "minify:html", "minify:styles", "minify:scripts" ] );
@@ -133,10 +137,30 @@ gulp.task( "minify:scripts", () => {
 		.pipe( gulp.dest( config.dist.scripts.dir ) );
 } );
 
-gulp.task( "package:semantic|css", () => {
-	return gulp.src( config.source.semantic.gulpfile, { read: false } )
-		.pipe( chug( {
-			tasks: [ "package compressed css", "package uncompressed css" ]
-		} ) )
-		;
+gulp.task( "replace:import-font", () => {
+	return gulp.src(
+		[
+			config.source.assets.semantic.dir + "semantic.css",
+			config.source.assets.semantic.dir + "semantic.min.css",
+			config.source.assets.semantic.components.dir + "site.css",
+			config.source.assets.semantic.components.dir + "site.min.css"
+		], { base: './' } )
+		.pipe( replace( "@import url('https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin');", "" ) )
+		.pipe( replace( "@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin);", "" ) )
+		.pipe( gulp.dest( "./" ) );
+} );
+
+gulp.task( "replace:font-family", () => {
+	return gulp.src(
+		[
+			config.source.assets.semantic.dir + "semantic.css",
+			config.source.assets.semantic.dir + "semantic.min.css",
+			config.source.assets.semantic.components.dir + "site.css",
+			config.source.assets.semantic.components.dir + "site.min.css",
+			config.source.assets.semantic.components.dir + "**/*.css",
+			config.source.assets.semantic.components.dir + "**/*.min.css"
+		], { base: './' } )
+		.pipe( replace( "'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif", "Helvetica, Arial, sans-serif" ) )
+		.pipe( replace( "Lato,'Helvetica Neue',Arial,Helvetica,sans-serif", "Helvetica,Arial,sans-serif" ) )
+		.pipe( gulp.dest( "./" ) );
 } );
