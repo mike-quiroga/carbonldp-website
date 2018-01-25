@@ -65,8 +65,7 @@ gulp.task( "default", [ "build" ] );
 
 gulp.task( "build", ( done ) => {
 	runSequence(
-		[ "compile:styles", "include:semantic" ],
-		"replace:import-font",
+		[ "compile:styles", "prepare:semantic" ],
 		"clean:site",
 		"compile:site",
 		"minify",
@@ -102,20 +101,6 @@ gulp.task( "compile:styles", function() {
 		.pipe( gulp.dest( config.source.styles.css.dir ) )
 } );
 
-gulp.task( "copy:semantic", () => {
-	return gulp.src( [ "./node_modules/semantic-ui/dist/**/*" ] )
-		.pipe( gulp.dest( config.source.assets.dir + "semantic/" ) );
-} );
-
-gulp.task( "include:semantic", ( done ) => {
-	runSequence(
-		"copy:semantic",
-		"replace:import-font",
-		"replace:font-family",
-		done
-	);
-} );
-
 gulp.task( "minify", [ "minify:html", "minify:styles", "minify:scripts" ] );
 
 gulp.task( "minify:html", () => {
@@ -137,7 +122,21 @@ gulp.task( "minify:scripts", () => {
 		.pipe( gulp.dest( config.dist.scripts.dir ) );
 } );
 
-gulp.task( "replace:import-font", () => {
+gulp.task( "prepare:semantic", ( done ) => {
+	runSequence(
+		"prepare:semantic|copy:semantic",
+		"prepare:semantic|remove:font-import",
+		"prepare:semantic|replace:font-family",
+		done
+	);
+} );
+
+gulp.task( "prepare:semantic|copy:semantic", () => {
+	return gulp.src( [ "./node_modules/semantic-ui/dist/**/*" ] )
+		.pipe( gulp.dest( config.source.assets.dir + "semantic/" ) );
+} );
+
+gulp.task( "prepare:semantic|remove:font-import", () => {
 	return gulp.src(
 		[
 			config.source.assets.semantic.dir + "semantic.css",
@@ -150,7 +149,7 @@ gulp.task( "replace:import-font", () => {
 		.pipe( gulp.dest( "./" ) );
 } );
 
-gulp.task( "replace:font-family", () => {
+gulp.task( "prepare:semantic|replace:font-family", () => {
 	return gulp.src(
 		[
 			config.source.assets.semantic.dir + "semantic.css",
