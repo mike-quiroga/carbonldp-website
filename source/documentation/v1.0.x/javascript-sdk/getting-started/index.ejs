@@ -1227,7 +1227,7 @@ pathPartialURL: javascript-sdk/getting-started
 							return project.listMembers&lt;Task&gt;();
 						&#125;
 					).then(
-						( [ shallowTasks, response ]:[ Task & PersistedDocument.Class, Response.Class ] ) => &#123;
+						( [ shallowTasks, response ]:[ ( Task & PersistedDocument.Class )[], Response.Class ] ) => &#123;
 							console.log( shallowTasks ); // Pointers for task1, task2 and task3
 
 							return project.removeMember( task2 );
@@ -1239,7 +1239,7 @@ pathPartialURL: javascript-sdk/getting-started
 							return project.getMembers&lt;Task&gt;();
 						&#125;
 					).then(
-						( [ resolvedTasks, response ]:[ Task & PersistedDocument.Class, Response.Class ] ) => &#123;
+						( [ resolvedTasks, response ]:[ ( Task & PersistedDocument.Class )[], Response.Class ] ) => &#123;
 							console.log( resolvedTasks ); // task1 and task3 documents
 							console.log( task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
 						&#125;
