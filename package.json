@@ -29,11 +29,9 @@
     "url": "https://github.com/CarbonLDP/carbonldp-website.git"
   },
   "hexo": {
-    "version": "3.4.4"
+    "version": "3.5.0"
   },
-  "scripts": {
-    "postinstall": "gulp"
-  },
+  "scripts": {},
   "dependencies": {
     "hexo": "^3.4.4",
     "hexo-generator-archive": "0.1.4",
