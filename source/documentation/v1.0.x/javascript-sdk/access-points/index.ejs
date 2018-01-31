@@ -338,7 +338,7 @@ version: v1.0.x
 					};
 
 					// Create the Access Point
-					project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+					project.createAccessPoint( projectMembersAccessPoint, "people" ).then(
 					    ( [ persistedProjectMembersAccessPoint, response ]:[ PersistedAccessPoint.Class, Response.Class ] ) => {
 					        console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
 
@@ -384,7 +384,7 @@ version: v1.0.x
 					&#125;;
 
 					// Create the Access Point
-					project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+					project.createAccessPoint( projectMembersAccessPoint, "people" ).then(
 						( [ persistedProjectMembersAccessPoint, response ] ) => &#123;
 							console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
 
@@ -430,7 +430,7 @@ version: v1.0.x
 					&#125;;
 
 					// Create the Access Point
-					project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+					project.createAccessPoint( projectMembersAccessPoint, "people" ).then(
 						function( result ) &#123;
 							var persistedProjectMembersAccessPoint = result[ 0 ];
 							var response = result[ 1 ];
@@ -509,7 +509,7 @@ version: v1.0.x
 					};
 
 					// Create the Access Point
-					project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+					project.createAccessPoint( projectMembersAccessPoint, "people" ).then(
 					    ( [ persistedProjectMembersAccessPoint, response ]:[ PersistedAccessPoint.Class, Response.Class ] ) => {
 					        console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
 
@@ -561,7 +561,7 @@ version: v1.0.x
 					&#125;;
 
 					// Create the Access Point
-					project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+					project.createAccessPoint( projectMembersAccessPoint, "people" ).then(
 						( [ persistedProjectMembersAccessPoint, response ] ) => {
 					        console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
 
@@ -613,7 +613,7 @@ version: v1.0.x
 					&#125;;
 
 					// Create the Access Point
-					project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+					project.createAccessPoint( projectMembersAccessPoint, "people" ).then(
 						function( result ) &#123;
 							var persistedProjectMembersAccessPoint = result[ 0 ];
 							var response = result[ 1 ];
