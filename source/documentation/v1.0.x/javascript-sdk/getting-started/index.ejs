@@ -1421,7 +1421,7 @@ pathPartialURL: javascript-sdk/getting-started
 					isMemberOfRelation: "projects" // property used to link back members to the document they are members of
 				&#125;;
 
-				project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+				project.createAccessPoint( projectMembersAccessPoint, "people" ).then(
 					( [ persistedProjectMembersAccessPoint, response ]:[ PersistedAccessPoint.Class, Response.Class ] ) => &#123;
 						console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
 
@@ -1463,7 +1463,7 @@ pathPartialURL: javascript-sdk/getting-started
 					isMemberOfRelation: "projects" // property used to link back members to the document they are members of
 				&#125;;
 
-				project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+				project.createAccessPoint( projectMembersAccessPoint, "people" ).then(
 					( [ persistedProjectMembersAccessPoint, response ] ) => &#123;
 						console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
 
@@ -1505,7 +1505,7 @@ pathPartialURL: javascript-sdk/getting-started
 					isMemberOfRelation: "projects" // property used to link back members to the document they are members of
 				&#125;;
 
-				project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+				project.createAccessPoint( projectMembersAccessPoint, "people" ).then(
 					function( result ) &#123;
 						var persistedProjectMembersAccessPoint = result[ 0 ];
 						var response = result[ 1 ];
