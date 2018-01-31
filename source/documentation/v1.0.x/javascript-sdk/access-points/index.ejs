@@ -394,7 +394,7 @@ version: v1.0.x
 					).then(
 						( response ) => &#123;
 							// Refresh the project so it can have the property listing the members
-							return project.refresh&lt;Project&gt;();
+							return project.refresh();
 						&#125;
 					).then(
 						( [ refreshedProject, response ] ) => &#123;
@@ -402,7 +402,7 @@ version: v1.0.x
 							console.log( refreshedProject.people ); // Pointers to person1 and person2
 
 							// Refresh a person so it can have the property pointing back to the document a person is member of
-							return person1.refresh&lt;Person&gt;();
+							return person1.refresh();
 						&#125;
 					).then(
 						( [ refreshedPerson1, response ] ) => &#123;
