@@ -1079,7 +1079,7 @@ pathPartialURL: javascript-sdk/getting-started
 
 					carbon.documents.listChildren( "projects/" ).then(
 						( [ shallowProjects, response ] ) => &#123;
-					        console.log( projectPointers ); // array of shallow documents
+					        console.log( shallowProjects ); // array of shallow documents
 						&#125;
 					);
 
@@ -1103,7 +1103,7 @@ pathPartialURL: javascript-sdk/getting-started
 							var shallowProjects = result[ 0 ];
 							var response = result[ 1 ];
 
-					        console.log( projectPointers ); // array of shallow documents
+					        console.log( shallowProjects ); // array of shallow documents
 						&#125;
 					);
 
@@ -1224,10 +1224,10 @@ pathPartialURL: javascript-sdk/getting-started
 							console.log( project.tasks.indexOf( task2 ) !== -1 ); // true
 							console.log( project.tasks.indexOf( task3 ) !== -1 ); // true
 
-							return project.listMembers&lt;Task&gt;();
+							return project.listMembers();
 						&#125;
 					).then(
-						( [ shallowTasks, response ]:[ ( Task & PersistedDocument.Class )[], Response.Class ] ) => &#123;
+						( [ shallowTasks, response ]:[ PersistedDocument.Class[], Response.Class ] ) => &#123;
 							console.log( shallowTasks ); // Pointers for task1, task2 and task3
 
 							return project.removeMember( task2 );
