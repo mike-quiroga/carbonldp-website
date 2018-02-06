@@ -69,6 +69,7 @@ deploy:
   type:
 
 # Sitemap
-sitemap:
-    path: sitemap.xml
-    template: ./sitemap_template.xml
+# Not needed because hexo-generator-sitemap does this automatically if no template is given
+#sitemap:
+#    path: sitemap.xml
+#    template: ./sitemap_template.xml
