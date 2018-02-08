@@ -17,7 +17,7 @@ let currentCategory = currentVersion.categories.find( category => category.title
 				</div>
 				<div class="category-titleContainer">
 					<%- svg( currentCategory.iconPath, "ui left floated image category-icon" ) %><h1 class="category-title"><%= currentCategory.title %></h1>
-					<%- partial( "documentation/_partial/versions-menu", { containerDarkBackground: false } ) %>
+					<%- partial( "documentation/_partial/versions-menu", { containerDarkBackground: false, whiteTextColor: false, containerBackground: false } ) %>
 				</div>
 				<div class="category-description">
 
