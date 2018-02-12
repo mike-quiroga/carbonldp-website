@@ -7,7 +7,7 @@
 					<h1 class="document-title"><%= page.title %></h1>
 				</div>
 				<div class="ui centered aligned grid versionsMenu-grid mobile only">
-					<%- partial( "documentation/_partial/versions-menu", { containerDarkBackground: true, whiteTextColor: true, containerBackground: 'blue' } ) %>
+					<%- partial( "documentation/_partial/versions-menu", { containerDarkBackground: false } ) %>
 				</div>
 
 				<% if ( page.notDocumented ) { %>
@@ -20,19 +20,16 @@
 		</div>
 
 		<div class="four wide computer tablet only column">
-			<div class="ui sticky sticky-wrapper">
-				<% if ( ! ( page.notDocumented ) ) { %>
-				<div class="versionsMenu--document">
-					<div class="ui versionsMenu-sticky">
-						<h2 class="ui header left aligned">Version</h2>
-						<%- partial( "documentation/_partial/versions-menu", { containerDarkBackground: true, whiteTextColor: true, containerBackground: 'blue' } ) %>
-					</div>
+			<% if ( ! ( page.notDocumented ) ) { %>
+			<div class="versionsMenu--document">
+				<div class="ui sticky versionsMenu-sticky">
+					<%- partial( "documentation/_partial/versions-menu", { containerDarkBackground: false } ) %>
 				</div>
-				<% } %>
-				<% if ( ! (page.sidebar || page.notDocumented ) ) { %>
-				<sidebar content="mainContent"></sidebar>
-				<% } %>
 			</div>
+			<% } %>
+			<% if ( ! (page.sidebar || page.notDocumented ) ) { %>
+			<sidebar content="mainContent"></sidebar>
+			<% } %>
 		</div>
 	</div>
 </div>

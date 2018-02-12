@@ -16,14 +16,13 @@
 	} );
 
 	//documentation-home dropdown versions button
-	$( ".versionsMenu-dropdown" ).dropdown();
+	$(".versionsMenu-dropdown").dropdown();
 
 	//individual document versionsMenu sticky
-	$( ".ui.sticky.sticky-wrapper" ).sticky( {
+	$( ".ui.sticky.versionsMenu-sticky" ).sticky( {
 		observeChanges: true,
 		context: ".mainContent",
-		offset: 0,
-		bottomOffset: 16
+		offset: 100
 	} );
 	// Activates scroll with offset
 	$( ".sidebar .menu a[href], .categoriesMenu-button, .staticContentMenu .menu a[href]" ).on( "click", scrollTo );

@@ -9,7 +9,7 @@ $( document ).ready( function() {
 	// Detect when section is passed
 	$sections.visibility( {
 		once: false,
-		offset: 100,
+		offset: 150,
 		onTopPassed: function() {
 			activateSection( this, $sidebarFollowingMenu, $sections );
 		},
@@ -23,7 +23,7 @@ $( document ).ready( function() {
 
 	$subSections.visibility( {
 		once: false,
-		offset: 100,
+		offset: 150,
 		onTopPassed: function() {
 			activateSubSection( this, $sidebarFollowingMenu, $subSections );
 		},
@@ -32,6 +32,13 @@ $( document ).ready( function() {
 		}
 	} );
 
+
+	// Make sidebar stick to its position
+	$( ".sidebar > .ui.sticky" ).sticky( {
+		observeChanges: true,
+		context: ".mainContent",
+		offset: 100
+	} );
 
 	// Activate toggle dropdown
 	$( ".sidebar .item > .dropdown.icon" ).on( "click", toggleDropdown );
@@ -56,6 +63,7 @@ $( document ).ready( function() {
 				$accordion.addClass( "toggled" );
 			}
 		}
+		$( ".ui.sticky" ).sticky( "refresh" );
 
 		return false;
 	}
@@ -112,6 +120,8 @@ $( document ).ready( function() {
 			$currentSection.find( ".menu" ).addClass( "active" );
 		}
 
+		$( ".ui.sticky" ).sticky( "refresh" );
+
 		return false;
 
 	}
@@ -133,6 +143,8 @@ $( document ).ready( function() {
 		if( ! subSectionMenuIsActive ) {
 			$subSectionMenu.addClass( "active" );
 		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
 
 		return false;
 	}
@@ -157,6 +169,8 @@ $( document ).ready( function() {
 			}
 
 		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
 
 		return false;
 	}

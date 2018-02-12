@@ -274,10 +274,6 @@ i.icon.scrollTop-icon {
   font-size: 28px;
   color: #19B7FB; }
 
-.ui.sticky.sticky-wrapper {
-  padding-top: 9rem;
-  z-index: 0; }
-
 .ui.button.versionsMenu-button {
   min-width: 135px;
   min-height: 30px;
@@ -287,9 +283,7 @@ i.icon.scrollTop-icon {
   background: transparent none;
   font-weight: normal;
   color: #d0c8c8;
-  text-shadow: none;
-  font-size: 1rem;
-  line-height: 2rem; }
+  text-shadow: none; }
 
 .ui.dropdown > .menu.versionsMenu {
   min-width: 135px;
@@ -314,17 +308,7 @@ i.icon.scrollTop-icon {
 
 .versionsMenu--document {
   text-align: center;
-  padding: 1em; }
-
-.versionsMenu-dropdown.versionsMenu-dropdown-blue .versionsMenu-button {
-  background: #0091cf; }
-  .versionsMenu-dropdown.versionsMenu-dropdown-blue .versionsMenu-button:hover {
-    background: #0091cf; }
-  .versionsMenu-dropdown.versionsMenu-dropdown-blue .versionsMenu-button .dropdown.icon {
-    background: #0178ab; }
-
-.ui.dropdown.versionsMenu-dropdown.versionsMenu-dropdown--whiteText > .default.text {
-  color: white; }
+  margin-top: 9em; }
 
 .ui.dropdown.versionsMenu-dropdown.versionsMenu-dropdown--blackText > .default.text {
   color: rgba(0, 0, 0, 0.8); }

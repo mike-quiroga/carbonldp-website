@@ -76,11 +76,6 @@ i.icon.scrollTop-icon {
 
 //styles for versions menu
 
-.ui.sticky.sticky-wrapper {
-	padding-top: 9rem;
-	z-index: 0;
-}
-
 .ui.button.versionsMenu-button {
 	min-width: 135px;
 	min-height: 30px;
@@ -91,24 +86,21 @@ i.icon.scrollTop-icon {
 	font-weight: normal;
 	color: rgba(208, 200, 200, 1);
 	text-shadow: none;
-	font-size: 1rem;
-	line-height: 2rem;
 }
-
 .ui.dropdown > .menu.versionsMenu {
 	min-width: 135px;
 	border: 0;
-	> .item {
-		text-align: center;
-	}
+		> .item{
+			text-align: center;
+		}
 }
 
 .ui.button.versionsMenu-button:hover {
-	font-weight: normal;
-	background: #ffffff;
-	color: rgba(0, 0, 0, .8);
-	text-shadow: none;
-}
+	 font-weight: normal;
+	 background: #ffffff;
+	 color: rgba(0, 0, 0, .8);
+	 text-shadow: none;
+ }
 
 // makes text black on hover
 .ui.dropdown.versionsMenu-dropdown > .default.text:hover {
@@ -120,40 +112,23 @@ i.icon.scrollTop-icon {
 	background: #f8f8f9;
 }
 
-.ui.labeled.icon.button.versionsMenu-button.versionsMenu-button--grayHover > .icon {
-	background-color: rgba(120, 120, 120, .05);
+.ui.labeled.icon.button.versionsMenu-button.versionsMenu-button--grayHover >.icon {
+	background-color: rgba(120,120,120,.05);
 }
 
-.versionsMenu--document {
+.versionsMenu--document{
 	text-align: center;
-	padding: 1em;
-}
-
-.versionsMenu-dropdown.versionsMenu-dropdown-blue {
-	.versionsMenu-button {
-		&:hover {
-			background: rgb(0, 145, 207);
-		}
-		background: rgb(0, 145, 207);
-
-		.dropdown.icon {
-			background: rgb(1, 120, 171);
-		}
-	}
+	margin-top :9em;
 }
 
 //versions Menu on light background, makes initial text black
-.ui.dropdown.versionsMenu-dropdown.versionsMenu-dropdown--whiteText > .default.text {
-	color: white;
-}
-
 .ui.dropdown.versionsMenu-dropdown.versionsMenu-dropdown--blackText > .default.text {
 	color: rgba(0, 0, 0, .8);
 }
 
-.ui.grid.versionsMenu-grid {
+.ui.grid.versionsMenu-grid{
 	margin: 0;
-	> * {
+	> *{
 		padding: 0;
 	}
 }
